@@ -1,0 +1,243 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout>
+  <div class="game-container">
+    <div class="header-beta">
+      <h1 class="level-title">Nivel Beta</h1>
+      <div class="timer-box">
+        Tiempo: <span id="time-left">15</span>s
+      </div>
+    </div>
+
+    <div class="screen">
+      <h2 id="math-question">Cargando...</h2>
+    </div>
+
+    <div class="fruits-container" id="options-container">
+      </div>
+
+    <p id="feedback-message" class="feedback"></p>
+  </div>
+</Layout>
+
+<style>
+  .game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-top: 2rem;
+  }
+
+  .header-beta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 1rem;
+  }
+
+  .level-title {
+    color: #5d2a5d;
+    font-size: 2rem;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  .timer-box {
+    background-color: #ffb3c1;
+    color: #5d2a5d;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    font-family: monospace;
+  }
+
+  .screen {
+    background-color: #ffffff;
+    color: #791aab;
+    padding: 2rem 4rem;
+    border-radius: 15px;
+    border: 4px dashed #cdb4db;
+    box-shadow: 0 8px 20px rgba(205, 180, 219, 0.3);
+    margin-bottom: 2rem;
+    min-width: 300px;
+  }
+
+  #math-question {
+    font-size: 4rem;
+    margin: 0;
+    font-family: monospace;
+    letter-spacing: 5px;
+  }
+
+  .fruits-container {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  :global(.fruit-btn) {
+    background-color: #fff;
+    border: 3px solid #bde0fe;
+    color: #002855;
+    font-size: 2.5rem;
+    font-weight: bold;
+    padding: 1rem 2rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 120px;
+  }
+
+  :global(.fruit-btn:hover) {
+    background-color: #bde0fe;
+    color: #002855;
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(189, 224, 254, 0.5);
+  }
+
+  .feedback {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 2rem;
+    min-height: 2rem;
+  }
+
+  :global(.correct) { color: #52b788; }
+  :global(.incorrect) { color: #ff6b81; }
+</style>
+
+<script>
+  const questionEl = document.getElementById('math-question');
+  const optionsContainer = document.getElementById('options-container');
+  const feedbackEl = document.getElementById('feedback-message');
+  const timeLeftEl = document.getElementById('time-left');
+
+  let timer: ReturnType<typeof setInterval> | undefined;
+  let timeLeft = 15;
+  let isAnswering = false;
+
+  function startTimer() {
+    timeLeft = 15;
+    if (timeLeftEl) timeLeftEl.textContent = timeLeft.toString();
+    clearInterval(timer);
+
+    timer = setInterval(() => {
+      timeLeft--;
+      if (timeLeftEl) timeLeftEl.textContent = timeLeft.toString();
+
+      if (timeLeft <= 0) {
+        clearInterval(timer);
+        handleTimeOut();
+      }
+    }, 1000);
+  }
+
+  function handleTimeOut() {
+    isAnswering = true;
+    if (feedbackEl) {
+      feedbackEl.textContent = "Tiempo agotado";
+      feedbackEl.className = "feedback incorrect";
+    }
+    setTimeout(() => {
+      generateQuestion();
+    }, 2000);
+  }
+
+  function generateQuestion() {
+    isAnswering = false;
+    if (feedbackEl) feedbackEl.textContent = "";
+
+    // Decidir si es multiplicación o división
+    const isMultiplication = Math.random() > 0.5;
+    let var1, var2, correctAnswer, operator;
+
+    if (isMultiplication) {
+      var1 = Math.floor(Math.random() * 10) + 2;
+      var2 = Math.floor(Math.random() * 10) + 2;
+      correctAnswer = var1 * var2;
+      operator = '×';
+    } else {
+
+      var2 = Math.floor(Math.random() * 9) + 2;
+      correctAnswer = Math.floor(Math.random() * 10) + 2;
+      var1 = correctAnswer * var2;
+      operator = '÷';
+    }
+
+    let wrong1 = correctAnswer + Math.floor(Math.random() * 4) + 1;
+    let wrong2 = Math.max(1, correctAnswer - (Math.floor(Math.random() * 4) + 1));
+
+    if (wrong1 === wrong2) wrong1 += 1;
+    if (wrong1 === correctAnswer) wrong1 += 2;
+    if (wrong2 === correctAnswer) wrong2 -= 1;
+
+    // 3 opciones para Beta
+    const options = [
+      { value: correctAnswer, isCorrect: true },
+      { value: wrong1, isCorrect: false },
+      { value: wrong2, isCorrect: false }
+    ];
+
+    options.sort(() => Math.random() - 0.5);
+
+    if (questionEl) {
+      questionEl.textContent = `${var1} ${operator} ${var2} = ?`;
+    }
+
+    renderOptions(options);
+    startTimer();
+  }
+
+  function renderOptions(options: { value: number; isCorrect: boolean }[]) {
+    if (!optionsContainer) return;
+    optionsContainer.innerHTML = '';
+
+    const labels = ['A', 'B', 'C'];
+
+    options.forEach((opt, index) => {
+      const btn = document.createElement('button');
+      btn.className = 'fruit-btn';
+      btn.textContent = `Fruta ${labels[index]}: ${opt.value}`;
+
+      btn.addEventListener('click', () => {
+        if (!isAnswering) checkAnswer(opt.isCorrect);
+      });
+
+      optionsContainer.appendChild(btn);
+    });
+  }
+
+  function checkAnswer(isCorrect: boolean) {
+    isAnswering = true;
+    clearInterval(timer);
+
+    if (!feedbackEl) return;
+
+    if (isCorrect) {
+      feedbackEl.textContent = "Correcto";
+      feedbackEl.className = "feedback correct";
+
+      setTimeout(() => {
+        generateQuestion();
+      }, 1500);
+
+    } else {
+      feedbackEl.textContent = "Intenta de nuevo";
+      feedbackEl.className = "feedback incorrect";
+      setTimeout(() => {
+        generateQuestion();
+      }, 1500);
+    }
+  }
+
+  generateQuestion();
+</script>

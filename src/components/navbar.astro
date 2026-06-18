@@ -1,0 +1,73 @@
+<nav class="navbar">
+  <div class="nav-container">
+    <a href="/" class="logo">
+      <span class="emoji">🐍</span> Serpientes y Escaleras
+    </a>
+
+    <div class="nav-links">
+      <a href="/Alpha" class="link alfa">Nivel Alfa (6-8 años)</a>
+      <a href="/Beta" class="link beta">Nivel Beta (9-12 años)</a>
+    </div>
+  </div>
+</nav>
+
+<style>
+  .navbar {
+    background-color: #ffffff;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 1rem 2rem;
+    font-family: 'system-ui', sans-serif;
+  }
+
+  .nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-decoration: none;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 15px;
+  }
+
+  .link {
+    text-decoration: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: transform 0.2s, background-color 0.2s;
+  }
+
+  .link:hover {
+    transform: scale(1.05);
+  }
+
+  .alfa {
+    background-color: #ffc8dd;
+    color: #5c0029;
+  }
+
+  .beta {
+    background-color: #bde0fe;
+    color: #002855;
+  }
+
+  @media (max-width: 600px) {
+    .nav-container {
+      flex-direction: column;
+      gap: 1rem;
+    }
+  }
+</style>

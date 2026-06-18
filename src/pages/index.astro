@@ -1,11 +1,88 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 ---
 
 <Layout>
-	<Welcome />
+  <div class="home-container">
+    <h1 class="main-title">Bienvenido al Juego Matemático <br/> <span class="highlight">Serpientes y Escaleras</span></h1>
+
+    <div class="intro-box">
+      <p>¡Prepárate para una aventura llena de diversión y matemáticas! En este juego, cada casilla tiene un desafío matemático que debes resolver para avanzar. ¡Buena suerte!</p>
+    </div>
+  </div>
 </Layout>
+
+<style>
+  .home-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-top: 2rem;
+    padding: 1rem;
+  }
+
+  .main-title {
+    color: #5d2a5d; /
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    line-height: 1.2;
+  }
+
+  .highlight {
+    color: #791aab;
+    text-shadow: 2px 2px 4px rgba(205, 180, 219, 0.5);
+  }
+
+  .intro-box {
+    background-color: #ffffff;
+    color: #6e446e;
+    padding: 2rem;
+    border-radius: 20px;
+    border: 4px dashed #cdb4db; /* Borde punteado lila */
+    box-shadow: 0 8px 20px rgba(205, 180, 219, 0.3);
+    max-width: 700px;
+    font-size: 1.2rem;
+    line-height: 1.6;
+    margin-bottom: 3rem;
+  }
+
+  .level-selection {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .level-btn {
+    text-decoration: none;
+    font-size: 1.3rem;
+    font-weight: bold;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    transition: all 0.2s ease;
+  }
+
+  .alfa-btn {
+    background-color: #ffc8dd;
+    color: #5c0029;
+    border: 3px solid #ffb3c1;
+  }
+
+  .alfa-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(255, 200, 221, 0.6);
+  }
+
+  .beta-btn {
+    background-color: #bde0fe;
+    color: #002855;
+    border: 3px solid #a2d2ff;
+  }
+
+  .beta-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(189, 224, 254, 0.6);
+  }
+</style>
