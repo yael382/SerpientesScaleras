@@ -1,0 +1,60 @@
+---
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="footer-content">
+    <p class="utvam-text">
+      Desarrollado por Ingeniería en Desarrollo y Gestión de Software
+    </p>
+    <p class="utvam-title">
+      <strong>UTVAM</strong>
+    </p>
+    <p class="sub-text">
+      Universidad Tecnológica de la Zona Metropolitana del Valle de México &copy; {currentYear}
+    </p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background-color: #cdb4db;
+    color: #4a0a4a;
+    padding: 2.5rem 1rem;
+    text-align: center;
+    font-family: 'system-ui', sans-serif;
+    border-top: 4px solid #a288b5;
+    margin-top: auto;
+  }
+
+  .footer-content {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .utvam-text {
+    font-size: 1.1rem;
+    margin: 0;
+    color: #5d2a5d;
+  }
+
+  .utvam-title {
+    font-size: 1.5rem;
+    margin: 5px 0;
+    letter-spacing: 2px;
+  }
+
+  .utvam-title strong {
+    color: #791aab;
+    text-shadow: 0 0 10px rgba(121, 26, 171, 0.2);
+  }
+
+  .sub-text {
+    font-size: 0.85rem;
+    color: #6e446e;
+    margin: 0;
+  }
+</style>

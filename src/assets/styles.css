@@ -1,0 +1,91 @@
+/* Estilos globales - Tema Pastel */
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff0f3;
+}
+
+.container {
+  flex: 1;
+  width: 100%;
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  box-sizing: border-box;
+}
+
+
+.game-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.level-title {
+  color: #5d2a5d;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.screen {
+  background-color: #ffffff;
+  color: #791aab;
+  padding: 2rem 4rem;
+  border-radius: 15px;
+  border: 4px dashed #cdb4db;
+  box-shadow: 0 8px 20px rgba(205, 180, 219, 0.3);
+  margin-bottom: 2rem;
+  min-width: 300px;
+}
+
+#math-question {
+  font-size: 4rem;
+  margin: 0;
+  font-family: monospace;
+  letter-spacing: 5px;
+}
+
+.fruits-container {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.fruit-btn {
+  background-color: #fff;
+  border: 3px solid #ffc8dd;
+  color: #5c0029;
+  font-size: 2.5rem;
+  font-weight: bold;
+  padding: 1rem 2rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 150px;
+}
+
+.fruit-btn:hover {
+  background-color: #ffc8dd;
+  color: #5c0029;
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(255, 200, 221, 0.5);
+}
+
+.feedback {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-top: 2rem;
+  min-height: 2rem;
+}
+
+.correct { color: #52b788; }
+.incorrect { color: #ff6b81; }

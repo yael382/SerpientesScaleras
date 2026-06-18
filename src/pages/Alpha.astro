@@ -1,0 +1,170 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout>
+  <div class="game-container">
+    <h1 class="level-title">Nivel Alfa</h1>
+
+    <div class="screen">
+      <h2 id="math-question">Cargando...</h2>
+    </div>
+
+    <div class="fruits-container" id="options-container">
+      </div>
+
+    <p id="feedback-message" class="feedback"></p>
+  </div>
+</Layout>
+
+<style>
+  .game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-top: 2rem;
+  }
+
+  .level-title {
+    color: #5d2a5d;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  .screen {
+    background-color: #ffffff;
+    color: #791aab;
+    padding: 2rem 4rem;
+    border-radius: 15px;
+    border: 4px dashed #cdb4db;
+    box-shadow: 0 8px 20px rgba(205, 180, 219, 0.3);
+    margin-bottom: 2rem;
+    min-width: 300px;
+  }
+
+  #math-question {
+    font-size: 4rem;
+    margin: 0;
+    font-family: monospace;
+    letter-spacing: 5px;
+  }
+
+  .fruits-container {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  :global(.fruit-btn) {
+    background-color: #fff;
+    border: 3px solid #ffc8dd;
+    color: #5c0029;
+    font-size: 2.5rem;
+    font-weight: bold;
+    padding: 1rem 2rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 150px;
+  }
+
+  :global(.fruit-btn:hover) {
+    background-color: #ffc8dd;
+    color: #5c0029;
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(255, 200, 221, 0.5);
+  }
+
+  .feedback {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 2rem;
+    min-height: 2rem;
+  }
+
+  :global(.correct) { color: #52b788; }
+  :global(.incorrect) { color: #ff6b81; }
+</style>
+
+<script>
+  const questionEl = document.getElementById('math-question');
+  const optionsContainer = document.getElementById('options-container');
+  const feedbackEl = document.getElementById('feedback-message');
+
+  function generateQuestion() {
+    let var1 = Math.floor(Math.random() * 15) + 1;
+    let var2 = Math.floor(Math.random() * 15) + 1;
+
+    const isAddition = Math.random() > 0.5;
+
+    if (!isAddition && var1 < var2) {
+      let temp = var1;
+      var1 = var2;
+      var2 = temp;
+    }
+
+    const correctAnswer = isAddition ? (var1 + var2) : (var1 - var2);
+    const operator = isAddition ? '+' : '-';
+
+    let wrong1 = correctAnswer + Math.floor(Math.random() * 3) + 1;
+    if (wrong1 === correctAnswer) wrong1 += 1;
+
+    // Solo 2 opciones para Alfa
+    const options = [
+      { value: correctAnswer, isCorrect: true },
+      { value: wrong1, isCorrect: false }
+    ];
+
+    options.sort(() => Math.random() - 0.5);
+
+    if (questionEl) {
+      questionEl.textContent = `${var1} ${operator} ${var2} = ?`;
+    }
+
+    renderOptions(options);
+  }
+
+  function renderOptions(options: { value: number; isCorrect: boolean }[]) {
+    if (!optionsContainer) return;
+    optionsContainer.innerHTML = '';
+
+    const labels = ['A', 'B'];
+
+    options.forEach((opt, index) => {
+      const btn = document.createElement('button');
+      btn.className = 'fruit-btn';
+      btn.textContent = `Fruta ${labels[index]}: ${opt.value}`;
+
+      btn.addEventListener('click', () => {
+        checkAnswer(opt.isCorrect);
+      });
+
+      optionsContainer.appendChild(btn);
+    });
+  }
+
+  function checkAnswer(isCorrect: boolean) {
+    if (!feedbackEl) return;
+
+    if (isCorrect) {
+      feedbackEl.textContent = "Correcto";
+      feedbackEl.className = "feedback correct";
+
+      setTimeout(() => {
+        feedbackEl.textContent = "";
+        generateQuestion();
+      }, 1500);
+
+    } else {
+      feedbackEl.textContent = "Intenta de nuevo";
+      feedbackEl.className = "feedback incorrect";
+    }
+  }
+
+  generateQuestion();
+</script>
