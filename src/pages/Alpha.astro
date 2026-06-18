@@ -1,17 +1,25 @@
----
 import Layout from '../layouts/Layout.astro';
+
+interface Props {
+  level?: 'alfa' | 'beta';
+}
+
+const { level = 'alfa' } = Astro.props;
 ---
 
 <Layout>
-  <div class="game-container">
-    <h1 class="level-title">Nivel Alfa</h1>
+  <div class="game-container" data-level={level} id="game-wrapper">
+    <div class="header-info">
+      <h1 class="level-title">{level === 'alfa' ? 'Nivel Alfa' : 'Nivel Beta'}</h1>
+      <div id="game-timer" class="timer">⏳ 15s</div>
+    </div>
 
     <div class="screen">
       <h2 id="math-question">Cargando...</h2>
     </div>
 
     <div class="fruits-container" id="options-container">
-      </div>
+    </div>
 
     <p id="feedback-message" class="feedback"></p>
   </div>
@@ -33,9 +41,29 @@ import Layout from '../layouts/Layout.astro';
     to { opacity: 1; transform: translateY(0); }
   }
 
+  .header-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 450px;
+    margin-bottom: 1.5rem;
+  }
+
+  .timer {
+    font-size: 1.8rem;
+    font-weight: bold;
+    font-family: 'Fredoka', monospace;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 0.5rem 1.2rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transition: color 0.3s ease;
+  }
+
   .level-title {
     font-size: 2.2rem;
-    margin-bottom: 1.5rem;
+    margin: 0;
     text-transform: uppercase;
     letter-spacing: 3px;
     background: linear-gradient(135deg, #FF922B, #FFD43B);
@@ -89,6 +117,7 @@ import Layout from '../layouts/Layout.astro';
     gap: 2rem;
     justify-content: center;
     flex-wrap: wrap;
+    max-width: 600px;
   }
 
   :global(.fruit-btn) {
@@ -154,13 +183,86 @@ import Layout from '../layouts/Layout.astro';
 </style>
 
 <script>
+  const wrapper = document.getElementById('game-wrapper');
+  const level = wrapper?.dataset.level || 'alfa';
+
   const questionEl = document.getElementById('math-question');
   const optionsContainer = document.getElementById('options-container');
   const feedbackEl = document.getElementById('feedback-message');
+  const timerEl = document.getElementById('game-timer');
+
+  let timeLeft = 15;
+  let timerId: any = null;
+  let isProcessing = false; // Bandera para evitar doble clic y desfases
+
+  function startTimer() {
+    clearInterval(timerId);
+    timeLeft = 15;
+    updateTimerUI();
+
+    timerId = setInterval(() => {
+      timeLeft--;
+      updateTimerUI();
+
+      if (timeLeft <= 0) {
+        clearInterval(timerId);
+        handleTimeout();
+      }
+    }, 1000);
+  }
+
+  function updateTimerUI() {
+    if (timerEl) {
+      timerEl.textContent = `⏳ ${timeLeft}s`;
+      timerEl.style.color = timeLeft <= 5 ? '#ef4444' : '#1e1b4b';
+    }
+  }
+
+  function handleTimeout() {
+    if (isProcessing) return;
+    isProcessing = true;
+
+    if (feedbackEl) {
+      feedbackEl.textContent = "¡Se acabó el tiempo!";
+      feedbackEl.className = "feedback incorrect";
+    }
+
+    setTimeout(() => {
+      if (feedbackEl) feedbackEl.textContent = "";
+      generateQuestion();
+    }, 1500);
+  }
+
+  // Genera distractores basados en errores matemáticos típicos
+  function generateSmartDistractors(v1: number, v2: number, correct: number, isAddition: boolean, count: number) {
+    const distractors = new Set<number>();
+    
+    // 1. Error de operación inversa (sumar en vez de restar o al revés)
+    const signError = isAddition ? Math.abs(v1 - v2) : (v1 + v2);
+    if (signError > 0 && signError !== correct) distractors.add(signError);
+
+    // 2. Errores posicionales/decenas comunes (+10 o -10)
+    distractors.add(correct + 10);
+    if (correct > 10) distractors.add(correct - 10);
+
+    // 3. Pequeños desfases de cálculo (+1, +2, -1)
+    distractors.add(correct + 1);
+    distractors.add(correct + 2);
+    if (correct > 1) distractors.add(correct - 1);
+
+    // Filtrar duplicados con la respuesta correcta y recortar al tamaño necesario
+    return Array.from(distractors)
+      .filter(d => d !== correct)
+      .slice(0, count);
+  }
 
   function generateQuestion() {
-    let var1 = Math.floor(Math.random() * 15) + 1;
-    let var2 = Math.floor(Math.random() * 15) + 1;
+    isProcessing = false;
+    
+    // Dificultad incremental según el nivel
+    const maxNum = level === 'beta' ? 25 : 15; 
+    let var1 = Math.floor(Math.random() * maxNum) + 1;
+    let var2 = Math.floor(Math.random() * maxNum) + 1;
 
     const isAddition = Math.random() > 0.5;
 
@@ -173,13 +275,13 @@ import Layout from '../layouts/Layout.astro';
     const correctAnswer = isAddition ? (var1 + var2) : (var1 - var2);
     const operator = isAddition ? '+' : '-';
 
-    let wrong1 = correctAnswer + Math.floor(Math.random() * 3) + 1;
-    if (wrong1 === correctAnswer) wrong1 += 1;
+    // Determinar número de opciones (Alfa: 2, Beta: 4)
+    const optionsCount = level === 'alfa' ? 2 : 4;
+    const distractors = generateSmartDistractors(var1, var2, correctAnswer, isAddition, optionsCount - 1);
 
-    // Solo 2 opciones para Alfa
     const options = [
       { value: correctAnswer, isCorrect: true },
-      { value: wrong1, isCorrect: false }
+      ...distractors.map(d => ({ value: d, isCorrect: false }))
     ];
 
     options.sort(() => Math.random() - 0.5);
@@ -189,13 +291,14 @@ import Layout from '../layouts/Layout.astro';
     }
 
     renderOptions(options);
+    startTimer();
   }
 
   function renderOptions(options: { value: number; isCorrect: boolean }[]) {
     if (!optionsContainer) return;
     optionsContainer.innerHTML = '';
 
-    const labels = ['A', 'B'];
+    const labels = ['A', 'B', 'C', 'D'];
 
     options.forEach((opt, index) => {
       const btn = document.createElement('button');
@@ -203,30 +306,47 @@ import Layout from '../layouts/Layout.astro';
       btn.textContent = `Opción ${labels[index]}: ${opt.value}`;
 
       btn.addEventListener('click', () => {
-        checkAnswer(opt.isCorrect);
+        checkAnswer(opt.isCorrect, btn);
       });
 
       optionsContainer.appendChild(btn);
     });
   }
 
-  function checkAnswer(isCorrect: boolean) {
-    if (!feedbackEl) return;
+  function checkAnswer(isCorrect: boolean, btnElement: HTMLButtonElement) {
+    if (isProcessing) return; // Bloquea clics adicionales mientras se procesa la transición
+    
+    clearInterval(timerId); // Frena el temporizador activo
 
     if (isCorrect) {
-      feedbackEl.textContent = "¡Correcto!";
-      feedbackEl.className = "feedback correct";
+      isProcessing = true;
+      if (feedbackEl) {
+        feedbackEl.textContent = "¡Correcto!";
+        feedbackEl.className = "feedback correct";
+      }
+      btnElement.style.background = "#16a34a"; // Feedback de color inmediato
 
       setTimeout(() => {
-        feedbackEl.textContent = "";
+        if (feedbackEl) feedbackEl.textContent = "";
         generateQuestion();
       }, 1500);
 
     } else {
-      feedbackEl.textContent = "Intenta de nuevo";
-      feedbackEl.className = "feedback incorrect";
+      if (feedbackEl) {
+        feedbackEl.textContent = "Intenta de nuevo";
+        feedbackEl.className = "feedback incorrect";
+      }
+      btnElement.style.background = "#ef4444";
+      btnElement.style.transform = "scale(0.95)";
+      
+      // Restablece sutilmente el botón incorrecto tras el parpadeo
+      setTimeout(() => {
+         btnElement.style.background = "";
+         btnElement.style.transform = "";
+      }, 500);
     }
   }
 
+  // Inicializar juego al cargar
   generateQuestion();
 </script>
