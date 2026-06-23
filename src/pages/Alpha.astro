@@ -39,6 +39,11 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA
       <h2 id="math-question">Cargando...</h2>
     </div>
 
+    <div id="timer-box" class="timer-box hidden">
+      <span class="timer-icon">⏱️</span>
+      <span id="time-left">60</span>s
+    </div>
+
     <div class="fruits-container" id="options-container"></div>
 
     <p id="feedback-message" class="feedback"></p>
@@ -229,7 +234,7 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA
     backdrop-filter: blur(25px) saturate(180%);
     -webkit-backdrop-filter: blur(25px) saturate(180%);
     color: #ffffff;
-    padding: 2.5rem 5rem;
+    padding: 2.5rem 3rem;
     border-radius: 28px;
     border: 1px solid rgba(255, 255, 255, 0.15);
     background-clip: padding-box;
@@ -239,7 +244,8 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA
       inset 0 -1px 2px rgba(255, 255, 255, 0.05),
       0 0 0 1px rgba(255, 255, 255, 0.08);
     margin-bottom: 2.5rem;
-    min-width: 360px;
+    width: 100%;
+    max-width: 680px;
     position: relative;
     z-index: 1;
   }
@@ -251,6 +257,99 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA
     letter-spacing: 5px;
     color: #ffffff;
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  }
+
+  /* ── Challenge card styles (fracciones / geometría) ── */
+  .challenge-card {
+    text-align: left;
+    animation: fadeSlideIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(12px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0)   scale(1);    }
+  }
+
+  .challenge-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .challenge-icon {
+    font-size: 2rem;
+    line-height: 1;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
+  }
+
+  .challenge-badge {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 50px;
+    padding: 0.2rem 0.9rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #e0e7ff;
+    backdrop-filter: blur(8px);
+  }
+
+  .challenge-body {
+    font-size: 1.25rem;
+    line-height: 1.7;
+    color: #f1f5f9;
+    margin: 0;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+  }
+
+  .challenge-body strong {
+    color: #fbbf24;
+    font-weight: 800;
+  }
+
+  .challenge-body em {
+    display: block;
+    margin-top: 0.6rem;
+    color: #a5f3fc;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 1.15rem;
+  }
+
+  /* ── Fracción matemática apilada ── */
+  .frac {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    margin: 0 0.35em;
+    line-height: 1;
+    font-size: 1em;
+  }
+  .frac-num {
+    font-size: 0.9em;
+    font-weight: 900;
+    color: #fde68a;
+    line-height: 1.2;
+    padding: 0 0.2em 0.05em;
+    border-bottom: 2.5px solid #fbbf24;
+    min-width: 1em;
+    text-align: center;
+    letter-spacing: 0;
+  }
+  .frac-den {
+    font-size: 0.9em;
+    font-weight: 900;
+    color: #fde68a;
+    line-height: 1.2;
+    padding: 0.05em 0.2em 0;
+    min-width: 1em;
+    text-align: center;
+    letter-spacing: 0;
   }
 
   .fruits-container {
@@ -328,6 +427,33 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA
   .fruit-btn:active {
     transform: translateY(-2px) scale(0.98);
   }
+
+  /* ── Timer box (sólo retos de 60 s) ── */
+  .timer-box {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: rgba(15, 23, 42, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 50px;
+    padding: 0.45rem 1.2rem;
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #a5f3fc;
+    backdrop-filter: blur(12px);
+    margin-bottom: 1rem;
+    transition: color 0.3s, border-color 0.3s;
+  }
+  .timer-box.timer-warning {
+    color: #f87171;
+    border-color: rgba(248, 113, 113, 0.5);
+    animation: timerPulse 0.8s ease-in-out infinite;
+  }
+  @keyframes timerPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+  .timer-icon { font-size: 1.1rem; }
 
   .feedback {
     font-size: 1.5rem;
@@ -407,6 +533,10 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA
 <script>
   import confetti from 'canvas-confetti';
   import { turnManager } from '../lib/turnManager';
+  import { ChallengePool } from '../utils/fracGeo';
+
+  // Pool de retos sin repetición – se rota todo el catálogo antes de volver a repetir
+  const challengePool = new ChallengePool('5to', 2);
   import { generateMathQuestion } from '../utils/mathGenerator';
 
   // --- CONTROL DEL MODAL DE REGLAS (NUEVO) ---
@@ -426,6 +556,53 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA
   const questionEl = document.getElementById('math-question');
   const optionsContainer = document.getElementById('options-container');
   const feedbackEl = document.getElementById('feedback-message');
+
+  let isAnswering = false;
+  let challengeTimer: ReturnType<typeof setInterval> | undefined;
+  const timerBox = document.getElementById('timer-box');
+  const timeLeftEl = document.getElementById('time-left');
+
+  function startChallengeTimer(duration: number) {
+    clearInterval(challengeTimer);
+    let timeLeft = duration;
+    if (timeLeftEl) timeLeftEl.textContent = String(timeLeft);
+    if (timerBox) { timerBox.classList.remove('hidden', 'timer-warning'); }
+
+    challengeTimer = setInterval(() => {
+      timeLeft--;
+      if (timeLeftEl) timeLeftEl.textContent = String(timeLeft);
+      if (timeLeft <= 10 && timerBox) timerBox.classList.add('timer-warning');
+      if (timeLeft <= 0) {
+        clearInterval(challengeTimer);
+        handleChallengeTimeout();
+      }
+    }, 1000);
+  }
+
+  function stopChallengeTimer() {
+    clearInterval(challengeTimer);
+    if (timerBox) timerBox.classList.add('hidden');
+  }
+
+  function handleChallengeTimeout() {
+    if (isAnswering) return;
+    isAnswering = true;
+    if (feedbackEl) {
+      feedbackEl.textContent = '⏰ ¡Tiempo agotado!';
+      feedbackEl.style.color = '#f87171';
+    }
+    // Disable buttons
+    document.querySelectorAll<HTMLButtonElement>('#options-container .fruit-btn')
+      .forEach(btn => { btn.disabled = true; btn.style.opacity = '0.5'; });
+    setTimeout(() => {
+      try {
+        turnManager.comenzarTurno();
+        turnManager.resolverTurno({ fueCorrecto: false });
+      } catch(e) { console.error(e); }
+      if (feedbackEl) { feedbackEl.textContent = ''; feedbackEl.style.color = ''; }
+      generateQuestion();
+    }, 2000);
+  }
 
   // Inicializar TurnManager y UI
   try {
@@ -459,6 +636,54 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA
   }
 
   function generateQuestion() {
+    isAnswering = false;
+    if (feedbackEl) feedbackEl.textContent = "";
+
+    // 50% de probabilidad de usar un reto de fracciones/geometría y 50% de operaciones simples
+    const useChallenge = Math.random() > 0.5;
+
+    if (useChallenge) {
+      const challenge = challengePool.next();
+      if (questionEl) {
+        questionEl.innerHTML = challenge.htmlQuestion;
+        questionEl.style.fontSize = '';
+        questionEl.style.letterSpacing = '';
+      }
+      startChallengeTimer(challenge.timeLimit);
+      renderOptions(challenge.options);
+    } else {
+      let var1 = Math.floor(Math.random() * 15) + 1;
+      let var2 = Math.floor(Math.random() * 15) + 1;
+      const isAddition = Math.random() > 0.5;
+
+      if (!isAddition && var1 < var2) {
+        let temp = var1;
+        var1 = var2;
+        var2 = temp;
+      }
+
+      const correctAnswer = isAddition ? (var1 + var2) : (var1 - var2);
+      const operator = isAddition ? '+' : '-';
+
+      let wrong1 = correctAnswer + Math.floor(Math.random() * 3) + 1;
+      if (wrong1 === correctAnswer) wrong1 += 1;
+
+      const options = [
+        { value: correctAnswer, isCorrect: true },
+        { value: wrong1, isCorrect: false }
+      ];
+
+      options.sort(() => Math.random() - 0.5);
+
+      if (questionEl) {
+        questionEl.textContent = `${var1} ${operator} ${var2} = ?`;
+        questionEl.style.fontSize = '4rem';
+        questionEl.style.letterSpacing = '5px';
+      }
+      stopChallengeTimer();
+
+      renderOptions(options);
+    }
     const question = generateMathQuestion('Alpha');
     
     if (questionEl) {
@@ -481,7 +706,7 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA
       btn.textContent = `Opción ${labels[index]}: ${opt.value}`;
 
       btn.addEventListener('click', () => {
-        checkAnswer(opt.isCorrect);
+        if (!isAnswering) checkAnswer(opt.isCorrect);
       });
 
       optionsContainer.appendChild(btn);
@@ -489,7 +714,9 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA
   }
 
   function checkAnswer(isCorrect: boolean) {
-    if (!feedbackEl || !optionsContainer) return;
+    if (!feedbackEl || !optionsContainer || isAnswering) return;
+    isAnswering = true;
+    stopChallengeTimer();
 
     try {
       turnManager.comenzarTurno();
