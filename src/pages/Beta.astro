@@ -4,6 +4,28 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA EN B
 ---
 
 <Layout showLevelButtons={true}>
+  <!-- MODAL DE BIENVENIDA Y REGLAS - MODO BETA (NUEVO) -->
+  <div id="rules-modal" class="modal-overlay">
+    <div class="modal-card animate-pop">
+      <div class="modal-header">
+        <span class="modal-icon">🚀</span>
+        <h2>¡Bienvenidos al Nivel Beta!</h2>
+      </div>
+      <div class="modal-body">
+        <p class="modal-subtitle">¡La dificultad aumenta en el espacio! Sigue las reglas:</p>
+        <ul class="rules-list">
+          <li><span>⚡</span> Tienes solo 15 segundos para resolver operaciones de multiplicación y división.</li>
+          <li><span>🎯</span> Si respondes bien, desbloquearás la ruleta espacial para avanzar.</li>
+          <li><span>🛸</span> Si el tiempo se agota o fallas, el turno pasará al siguiente equipo automáticamente. ¡Sé veloz!</li>
+        </ul>
+      </div>
+      <button type="button" id="btn-close-rules" class="modal-btn">
+        ¡Iniciar Misión! 🎲
+      </button>
+    </div>
+  </div>
+
+  <!-- CONTENEDOR PRINCIPAL -->
   <div class="game-container">
     <div class="header-beta">
       <h1 class="level-title">Nivel Beta</h1>
@@ -32,6 +54,109 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA EN B
   </div>
 </Layout>
 
+<style>
+  /* --- NUEVOS ESTILOS DEL MODAL ANIMADO EN MODO BETA --- */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(10, 15, 30, 0.9); /* Un tono más oscuro y espacial */
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+  }
+
+  .modal-card {
+    background: #ffffff;
+    width: 90%;
+    max-width: 500px;
+    padding: 2.5rem;
+    border-radius: 32px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+    text-align: center;
+    box-sizing: border-box;
+    border: 3px solid #3B82F6; /* Borde Azul característico de Beta */
+  }
+
+  .modal-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .modal-icon {
+    font-size: 3.5rem;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .modal-card h2 {
+    font-size: 2rem;
+    color: #1e3a5f;
+    margin: 0;
+    font-family: 'Fredoka', sans-serif;
+  }
+
+  .modal-subtitle {
+    font-size: 1.1rem;
+    color: #64748b;
+    margin-bottom: 1.5rem;
+  }
+
+  .rules-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 2rem 0;
+    text-align: left;
+  }
+
+  .rules-list li {
+    font-size: 1.05rem;
+    color: #334155;
+    margin-bottom: 1.2rem;
+    display: flex;
+    gap: 0.75rem;
+    line-height: 1.4;
+  }
+
+  .modal-btn {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); /* Degradado Azul */
+    color: white;
+    border: none;
+    padding: 1rem 2.5rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(29, 78, 216, 0.4);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .modal-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 25px rgba(29, 78, 216, 0.5);
+  }
+
+  /* Animaciones */
+  .animate-pop {
+    animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  .modal-fade-out {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+  }
+
+  @keyframes popIn {
+    0% { transform: scale(0.7); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  /* --- TU CSS ORIGINAL (SE MANTIENE INTEGRO) --- */
 <style is:global>
   /* ... Todo tu CSS original se mantiene exactamente igual ... */
   .game-container {
@@ -433,6 +558,7 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA EN B
 
   // Pool de retos sin repetición – se rota todo el catálogo antes de volver a repetir
   const challengePool = new ChallengePool('6to', 3);
+  import { generateMathQuestion } from '../utils/mathGenerator';
 
   // Inicializar TurnManager y UI
   try {
@@ -471,12 +597,21 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA EN B
   const timeLeftEl = document.getElementById('time-left');
   const timerBox = document.querySelector('.timer-box');
 
+  // --- VARIABLES DE CONTROL DEL MODAL (NUEVO) ---
+  const rulesModal = document.getElementById('rules-modal');
+  const btnCloseRules = document.getElementById('btn-close-rules');
+  let modalAbierto = true; // Flag para impedir que corra el tiempo al inicio
+
   let timer: ReturnType<typeof setInterval> | undefined;
   let timeLeft = 15;
   let isAnswering = false;
 
   function startTimer(duration: number = 15) {
     timeLeft = duration;
+  function startTimer() {
+    if (modalAbierto) return; // Si las reglas están en pantalla, NO iniciamos el reloj
+    
+    timeLeft = 15;
     if (timeLeftEl) timeLeftEl.textContent = timeLeft.toString();
     if (timerBox) timerBox.classList.remove('timer-warning');
     clearInterval(timer);
@@ -575,6 +710,14 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA EN B
       renderOptions(options);
     }
     startTimer(15);
+    const question = generateMathQuestion('Beta');
+
+    if (questionEl) {
+      questionEl.textContent = question.text;
+    }
+
+    renderOptions(question.options);
+    startTimer();
   }
 
   function renderOptions(options: { value: number; isCorrect: boolean }[]) {
@@ -661,7 +804,18 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA EN B
     }
   }
 
-  // 4. NUEVO: Escuchar cuando la ruleta termine para reiniciar todo en Beta
+  // Lógica para cerrar el Modal e iniciar formalmente el conteo regresivo
+  if (btnCloseRules && rulesModal) {
+    btnCloseRules.addEventListener('click', () => {
+      rulesModal.classList.add('modal-fade-out');
+      setTimeout(() => {
+        rulesModal.style.display = 'none';
+        modalAbierto = false; // Desbloquea el reloj
+        startTimer();        // Activa los 15 segundos ahora sí
+      }, 400);
+    });
+  }
+
   document.addEventListener('siguienteTurno', () => {
     try {
       turnManager.siguienteTurno();
@@ -669,14 +823,14 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA EN B
     } catch(e) { console.error(e) }
 
     if (feedbackEl) feedbackEl.textContent = "";
-    if (optionsContainer) optionsContainer.style.display = 'flex'; // Regresamos las 3 respuestas visualmente
-    generateQuestion(); // Esto genera nueva pregunta y reinicia el timer solo
+    if (optionsContainer) optionsContainer.style.display = 'flex'; 
+    generateQuestion(); 
   });
 
-  // 5. NUEVO: Escuchar los pasos para avanzar ficha (Consola)
   document.addEventListener('avanzarFicha', (e: any) => {
     console.log(`Beta: El jugador saca dado de ${e.detail.pasos}. Mover ficha.`);
   });
 
+  // Genera la pregunta base (las respuestas se pintan pero el reloj esperará el clic del modal)
   generateQuestion();
 </script>
