@@ -4,6 +4,26 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA
 ---
 
 <Layout showLevelButtons={true}>
+  <div id="rules-modal" class="modal-overlay">
+    <div class="modal-card animate-pop">
+      <div class="modal-header">
+        <span class="modal-icon">🦆</span>
+        <h2>¡Bienvenidos al Nivel Alfa!</h2>
+      </div>
+      <div class="modal-body">
+        <p class="modal-subtitle">Sigue estas reglas para ganar la carrera:</p>
+        <ul class="rules-list">
+          <li><span>✌️</span> Resuelve la suma o resta mágica correctamente para desbloquear la ruleta.</li>
+          <li><span>🎯</span> Presiona el botón central para girar la ruleta y descubrir cuántos pasos avanzas.</li>
+          <li><span>🚀</span> ¡Salta de oca en oca y vuela directo a la meta antes que los demás!</li>
+        </ul>
+      </div>
+      <button type="button" id="btn-close-rules" class="modal-btn">
+        ¡Entendido, a Jugar! 🎲
+      </button>
+    </div>
+  </div>
+
   <div class="game-container">
     <h1 class="level-title">Nivel Alfa</h1>
 
@@ -27,6 +47,109 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA
   </div>
 </Layout>
 
+<style>
+  /* --- NUEVOS ESTILOS DEL MODAL ANIMADO DE REGLAS --- */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(15, 12, 38, 0.85);
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000; /* Siempre por encima del juego y ruletas */
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+  }
+
+  .modal-card {
+    background: #ffffff;
+    width: 90%;
+    max-width: 500px;
+    padding: 2.5rem;
+    border-radius: 32px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    box-sizing: border-box;
+    border: 3px solid #FF922B; /* Borde naranja del modo Alfa */
+  }
+
+  .modal-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .modal-icon {
+    font-size: 3.5rem;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .modal-card h2 {
+    font-size: 2rem;
+    color: #1e1b4b;
+    margin: 0;
+    font-family: 'Fredoka', sans-serif;
+  }
+
+  .modal-subtitle {
+    font-size: 1.1rem;
+    color: #64748b;
+    margin-bottom: 1.5rem;
+  }
+
+  .rules-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 2rem 0;
+    text-align: left;
+  }
+
+  .rules-list li {
+    font-size: 1.05rem;
+    color: #334155;
+    margin-bottom: 1.2rem;
+    display: flex;
+    gap: 0.75rem;
+    line-height: 1.4;
+  }
+
+  .modal-btn {
+    background: linear-gradient(135deg, #ff922b 0%, #f57c00 100%);
+    color: white;
+    border: none;
+    padding: 1rem 2.5rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(245, 124, 0, 0.4);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .modal-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 25px rgba(245, 124, 0, 0.5);
+  }
+
+  /* Animaciones del Modal */
+  .animate-pop {
+    animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  .modal-fade-out {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+  }
+
+  @keyframes popIn {
+    0% { transform: scale(0.7); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  /* --- TU CSS ORIGINAL (SIN MODIFICACIONES) --- */
 <style is:global>
   /* ... Tu CSS original se mantiene exactamente igual ... */
   .game-container {
@@ -286,6 +409,20 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA
   import { turnManager } from '../lib/turnManager';
   import { generateMathQuestion } from '../utils/mathGenerator';
 
+  // --- CONTROL DEL MODAL DE REGLAS (NUEVO) ---
+  const rulesModal = document.getElementById('rules-modal');
+  const btnCloseRules = document.getElementById('btn-close-rules');
+
+  if (btnCloseRules && rulesModal) {
+    btnCloseRules.addEventListener('click', () => {
+      rulesModal.classList.add('modal-fade-out'); // Inicia animación de desvanecimiento
+      setTimeout(() => {
+        rulesModal.style.display = 'none'; // Lo quita de pantalla por completo
+      }, 400);
+    });
+  }
+
+  // --- TU LÓGICA ORIGINAL DEL JUEGO ---
   const questionEl = document.getElementById('math-question');
   const optionsContainer = document.getElementById('options-container');
   const feedbackEl = document.getElementById('feedback-message');
@@ -372,7 +509,6 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA
         origin: { y: 0.6 }
       });
 
-      // 3. CAMBIO AQUÍ: Ocultamos los botones de respuestas y disparamos la ruleta
       optionsContainer.style.display = 'none'; 
       document.dispatchEvent(new CustomEvent('respuestaCorrecta'));
 
@@ -414,7 +550,6 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA
     }
   }
 
-  // 4. NUEVO: Escuchar cuando la ruleta termine su turno para pasar a la siguiente pregunta
   document.addEventListener('siguienteTurno', () => {
     try {
       turnManager.siguienteTurno();
@@ -422,11 +557,10 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA
     } catch(e) { console.error(e) }
 
     if (feedbackEl) feedbackEl.textContent = "";
-    if (optionsContainer) optionsContainer.style.display = 'flex'; // Regresamos las respuestas visualmente
+    if (optionsContainer) optionsContainer.style.display = 'flex'; 
     generateQuestion();
   });
 
-  // 5. OPCIONAL: Escuchar cuántas casillas debe avanzar (por si tienes código de fichas aquí)
   document.addEventListener('avanzarFicha', (e: any) => {
     console.log(`Mover la ficha del jugador: ${e.detail.pasos} espacios.`);
   });
