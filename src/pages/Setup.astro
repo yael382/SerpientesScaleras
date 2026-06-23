@@ -1,0 +1,1218 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout>
+  <div class="setup-container">
+    <div class="setup-card">
+      <div class="setup-header">
+        <a href="/" class="back-link">
+          <span class="back-arrow">←</span> Volver al Inicio
+        </a>
+        <h1 class="setup-title">Configuración de la Partida</h1>
+        <p class="setup-subtitle">¡Prepara a tus equipos y prepárate para jugar!</p>
+      </div>
+
+      <!-- SECCIÓN 1: Selección de Nivel -->
+      <div class="setup-section">
+        <h3 class="section-title">
+          <span class="step-num">1</span> Selecciona el Nivel de Dificultad
+        </h3>
+        <div class="level-selection-container">
+          <button type="button" class="level-btn active" id="btn-level-alpha" data-level="Alpha">
+            <span class="level-icon">🍎</span>
+            <div class="level-text-container">
+              <span class="level-name">Nivel Alfa</span>
+              <span class="level-desc">Sumas y Restas (6-8 años)</span>
+            </div>
+          </button>
+
+          <button type="button" class="level-btn" id="btn-level-beta" data-level="Beta">
+            <span class="level-icon">🚀</span>
+            <div class="level-text-container">
+              <span class="level-name">Nivel Beta</span>
+              <span class="level-desc">Multiplicación y División (9-12 años)</span>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- SECCIÓN 2: Cantidad de Equipos -->
+      <div class="setup-section">
+        <h3 class="section-title">
+          <span class="step-num">2</span> ¿Cuántos equipos van a jugar?
+        </h3>
+        <div class="qty-selection-container">
+          <button type="button" class="qty-btn" data-qty="2">2 Equipos</button>
+          <button type="button" class="qty-btn active" data-qty="3">3 Equipos</button>
+          <button type="button" class="qty-btn" data-qty="4">4 Equipos</button>
+        </div>
+      </div>
+
+      <!-- SECCIÓN 3: Personalizar Equipos -->
+      <div class="setup-section">
+        <h3 class="section-title">
+          <span class="step-num">3</span> Personaliza tus Equipos e Integrantes
+        </h3>
+        <div class="teams-grid" id="teams-grid">
+          
+          <!-- TARJETA EQUIPO 1 (Azul) -->
+          <div class="team-card team-blue" id="team-card-1">
+            <div class="card-header">
+              <div class="avatar-preview-circle" id="preview-avatar-1">🦁</div>
+              <input 
+                type="text" 
+                class="team-name-input" 
+                id="team-name-1" 
+                value="Equipo León" 
+                placeholder="Nombre del Equipo 1"
+                maxlength="20"
+              />
+            </div>
+            <div class="avatar-picker-section">
+              <span class="picker-label">Elige Mascota:</span>
+              <div class="avatar-options" data-team-id="1">
+                <button type="button" class="avatar-opt-btn active" data-emoji="🦁">🦁</button>
+                <button type="button" class="avatar-opt-btn" data-emoji="🦊">🦊</button>
+                <button type="button" class="avatar-opt-btn" data-emoji="🐼">🐼</button>
+                <button type="button" class="avatar-opt-btn" data-emoji="🐨">🐨</button>
+                <button type="button" class="avatar-opt-btn" data-emoji="🐸">🐸</button>
+                <button type="button" class="avatar-opt-btn" data-emoji="🐙">🐙</button>
+                <button type="button" class="avatar-opt-btn" data-emoji="🦖">🦖</button>
+                <button type="button" class="avatar-opt-btn" data-emoji="🦄">🦄</button>
+              </div>
+            </div>
+            <div class="members-section">
+              <span class="picker-label">Integrantes:</span>
+              <div class="member-input-row">
+                <input 
+                  type="text" 
+                  class="member-text-input" 
+                  id="member-input-1" 
+                  placeholder="Ej. Juanito"
+                  maxlength="15"
+                />
+                <button type="button" class="add-member-btn" data-team-id="1">+</button>
+              </div>
+              <div class="members-chips-container" id="members-container-1">
+                <!-- Se llena con chips de JS -->
+              </div>
+              <p class="empty-warning" id="empty-warning-1">⚠️ Agrega al menos un integrante</p>
+            </div>
+          </div>
+
+          <!-- TARJETA EQUIPO 2 (Naranja) -->
+          <div class="team-card team-orange" id="team-card-2">
+            <div class="card-header">
+              <div class="avatar-preview-circle" id="preview-avatar-2">🦊</div>
+              <input 
+                type="text" 
+                class="team-name-input" 
+                id="team-name-2" 
+                value="Equipo Zorro" 
+                placeholder="Nombre del Equipo 2"
+                maxlength="20"
+              />
+            </div>
+            <div class="avatar-picker-section">
+              <span class="picker-label">Elige Mascota:</span>
+              <div class="avatar-options" data-team-id="2">
+                <button type="button" class="avatar-opt-btn" data-emoji="🦁">🦁</button>
+                <button type="button" class="avatar-opt-btn active" data-emoji="🦊">🦊</button>
+                <button type="button" class="avatar-opt-btn" data-emoji="🐼">🐼</button>
+                <button type="button" class="avatar-opt-btn" data-emoji="🐨">🐨</button>
+                <button type="button" class="avatar-opt-btn" data-emoji="🐸">🐸</button>
+                <button type="button" class="avatar-opt-btn" data-emoji="🐙">🐙</button>
+                <button type="button" class="avatar-opt-btn" data-emoji="🦖">🦖</button>
+                <button type="button" class="avatar-opt-btn" data-emoji="🦄">🦄</button>
+              </div>
+            </div>
+            <div class="members-section">
+              <span class="picker-label">Integrantes:</span>
+              <div class="member-input-row">
+                <input 
+                  type="text" 
+                  class="member-text-input" 
+                  id="member-input-2" 
+                  placeholder="Ej. Anita"
+                  maxlength="15"
+                />
+                <button type="button" class="add-member-btn" data-team-id="2">+</button>
+              </div>
+              <div class="members-chips-container" id="members-container-2">
+                <!-- Se llena con chips de JS -->
+              </div>
+              <p class="empty-warning" id="empty-warning-2">⚠️ Agrega al menos un integrante</p>
+            </div>
+          </div>
+
+          <!-- TARJETA EQUIPO 3 (Verde) -->
+          <div class="team-card team-green" id="team-card-3">
+            <div class="card-header">
+              <div class="avatar-preview-circle" id="preview-avatar-3">🐼</div>
+              <input 
+                type="text" 
+                class="team-name-input" 
+                id="team-name-3" 
+                value="Equipo Panda" 
+                placeholder="Nombre del Equipo 3"
+                maxlength="20"
+              />
+            </div>
+            <div class="avatar-picker-section">
+              <span class="picker-label">Elige Mascota:</span>
+              <div class="avatar-options" data-team-id="3">
+                <button type="button" class="avatar-opt-btn" data-emoji="🦁">🦁</button>
+                <button type="button" class="avatar-opt-btn" data-emoji="🦊">🦊</button>
+                <button type="button" class="avatar-opt-btn active" data-emoji="🐼">🐼</button>
+                <button type="button" class="avatar-opt-btn" data-emoji="🐨">🐨</button>
+                <button type="button" class="avatar-opt-btn" data-emoji="🐸">🐸</button>
+                <button type="button" class="avatar-opt-btn" data-emoji="🐙">🐙</button>
+                <button type="button" class="avatar-opt-btn" data-emoji="🦖">🦖</button>
+                <button type="button" class="avatar-opt-btn" data-emoji="🦄">🦄</button>
+              </div>
+            </div>
+            <div class="members-section">
+              <span class="picker-label">Integrantes:</span>
+              <div class="member-input-row">
+                <input 
+                  type="text" 
+                  class="member-text-input" 
+                  id="member-input-3" 
+                  placeholder="Ej. Mateo"
+                  maxlength="15"
+                />
+                <button type="button" class="add-member-btn" data-team-id="3">+</button>
+              </div>
+              <div class="members-chips-container" id="members-container-3">
+                <!-- Se llena con chips de JS -->
+              </div>
+              <p class="empty-warning" id="empty-warning-3">⚠️ Agrega al menos un integrante</p>
+            </div>
+          </div>
+
+          <!-- TARJETA EQUIPO 4 (Morado) -->
+          <div class="team-card team-purple" id="team-card-4">
+            <div class="card-header">
+              <div class="avatar-preview-circle" id="preview-avatar-4">🐨</div>
+              <input 
+                type="text" 
+                class="team-name-input" 
+                id="team-name-4" 
+                value="Equipo Koala" 
+                placeholder="Nombre del Equipo 4"
+                maxlength="20"
+              />
+            </div>
+            <div class="avatar-picker-section">
+              <span class="picker-label">Elige Mascota:</span>
+              <div class="avatar-options" data-team-id="4">
+                <button type="button" class="avatar-opt-btn" data-emoji="🦁">🦁</button>
+                <button type="button" class="avatar-opt-btn" data-emoji="🦊">🦊</button>
+                <button type="button" class="avatar-opt-btn" data-emoji="🐼">🐼</button>
+                <button type="button" class="avatar-opt-btn active" data-emoji="🐨">🐨</button>
+                <button type="button" class="avatar-opt-btn" data-emoji="🐸">🐸</button>
+                <button type="button" class="avatar-opt-btn" data-emoji="🐙">🐙</button>
+                <button type="button" class="avatar-opt-btn" data-emoji="🦖">🦖</button>
+                <button type="button" class="avatar-opt-btn" data-emoji="🦄">🦄</button>
+              </div>
+            </div>
+            <div class="members-section">
+              <span class="picker-label">Integrantes:</span>
+              <div class="member-input-row">
+                <input 
+                  type="text" 
+                  class="member-text-input" 
+                  id="member-input-4" 
+                  placeholder="Ej. Sofi"
+                  maxlength="15"
+                />
+                <button type="button" class="add-member-btn" data-team-id="4">+</button>
+              </div>
+              <div class="members-chips-container" id="members-container-4">
+                <!-- Se llena con chips de JS -->
+              </div>
+              <p class="empty-warning" id="empty-warning-4">⚠️ Agrega al menos un integrante</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Botón Comenzar y Caja de Validación -->
+      <div class="actions-section">
+        <div id="error-message" class="error-toast hidden">
+          ⚠️ Por favor solucione los errores antes de comenzar.
+        </div>
+        <button type="button" id="btn-start" class="btn-start-adventure">
+          ¡Comenzar Aventura! 🎲
+        </button>
+      </div>
+
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .setup-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem 0;
+    animation: fadeInDown 0.6s ease-out;
+  }
+
+  @keyframes fadeInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .setup-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(243, 232, 255, 0.92));
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 3px solid rgba(192, 132, 252, 0.35);
+    border-radius: 32px;
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 950px;
+    box-shadow: 0 20px 50px rgba(124, 58, 237, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.6);
+  }
+
+  .setup-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    position: relative;
+  }
+
+  .back-link {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    text-decoration: none;
+    color: #7C3AED;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 1.05rem;
+    transition: all 0.2s ease;
+  }
+
+  .back-link:hover {
+    color: #6D28D9;
+    transform: translateY(-50%) translateX(-4px);
+  }
+
+  .setup-title {
+    font-size: 2.4rem;
+    color: #1F1035;
+    margin: 0 0 0.5rem 0;
+    font-weight: 800;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
+  }
+
+  .setup-subtitle {
+    font-size: 1.1rem;
+    color: #5C4A78;
+    margin: 0;
+    opacity: 0.9;
+  }
+
+  .setup-section {
+    margin-bottom: 2.5rem;
+    border-bottom: 2px dashed rgba(192, 132, 252, 0.2);
+    padding-bottom: 2.5rem;
+  }
+
+  .setup-section:last-of-type {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 1.5rem;
+  }
+
+  .section-title {
+    font-size: 1.4rem;
+    color: #2D1B4E;
+    margin: 0 0 1.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 700;
+  }
+
+  .step-num {
+    background: linear-gradient(135deg, #7C3AED, #9333EA);
+    color: #fff;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 1.1rem;
+    font-weight: 700;
+    box-shadow: 0 4px 10px rgba(124, 58, 237, 0.3);
+  }
+
+  /* Nivel Selection */
+  .level-selection-container {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .level-btn {
+    flex: 1;
+    min-width: 250px;
+    background: rgba(255, 255, 255, 0.7);
+    border: 3px solid rgba(192, 132, 252, 0.2);
+    border-radius: 20px;
+    padding: 1.2rem 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    text-align: left;
+  }
+
+  .level-btn:hover {
+    transform: translateY(-5px);
+    border-color: rgba(192, 132, 252, 0.6);
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 10px 25px rgba(124, 58, 237, 0.08);
+  }
+
+  .level-btn.active {
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.08), rgba(192, 132, 252, 0.15));
+    border-color: #7C3AED;
+    box-shadow: 0 8px 24px rgba(124, 58, 237, 0.15);
+  }
+
+  .level-icon {
+    font-size: 2.2rem;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+    transition: transform 0.3s ease;
+  }
+
+  .level-btn:hover .level-icon {
+    transform: rotate(10deg) scale(1.1);
+  }
+
+  .level-text-container {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .level-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1F1035;
+  }
+
+  .level-desc {
+    font-size: 0.9rem;
+    color: #6B5A88;
+  }
+
+  /* Cantidad de Equipos */
+  .qty-selection-container {
+    display: flex;
+    gap: 1.2rem;
+  }
+
+  .qty-btn {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.7);
+    border: 3px solid rgba(192, 132, 252, 0.2);
+    border-radius: 16px;
+    padding: 1rem;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #2D1B4E;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .qty-btn:hover {
+    transform: translateY(-3px);
+    border-color: rgba(192, 132, 252, 0.6);
+    background: rgba(255, 255, 255, 0.95);
+  }
+
+  .qty-btn.active {
+    background: linear-gradient(135deg, #7C3AED, #9333EA);
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 8px 20px rgba(124, 58, 237, 0.35);
+  }
+
+  /* Grid de Equipos */
+  .teams-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .team-card {
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 24px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    transition: all 0.3s ease;
+    position: relative;
+    border: 3px solid transparent;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+  }
+
+  /* Colores temáticos de equipos */
+  .team-blue {
+    border-color: rgba(59, 130, 246, 0.25);
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(255, 255, 255, 0.85));
+  }
+  .team-blue:focus-within, .team-blue.active-glow {
+    border-color: #3B82F6;
+    box-shadow: 0 12px 30px rgba(59, 130, 246, 0.15);
+  }
+
+  .team-orange {
+    border-color: rgba(249, 115, 22, 0.25);
+    background: linear-gradient(135deg, rgba(249, 115, 22, 0.05), rgba(255, 255, 255, 0.85));
+  }
+  .team-orange:focus-within, .team-orange.active-glow {
+    border-color: #F97316;
+    box-shadow: 0 12px 30px rgba(249, 115, 22, 0.15);
+  }
+
+  .team-green {
+    border-color: rgba(16, 185, 129, 0.25);
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(255, 255, 255, 0.85));
+  }
+  .team-green:focus-within, .team-green.active-glow {
+    border-color: #10B981;
+    box-shadow: 0 12px 30px rgba(16, 185, 129, 0.15);
+  }
+
+  .team-purple {
+    border-color: rgba(139, 92, 246, 0.25);
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.05), rgba(255, 255, 255, 0.85));
+  }
+  .team-purple:focus-within, .team-purple.active-glow {
+    border-color: #8B5CF6;
+    box-shadow: 0 12px 30px rgba(139, 92, 246, 0.15);
+  }
+
+  /* Animación de ocultar tarjeta */
+  .team-card.hidden-card {
+    display: none !important;
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .avatar-preview-circle {
+    width: 50px;
+    height: 50px;
+    background: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 2px solid rgba(0, 0, 0, 0.05);
+  }
+
+  .team-name-input {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.6);
+    border: 2px solid rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+    padding: 0.6rem 0.8rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1F1035;
+    outline: none;
+    transition: all 0.2s ease;
+  }
+
+  .team-name-input:focus {
+    background: #fff;
+    border-color: rgba(124, 58, 237, 0.4);
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+  }
+
+  /* Avatar Picker */
+  .avatar-picker-section {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .picker-label {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #5C4A78;
+    margin-bottom: 2px;
+  }
+
+  .avatar-options {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .avatar-opt-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    background: #fff;
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  }
+
+  .avatar-opt-btn:hover {
+    transform: scale(1.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .avatar-opt-btn.active {
+    transform: scale(1.25);
+    border-color: #7C3AED;
+    box-shadow: 0 4px 10px rgba(124, 58, 237, 0.25);
+    z-index: 2;
+  }
+
+  /* Integrantes */
+  .members-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+  }
+
+  .member-input-row {
+    display: flex;
+    gap: 8px;
+  }
+
+  .member-text-input {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.6);
+    border: 2px solid rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+    padding: 0.5rem 0.8rem;
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.2s ease;
+  }
+
+  .member-text-input:focus {
+    background: #fff;
+    border-color: rgba(124, 58, 237, 0.4);
+  }
+
+  .add-member-btn {
+    background: linear-gradient(135deg, #7C3AED, #9333EA);
+    color: #fff;
+    border: none;
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    font-size: 1.4rem;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 4px 8px rgba(124, 58, 237, 0.2);
+  }
+
+  .add-member-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 12px rgba(124, 58, 237, 0.3);
+  }
+
+  .add-member-btn:active {
+    transform: scale(0.95);
+  }
+
+  /* Member chips */
+  .members-chips-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 4px;
+    min-height: 30px;
+  }
+
+  .member-chip {
+    background: #fff;
+    border: 2px solid rgba(124, 58, 237, 0.15);
+    color: #2D1B4E;
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 0.3rem 0.6rem;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+    animation: chipPopIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes chipPopIn {
+    from {
+      transform: scale(0.5);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  .remove-member-btn {
+    border: none;
+    background: transparent;
+    color: #ef4444;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 2px;
+    transition: color 0.2s ease, transform 0.2s ease;
+  }
+
+  .remove-member-btn:hover {
+    color: #dc2626;
+    transform: scale(1.2);
+  }
+
+  .empty-warning {
+    font-size: 0.85rem;
+    color: #ea580c;
+    margin: 4px 0 0 0;
+    font-weight: 500;
+    display: none;
+  }
+
+  .empty-warning.visible-warning {
+    display: block;
+    animation: shake 0.4s ease;
+  }
+
+  /* Acciones de envío */
+  .actions-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .error-toast {
+    background: #fef2f2;
+    border: 2px solid #fca5a5;
+    color: #dc2626;
+    padding: 0.8rem 1.5rem;
+    border-radius: 16px;
+    font-weight: 700;
+    font-size: 1rem;
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.1);
+    animation: shake 0.5s ease;
+  }
+
+  .error-toast.hidden {
+    display: none !important;
+  }
+
+  .btn-start-adventure {
+    background: linear-gradient(135deg, #10B981, #059669);
+    color: #fff;
+    border: none;
+    font-size: 1.6rem;
+    font-weight: 800;
+    padding: 1.2rem 3.5rem;
+    border-radius: 24px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4);
+  }
+
+  .btn-start-adventure:hover {
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0 15px 35px rgba(16, 185, 129, 0.55);
+  }
+
+  .btn-start-adventure:active {
+    transform: translateY(-2px) scale(0.98);
+  }
+
+  /* Shaking Animation for errors */
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    75% { transform: translateX(8px); }
+  }
+
+  .shake-anim {
+    animation: shake 0.4s ease;
+  }
+
+  @media (max-width: 650px) {
+    .setup-card {
+      padding: 1.5rem;
+    }
+    .back-link {
+      position: static;
+      transform: none;
+      margin-bottom: 1rem;
+      justify-content: center;
+    }
+    .setup-header {
+      margin-bottom: 1.5rem;
+    }
+    .setup-title {
+      font-size: 1.8rem;
+    }
+    .level-selection-container {
+      flex-direction: column;
+    }
+    .qty-selection-container {
+      flex-direction: column;
+    }
+    .btn-start-adventure {
+      width: 100%;
+      padding: 1rem 2rem;
+      font-size: 1.3rem;
+    }
+  }
+</style>
+
+<script>
+  // Estructura de estado en cliente
+  interface Team {
+    id: number;
+    name: string;
+    avatar: string;
+    members: string[];
+    colorClass: string;
+    hexColor: string;
+  }
+
+  interface SetupState {
+    level: string;
+    qty: number;
+    teams: Team[];
+  }
+
+  const state: SetupState = {
+    level: 'Alpha',
+    qty: 3,
+    teams: [
+      { id: 1, name: "Equipo León", avatar: "🦁", members: [], colorClass: "team-blue", hexColor: "#3B82F6" },
+      { id: 2, name: "Equipo Zorro", avatar: "🦊", members: [], colorClass: "team-orange", hexColor: "#F97316" },
+      { id: 3, name: "Equipo Panda", avatar: "🐼", members: [], colorClass: "team-green", hexColor: "#10B981" },
+      { id: 4, name: "Equipo Koala", avatar: "🐨", members: [], colorClass: "team-purple", hexColor: "#8B5CF6" }
+    ]
+  };
+
+  // Elementos del DOM
+  const btnLevelAlpha = document.getElementById('btn-level-alpha');
+  const btnLevelBeta = document.getElementById('btn-level-beta');
+  const qtyButtons = document.querySelectorAll('.qty-selection-container .qty-btn');
+  const teamCards = [
+    document.getElementById('team-card-1'),
+    document.getElementById('team-card-2'),
+    document.getElementById('team-card-3'),
+    document.getElementById('team-card-4')
+  ];
+  const btnStart = document.getElementById('btn-start');
+  const errorToast = document.getElementById('error-message');
+
+  // Inicializar leyendo parámetros URL
+  function init() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const lvlParam = urlParams.get('level');
+    
+    if (lvlParam === 'Beta') {
+      setLevel('Beta');
+    } else {
+      setLevel('Alpha');
+    }
+
+    // Por defecto inicializamos con 3 equipos
+    setTeamQuantity(3);
+
+    // Cargar configuraciones previas si existen
+    loadFromLocalStorage();
+
+    // Enlazar eventos de inputs, avatares y miembros
+    bindEvents();
+    
+    // Renderizar chips iniciales
+    updateAllChips();
+  }
+
+  // Cargar desde LocalStorage para no reescribir
+  function loadFromLocalStorage() {
+    try {
+      const saved = localStorage.getItem('serpientes_escaleras_setup');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.level) setLevel(parsed.level);
+        if (parsed.qty) setTeamQuantity(parsed.qty);
+        if (parsed.teams && Array.isArray(parsed.teams)) {
+          parsed.teams.forEach((t: any, index: number) => {
+            if (index < state.teams.length) {
+              if (t.name) {
+                state.teams[index].name = t.name;
+                const nameInput = document.getElementById(`team-name-${index + 1}`) as HTMLInputElement;
+                if (nameInput) nameInput.value = t.name;
+              }
+              if (t.avatar) {
+                state.teams[index].avatar = t.avatar;
+                const preview = document.getElementById(`preview-avatar-${index + 1}`);
+                if (preview) preview.textContent = t.avatar;
+
+                // Actualizar botón activo de avatar
+                const pickerContainer = document.querySelector(`.avatar-options[data-team-id="${index + 1}"]`);
+                if (pickerContainer) {
+                  pickerContainer.querySelectorAll('.avatar-opt-btn').forEach(btn => {
+                    const btnEmoji = btn.getAttribute('data-emoji');
+                    if (btnEmoji === t.avatar || (t.avatar === '🐨' && btnEmoji === 'Ko')) {
+                      btn.classList.add('active');
+                    } else {
+                      btn.classList.remove('active');
+                    }
+                  });
+                }
+              }
+              if (t.members) {
+                state.teams[index].members = t.members;
+              }
+            }
+          });
+        }
+      }
+    } catch (e) {
+      console.error("Error loading previous configuration", e);
+    }
+  }
+
+  // Guardar configuración de Nivel
+  function setLevel(lvl: string) {
+    state.level = lvl;
+    if (lvl === 'Alpha') {
+      btnLevelAlpha?.classList.add('active');
+      btnLevelBeta?.classList.remove('active');
+    } else {
+      btnLevelBeta?.classList.add('active');
+      btnLevelAlpha?.classList.remove('active');
+    }
+  }
+
+  // Cambiar cantidad de equipos (2 a 4)
+  function setTeamQuantity(qty: number) {
+    state.qty = qty;
+
+    // Actualizar botones de cantidad
+    qtyButtons.forEach(btn => {
+      const btnQty = parseInt(btn.getAttribute('data-qty') || '0', 10);
+      if (btnQty === qty) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+
+    // Mostrar/ocultar tarjetas correspondientes
+    teamCards.forEach((card, idx) => {
+      if (card) {
+        if (idx < qty) {
+          card.classList.remove('hidden-card');
+          card.classList.add('active-glow');
+        } else {
+          card.classList.add('hidden-card');
+          card.classList.remove('active-glow');
+        }
+      }
+    });
+
+    validateFormQuietly();
+  }
+
+  // Enlazar eventos generales
+  function bindEvents() {
+    // Eventos Nivel
+    btnLevelAlpha?.addEventListener('click', () => setLevel('Alpha'));
+    btnLevelBeta?.addEventListener('click', () => setLevel('Beta'));
+
+    // Eventos Cantidad
+    qtyButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const qty = parseInt(btn.getAttribute('data-qty') || '3', 10);
+        setTeamQuantity(qty);
+      });
+    });
+
+    // Eventos dentro de cada Tarjeta de Equipo
+    for (let i = 1; i <= 4; i++) {
+      // 1. Inputs de nombre del equipo
+      const nameInput = document.getElementById(`team-name-${i}`) as HTMLInputElement;
+      if (nameInput) {
+        nameInput.addEventListener('input', (e) => {
+          const val = (e.target as HTMLInputElement).value.trim();
+          state.teams[i - 1].name = val || `Equipo ${i}`;
+          validateFormQuietly();
+        });
+      }
+
+      // 2. Selectores de avatar (emoji)
+      const avatarContainer = document.querySelector(`.avatar-options[data-team-id="${i}"]`);
+      if (avatarContainer) {
+        avatarContainer.querySelectorAll('.avatar-opt-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const target = e.currentTarget as HTMLButtonElement;
+            let emoji = target.getAttribute('data-emoji') || '🦁';
+            if (emoji === 'Ko') emoji = '🐨'; // Normalizar
+            
+            // Actualizar estado
+            state.teams[i - 1].avatar = emoji;
+
+            // Actualizar preview visual
+            const preview = document.getElementById(`preview-avatar-${i}`);
+            if (preview) {
+              preview.textContent = emoji;
+              // Micro-animación de rebote
+              preview.style.transform = 'scale(1.3) rotate(-10deg)';
+              setTimeout(() => {
+                preview.style.transform = 'scale(1) rotate(0deg)';
+              }, 250);
+            }
+
+            // Cambiar clase activa en los botones de este contenedor
+            avatarContainer.querySelectorAll('.avatar-opt-btn').forEach(b => b.classList.remove('active'));
+            target.classList.add('active');
+          });
+        });
+      }
+
+      // 3. Input de integrante y botón Añadir
+      const memberInput = document.getElementById(`member-input-${i}`) as HTMLInputElement;
+      const addBtn = document.querySelector(`.add-member-btn[data-team-id="${i}"]`);
+
+      const handleAddMember = () => {
+        if (!memberInput) return;
+        const name = memberInput.value.trim();
+        if (name) {
+          // Validar que no esté repetido en el mismo equipo
+          if (state.teams[i - 1].members.includes(name)) {
+            memberInput.classList.add('shake-anim');
+            setTimeout(() => memberInput.classList.remove('shake-anim'), 400);
+            return;
+          }
+          
+          state.teams[i - 1].members.push(name);
+          memberInput.value = '';
+          updateChipsForTeam(i);
+          validateFormQuietly();
+        }
+      };
+
+      if (addBtn) {
+        addBtn.addEventListener('click', handleAddMember);
+      }
+      if (memberInput) {
+        memberInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            handleAddMember();
+          }
+        });
+      }
+    }
+
+    // Botón Iniciar juego
+    btnStart?.addEventListener('click', validateAndStart);
+  }
+
+  // Renderizar chips de integrantes para un equipo específico
+  function updateChipsForTeam(teamId: number) {
+    const container = document.getElementById(`members-container-${teamId}`);
+    const emptyWarning = document.getElementById(`empty-warning-${teamId}`);
+    if (!container) return;
+
+    container.innerHTML = '';
+    const members = state.teams[teamId - 1].members;
+
+    if (members.length === 0) {
+      if (emptyWarning) emptyWarning.classList.add('visible-warning');
+    } else {
+      if (emptyWarning) emptyWarning.classList.remove('visible-warning');
+    }
+
+    members.forEach((member, index) => {
+      const chip = document.createElement('span');
+      chip.className = 'member-chip';
+      chip.textContent = member;
+
+      const removeBtn = document.createElement('button');
+      removeBtn.className = 'remove-member-btn';
+      removeBtn.innerHTML = '&times;';
+      removeBtn.type = 'button';
+      removeBtn.addEventListener('click', () => {
+        state.teams[teamId - 1].members.splice(index, 1);
+        updateChipsForTeam(teamId);
+        validateFormQuietly();
+      });
+
+      chip.appendChild(removeBtn);
+      container.appendChild(chip);
+    });
+  }
+
+  // Renderizar chips de todos los equipos
+  function updateAllChips() {
+    for (let i = 1; i <= 4; i++) {
+      updateChipsForTeam(i);
+    }
+  }
+
+  // Validación silenciosa de errores en caliente (sin toast flotante)
+  function validateFormQuietly(): boolean {
+    let isValid = true;
+    const names = new Set<string>();
+
+    for (let i = 0; i < state.qty; i++) {
+      const team = state.teams[i];
+      const card = teamCards[i];
+      const emptyWarning = document.getElementById(`empty-warning-${i + 1}`);
+
+      // Validar integrantes
+      if (team.members.length === 0) {
+        isValid = false;
+        emptyWarning?.classList.add('visible-warning');
+      } else {
+        emptyWarning?.classList.remove('visible-warning');
+      }
+
+      // Validar nombres únicos y no vacíos
+      const cleanName = team.name.trim();
+      if (!cleanName) {
+        isValid = false;
+      }
+      if (names.has(cleanName)) {
+        isValid = false;
+      }
+      names.add(cleanName);
+    }
+
+    return isValid;
+  }
+
+  // Validación final y arranque de juego
+  function validateAndStart() {
+    let isValid = true;
+    let errorMessage = "";
+    const names = new Set<string>();
+
+    // Limpiar alertas de error previas
+    errorToast?.classList.add('hidden');
+
+    for (let i = 0; i < state.qty; i++) {
+      const team = state.teams[i];
+      const card = teamCards[i];
+      const emptyWarning = document.getElementById(`empty-warning-${i + 1}`);
+      const nameInput = document.getElementById(`team-name-${i + 1}`);
+
+      // Validar integrantes
+      if (team.members.length === 0) {
+        isValid = false;
+        emptyWarning?.classList.add('visible-warning');
+        card?.classList.add('shake-anim');
+        setTimeout(() => card?.classList.remove('shake-anim'), 500);
+        errorMessage = "Todos los equipos deben tener al menos un integrante.";
+      }
+
+      // Validar nombre vacío
+      const cleanName = team.name.trim();
+      if (!cleanName) {
+        isValid = false;
+        nameInput?.classList.add('shake-anim');
+        setTimeout(() => nameInput?.classList.remove('shake-anim'), 500);
+        errorMessage = "El nombre del equipo no puede estar vacío.";
+      }
+
+      // Validar nombres duplicados
+      if (names.has(cleanName)) {
+        isValid = false;
+        nameInput?.classList.add('shake-anim');
+        setTimeout(() => nameInput?.classList.remove('shake-anim'), 500);
+        errorMessage = "Cada equipo debe tener un nombre único.";
+      }
+      names.add(cleanName);
+    }
+
+    if (!isValid) {
+      if (errorToast) {
+        errorToast.textContent = `⚠️ ${errorMessage}`;
+        errorToast.classList.remove('hidden');
+        
+        // Sonido de error
+        const audioPerder = new Audio('/sounds/perder.mp3');
+        audioPerder.play().catch(err => console.log("Audio play blocked by browser:", err));
+      }
+      return;
+    }
+
+    // Guardar configuración limpia en LocalStorage (solo los equipos activos)
+    const finalData = {
+      level: state.level,
+      qty: state.qty,
+      teams: state.teams.slice(0, state.qty)
+    };
+
+    localStorage.setItem('serpientes_escaleras_setup', JSON.stringify(finalData));
+
+    // Sonido de victoria al iniciar
+    const audioGanar = new Audio('/sounds/Ganar.mp3');
+    audioGanar.play().catch(err => console.log("Audio play blocked by browser:", err));
+
+    // Efecto de botón antes de redirección
+    btnStart?.classList.add('shake-anim');
+    setTimeout(() => {
+      // Redirigir al nivel seleccionado
+      window.location.href = `/${state.level}`;
+    }, 800);
+  }
+
+  // Arrancar inicialización al cargar el DOM
+  document.addEventListener('DOMContentLoaded', init);
+</script>
