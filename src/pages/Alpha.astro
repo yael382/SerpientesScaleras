@@ -27,6 +27,14 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA
   <div class="game-container">
     <h1 class="level-title">Nivel Alfa</h1>
 
+    <div id="turn-indicator" class="turn-indicator hidden">
+      <div class="turn-avatar" id="turn-avatar">🦁</div>
+      <div class="turn-info">
+        <div class="turn-team" id="turn-team">Cargando equipo...</div>
+        <div class="turn-member">Turno de: <strong id="turn-member">...</strong></div>
+      </div>
+    </div>
+
     <div class="screen">
       <h2 id="math-question">Cargando...</h2>
     </div>
@@ -142,6 +150,8 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA
   }
 
   /* --- TU CSS ORIGINAL (SIN MODIFICACIONES) --- */
+<style is:global>
+  /* ... Tu CSS original se mantiene exactamente igual ... */
   .game-container {
     display: flex;
     flex-direction: column;
@@ -168,29 +178,70 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA
     filter: drop-shadow(1px 1px 4px rgba(15, 23, 42, 0.15));
   }
 
+  .turn-indicator {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    padding: 10px 20px;
+    border-radius: 20px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    transition: all 0.3s ease;
+  }
+  .turn-indicator.hidden { display: none; }
+  .turn-avatar {
+    font-size: 2.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  }
+  .turn-info {
+    text-align: left;
+  }
+  .turn-team {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
+  }
+  .turn-member {
+    font-size: 1.1rem;
+    color: #e2e8f0;
+    margin-top: 2px;
+  }
+  .turn-member strong {
+    color: #fbbf24;
+    font-size: 1.3rem;
+  }
+
   .screen {
-    background: rgba(255, 255, 255, 0.24);
-    backdrop-filter: blur(20px);
-    color: #1e1b4b;
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.45), rgba(30, 41, 59, 0.25));
+    backdrop-filter: blur(25px) saturate(180%);
+    -webkit-backdrop-filter: blur(25px) saturate(180%);
+    color: #ffffff;
     padding: 2.5rem 5rem;
     border-radius: 28px;
-    border: 1px solid rgba(255, 255, 255, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     background-clip: padding-box;
     box-shadow: 
-      0 18px 48px rgba(15, 23, 42, 0.14),
-      inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+      0 24px 60px rgba(0, 0, 0, 0.4), 
+      inset 0 1px 1px rgba(255, 255, 255, 0.12),
+      inset 0 -1px 2px rgba(255, 255, 255, 0.05),
+      0 0 0 1px rgba(255, 255, 255, 0.08);
     margin-bottom: 2.5rem;
     min-width: 360px;
     position: relative;
-  }
-
-  .screen::before {
-    content: '';
-    position: absolute;
-    inset: -2px;
-    border-radius: 26px;
-    background: rgba(255, 255, 255, 0.18);
-    z-index: -1;
+    z-index: 1;
   }
 
   #math-question {
@@ -198,7 +249,8 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA
     margin: 0;
     font-family: 'Fredoka', monospace;
     letter-spacing: 5px;
-    color: #1e1b4b;
+    color: #ffffff;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
   }
 
   .fruits-container {
@@ -206,61 +258,74 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA
     gap: 2rem;
     justify-content: center;
     flex-wrap: wrap;
+    position: relative;
+    z-index: 2;
   }
 
-  :global(.fruit-btn) {
-    background: rgba(255, 255, 255, 0.18);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    color: #ffffff;
-    font-size: 2.1rem;
-    font-weight: 800;
-    padding: 1.6rem 2.4rem;
-    border-radius: 32px;
+  .fruit-btn {
+    border-radius: 24px;
     cursor: pointer;
     transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
     min-width: 220px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.16);
+    font-size: 2.1rem;
+    font-weight: 800;
+    padding: 1.6rem 2.4rem;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3);
     position: relative;
     overflow: hidden;
-    backdrop-filter: blur(16px);
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color: #ffffff !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   }
 
-  :global(.fruit-btn::before) {
+  .fruit-btn::before {
     content: '';
     position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0.08) 40%, transparent 100%);
-    pointer-events: none;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.3),
+      transparent
+    );
+    transition: all 0.6s ease;
+    transform: skewX(-25deg);
   }
 
-  :global(.fruit-btn:hover) {
-    transform: translateY(-10px) scale(1.03);
-    box-shadow: 0 24px 50px rgba(0, 0, 0, 0.2);
+  .fruit-btn:hover::before {
+    left: 150%;
   }
 
-  :global(.fruit-btn.blue-card) {
-    background: rgba(59, 130, 246, 0.24);
-    border-color: rgba(59, 130, 246, 0.55);
+  .fruit-btn:hover {
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.2);
   }
 
-  :global(.fruit-btn.green-card) {
-    background: rgba(16, 185, 129, 0.24);
-    border-color: rgba(16, 185, 129, 0.55);
+  .fruit-btn.blue-card {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.5), rgba(59, 130, 246, 0.2));
+    border: 1px solid rgba(59, 130, 246, 0.5);
   }
 
-  :global(.fruit-btn.red-card) {
-    background: rgba(239, 68, 68, 0.24);
-    border-color: rgba(239, 68, 68, 0.55);
+  .fruit-btn.green-card {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.5), rgba(16, 185, 129, 0.2));
+    border: 1px solid rgba(16, 185, 129, 0.5);
   }
 
-  :global(.fruit-btn.yellow-card) {
-    background: rgba(234, 179, 8, 0.24);
-    border-color: rgba(234, 179, 8, 0.55);
-    color: #1f2937;
+  .fruit-btn.red-card {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.5), rgba(239, 68, 68, 0.2));
+    border: 1px solid rgba(239, 68, 68, 0.5);
   }
 
-  :global(.fruit-btn:active) {
+  .fruit-btn.yellow-card {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.55), rgba(245, 158, 11, 0.25));
+    border: 1px solid rgba(245, 158, 11, 0.5);
+  }
+
+  .fruit-btn:active {
     transform: translateY(-2px) scale(0.98);
   }
 
@@ -269,14 +334,15 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA
     font-weight: bold;
     margin-top: 2rem;
     min-height: 2rem;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
   }
 
-  :global(.correct) {
-    color: #16a34a;
+  .correct {
+    color: #22c55e;
     animation: correctPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
-  :global(.incorrect) {
+  .incorrect {
     color: #ef4444;
     animation: shake 0.5s ease;
   }
@@ -291,10 +357,57 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA
     25% { transform: translateX(-10px); }
     75% { transform: translateX(10px); }
   }
+
+  @media (max-width: 600px) {
+    .level-title {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+    }
+
+    .screen {
+      padding: 1.5rem 1rem;
+      border-radius: 20px;
+      margin-bottom: 1.5rem;
+      min-width: 0;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    #math-question {
+      font-size: 2.5rem;
+      letter-spacing: 2px;
+    }
+
+    .fruits-container {
+      gap: 1rem;
+      width: 100%;
+    }
+
+    :global(.fruit-btn) {
+      min-width: 0;
+      width: 100%;
+      box-sizing: border-box;
+      font-size: 1.4rem;
+      padding: 1.1rem 1.5rem;
+      border-radius: 16px;
+    }
+  }
+
+  @media (max-width: 360px) {
+    #math-question {
+      font-size: 2rem;
+    }
+    :global(.fruit-btn) {
+      font-size: 1.2rem;
+    }
+  }
+</style>
 </style>
 
 <script>
   import confetti from 'canvas-confetti';
+  import { turnManager } from '../lib/turnManager';
+  import { generateMathQuestion } from '../utils/mathGenerator';
 
   // --- CONTROL DEL MODAL DE REGLAS (NUEVO) ---
   const rulesModal = document.getElementById('rules-modal');
@@ -314,36 +427,45 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA
   const optionsContainer = document.getElementById('options-container');
   const feedbackEl = document.getElementById('feedback-message');
 
+  // Inicializar TurnManager y UI
+  try {
+    turnManager.inicializar();
+    updateTurnUI();
+  } catch (e) {
+    console.warn("Faltan datos de configuración, redirigiendo a Setup...");
+    window.location.href = '/Setup';
+  }
+
+  function updateTurnUI() {
+    try {
+      const turnInfo = turnManager.obtenerTurnoActual();
+      const indicator = document.getElementById('turn-indicator');
+      const avatarEl = document.getElementById('turn-avatar');
+      const teamEl = document.getElementById('turn-team');
+      const memberEl = document.getElementById('turn-member');
+
+      if (indicator && avatarEl && teamEl && memberEl) {
+        indicator.classList.remove('hidden');
+        avatarEl.textContent = turnInfo.equipo.avatar;
+        teamEl.textContent = turnInfo.equipo.name;
+        teamEl.style.color = turnInfo.equipo.hexColor;
+        memberEl.textContent = turnInfo.miembro;
+        indicator.style.borderColor = turnInfo.equipo.hexColor;
+        indicator.style.boxShadow = `0 8px 32px ${turnInfo.equipo.hexColor}40`;
+      }
+    } catch (e) {
+      console.error("Error al actualizar UI de turno:", e);
+    }
+  }
+
   function generateQuestion() {
-    let var1 = Math.floor(Math.random() * 15) + 1;
-    let var2 = Math.floor(Math.random() * 15) + 1;
-
-    const isAddition = Math.random() > 0.5;
-
-    if (!isAddition && var1 < var2) {
-      let temp = var1;
-      var1 = var2;
-      var2 = temp;
-    }
-
-    const correctAnswer = isAddition ? (var1 + var2) : (var1 - var2);
-    const operator = isAddition ? '+' : '-';
-
-    let wrong1 = correctAnswer + Math.floor(Math.random() * 3) + 1;
-    if (wrong1 === correctAnswer) wrong1 += 1;
-
-    const options = [
-      { value: correctAnswer, isCorrect: true },
-      { value: wrong1, isCorrect: false }
-    ];
-
-    options.sort(() => Math.random() - 0.5);
-
+    const question = generateMathQuestion('Alpha');
+    
     if (questionEl) {
-      questionEl.textContent = `${var1} ${operator} ${var2} = ?`;
+      questionEl.textContent = question.text;
     }
 
-    renderOptions(options);
+    renderOptions(question.options);
   }
 
   function renderOptions(options: { value: number; isCorrect: boolean }[]) {
@@ -368,6 +490,11 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA
 
   function checkAnswer(isCorrect: boolean) {
     if (!feedbackEl || !optionsContainer) return;
+
+    try {
+      turnManager.comenzarTurno();
+      turnManager.resolverTurno({ fueCorrecto: isCorrect });
+    } catch(e) { console.error(e) }
 
     if (isCorrect) {
       feedbackEl.textContent = "¡Correcto!";
@@ -411,10 +538,24 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA
           setTimeout(() => x.remove(), 2500);
         }, Math.random() * 600);
       }
+
+      // Pasar turno automáticamente si se equivoca
+      setTimeout(() => {
+        try {
+          turnManager.siguienteTurno();
+          updateTurnUI();
+        } catch(e) { console.error(e) }
+        generateQuestion();
+      }, 1500);
     }
   }
 
   document.addEventListener('siguienteTurno', () => {
+    try {
+      turnManager.siguienteTurno();
+      updateTurnUI();
+    } catch(e) { console.error(e) }
+
     if (feedbackEl) feedbackEl.textContent = "";
     if (optionsContainer) optionsContainer.style.display = 'flex'; 
     generateQuestion();

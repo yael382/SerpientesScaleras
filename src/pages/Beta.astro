@@ -34,6 +34,14 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA EN B
       </div>
     </div>
 
+    <div id="turn-indicator" class="turn-indicator hidden">
+      <div class="turn-avatar" id="turn-avatar">🦁</div>
+      <div class="turn-info">
+        <div class="turn-team" id="turn-team">Cargando equipo...</div>
+        <div class="turn-member">Turno de: <strong id="turn-member">...</strong></div>
+      </div>
+    </div>
+
     <div class="screen">
       <h2 id="math-question">Cargando...</h2>
     </div>
@@ -149,6 +157,8 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA EN B
   }
 
   /* --- TU CSS ORIGINAL (SE MANTIENE INTEGRO) --- */
+<style is:global>
+  /* ... Todo tu CSS original se mantiene exactamente igual ... */
   .game-container {
     display: flex;
     flex-direction: column;
@@ -184,6 +194,52 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA EN B
     filter: drop-shadow(1px 1px 4px rgba(15, 23, 42, 0.12));
   }
 
+  .turn-indicator {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    padding: 10px 20px;
+    border-radius: 20px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    transition: all 0.3s ease;
+  }
+  .turn-indicator.hidden { display: none; }
+  .turn-avatar {
+    font-size: 2.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  }
+  .turn-info {
+    text-align: left;
+  }
+  .turn-team {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
+  }
+  .turn-member {
+    font-size: 1.1rem;
+    color: #e2e8f0;
+    margin-top: 2px;
+  }
+  .turn-member strong {
+    color: #fbbf24;
+    font-size: 1.3rem;
+  }
+
   .timer-box {
     background: linear-gradient(135deg, #EF4444, #F97316);
     color: #fff;
@@ -210,27 +266,23 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA EN B
   }
 
   .screen {
-    background: rgba(255, 255, 255, 0.22);
-    backdrop-filter: blur(22px);
-    color: #1e3a5f;
-    padding: 2rem 4rem;
-    border-radius: 24px;
-    border: 1px solid rgba(255, 255, 255, 0.45);
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.45), rgba(30, 41, 59, 0.25));
+    backdrop-filter: blur(25px) saturate(180%);
+    -webkit-backdrop-filter: blur(25px) saturate(180%);
+    color: #ffffff;
+    padding: 2.5rem 5rem;
+    border-radius: 28px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background-clip: padding-box;
     box-shadow: 
-      0 16px 40px rgba(15, 23, 42, 0.12),
-      inset 0 0 0 1px rgba(255, 255, 255, 0.55);
-    margin-bottom: 2rem;
+      0 24px 60px rgba(0, 0, 0, 0.4), 
+      inset 0 1px 1px rgba(255, 255, 255, 0.12),
+      inset 0 -1px 2px rgba(255, 255, 255, 0.05),
+      0 0 0 1px rgba(255, 255, 255, 0.08);
+    margin-bottom: 2.5rem;
     min-width: 300px;
     position: relative;
-  }
-
-  .screen::before {
-    content: '';
-    position: absolute;
-    inset: -2px;
-    border-radius: 26px;
-    background: rgba(255, 255, 255, 0.18);
-    z-index: -1;
+    z-index: 1;
   }
 
   #math-question {
@@ -238,7 +290,8 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA EN B
     margin: 0;
     font-family: 'Fredoka', monospace;
     letter-spacing: 5px;
-    color: #1e1b4b;
+    color: #ffffff;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
   }
 
   .fruits-container {
@@ -246,61 +299,74 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA EN B
     gap: 1.5rem;
     justify-content: center;
     flex-wrap: wrap;
+    position: relative;
+    z-index: 2;
   }
 
-  :global(.fruit-btn) {
-    background: rgba(255, 255, 255, 0.18);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    color: #ffffff;
-    font-size: 2rem;
-    font-weight: 800;
-    padding: 1.4rem 2rem;
+  .fruit-btn {
     border-radius: 28px;
     cursor: pointer;
     transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
     min-width: 170px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.16);
+    font-size: 2rem;
+    font-weight: 800;
+    padding: 1.4rem 2rem;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3);
     position: relative;
     overflow: hidden;
-    backdrop-filter: blur(16px);
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color: #ffffff !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   }
 
-  :global(.fruit-btn::before) {
+  .fruit-btn::before {
     content: '';
     position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0.08) 40%, transparent 100%);
-    pointer-events: none;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.3),
+      transparent
+    );
+    transition: all 0.6s ease;
+    transform: skewX(-25deg);
   }
 
-  :global(.fruit-btn:hover) {
-    transform: translateY(-10px) scale(1.03);
-    box-shadow: 0 24px 50px rgba(0, 0, 0, 0.2);
+  .fruit-btn:hover::before {
+    left: 150%;
   }
 
-  :global(.fruit-btn.blue-card) {
-    background: rgba(59, 130, 246, 0.24);
-    border-color: rgba(59, 130, 246, 0.55);
+  .fruit-btn:hover {
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.2);
   }
 
-  :global(.fruit-btn.green-card) {
-    background: rgba(16, 185, 129, 0.24);
-    border-color: rgba(16, 185, 129, 0.55);
+  .fruit-btn.blue-card {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.5), rgba(59, 130, 246, 0.2));
+    border: 1px solid rgba(59, 130, 246, 0.5);
   }
 
-  :global(.fruit-btn.red-card) {
-    background: rgba(239, 68, 68, 0.24);
-    border-color: rgba(239, 68, 68, 0.55);
+  .fruit-btn.green-card {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.5), rgba(16, 185, 129, 0.2));
+    border: 1px solid rgba(16, 185, 129, 0.5);
   }
 
-  :global(.fruit-btn.yellow-card) {
-    background: rgba(234, 179, 8, 0.24);
-    border-color: rgba(234, 179, 8, 0.55);
-    color: #1f2937;
+  .fruit-btn.red-card {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.5), rgba(239, 68, 68, 0.2));
+    border: 1px solid rgba(239, 68, 68, 0.5);
   }
 
-  :global(.fruit-btn:active) {
+  .fruit-btn.yellow-card {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.55), rgba(245, 158, 11, 0.25));
+    border: 1px solid rgba(245, 158, 11, 0.5);
+  }
+
+  .fruit-btn:active {
     transform: translateY(-2px) scale(0.98);
   }
 
@@ -309,14 +375,15 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA EN B
     font-weight: bold;
     margin-top: 2rem;
     min-height: 2rem;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
   }
 
-  :global(.correct) {
-    color: #16a34a;
+  .correct {
+    color: #22c55e;
     animation: correctPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
-  :global(.incorrect) {
+  .incorrect {
     color: #ef4444;
     animation: shake 0.5s ease;
   }
@@ -331,11 +398,100 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA EN B
     25% { transform: translateX(-10px); }
     75% { transform: translateX(10px); }
   }
+
+  @media (max-width: 600px) {
+    .header-beta {
+      flex-direction: column;
+      gap: 0.8rem;
+      margin-bottom: 1rem;
+    }
+
+    .level-title {
+      font-size: 1.8rem;
+    }
+
+    .timer-box {
+      font-size: 1.1rem;
+      padding: 0.4rem 1rem;
+      border-radius: 12px;
+    }
+
+    .screen {
+      padding: 1.5rem 1rem;
+      border-radius: 20px;
+      margin-bottom: 1.5rem;
+      min-width: 0;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    #math-question {
+      font-size: 2.5rem;
+      letter-spacing: 2px;
+    }
+
+    .fruits-container {
+      gap: 1rem;
+      width: 100%;
+    }
+
+    :global(.fruit-btn) {
+      min-width: 0;
+      width: 100%;
+      box-sizing: border-box;
+      font-size: 1.4rem;
+      padding: 1.1rem 1.5rem;
+      border-radius: 16px;
+    }
+  }
+
+  @media (max-width: 360px) {
+    #math-question {
+      font-size: 2rem;
+    }
+    :global(.fruit-btn) {
+      font-size: 1.2rem;
+    }
+  }
+</style>
 </style>
 
 <script>
   //@ts-ignore
   import confetti from 'canvas-confetti';
+  import { turnManager } from '../lib/turnManager';
+  import { generateMathQuestion } from '../utils/mathGenerator';
+
+  // Inicializar TurnManager y UI
+  try {
+    turnManager.inicializar();
+    updateTurnUI();
+  } catch (e) {
+    console.warn("Faltan datos de configuración, redirigiendo a Setup...");
+    window.location.href = '/Setup';
+  }
+
+  function updateTurnUI() {
+    try {
+      const turnInfo = turnManager.obtenerTurnoActual();
+      const indicator = document.getElementById('turn-indicator');
+      const avatarEl = document.getElementById('turn-avatar');
+      const teamEl = document.getElementById('turn-team');
+      const memberEl = document.getElementById('turn-member');
+
+      if (indicator && avatarEl && teamEl && memberEl) {
+        indicator.classList.remove('hidden');
+        avatarEl.textContent = turnInfo.equipo.avatar;
+        teamEl.textContent = turnInfo.equipo.name;
+        teamEl.style.color = turnInfo.equipo.hexColor;
+        memberEl.textContent = turnInfo.miembro;
+        indicator.style.borderColor = turnInfo.equipo.hexColor;
+        indicator.style.boxShadow = `0 8px 32px ${turnInfo.equipo.hexColor}40`;
+      }
+    } catch (e) {
+      console.error("Error al actualizar UI de turno:", e);
+    }
+  }
 
   const questionEl = document.getElementById('math-question');
   const optionsContainer = document.getElementById('options-container');
@@ -377,11 +533,21 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA EN B
 
   function handleTimeOut() {
     isAnswering = true;
+
+    try {
+      turnManager.comenzarTurno();
+      turnManager.resolverTurno({ fueCorrecto: false });
+    } catch(e) { console.error(e) }
+
     if (feedbackEl) {
       feedbackEl.textContent = "¡Tiempo agotado!";
       feedbackEl.className = "feedback incorrect";
     }
     setTimeout(() => {
+      try {
+        turnManager.siguienteTurno();
+        updateTurnUI();
+      } catch(e) { console.error(e) }
       generateQuestion();
     }, 2000);
   }
@@ -390,41 +556,13 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA EN B
     isAnswering = false;
     if (feedbackEl) feedbackEl.textContent = "";
 
-    const isMultiplication = Math.random() > 0.5;
-    let var1, var2, correctAnswer, operator;
-
-    if (isMultiplication) {
-      var1 = Math.floor(Math.random() * 10) + 2;
-      var2 = Math.floor(Math.random() * 10) + 2;
-      correctAnswer = var1 * var2;
-      operator = '×';
-    } else {
-      var2 = Math.floor(Math.random() * 9) + 2;
-      correctAnswer = Math.floor(Math.random() * 10) + 2;
-      var1 = correctAnswer * var2;
-      operator = '÷';
-    }
-
-    let wrong1 = correctAnswer + Math.floor(Math.random() * 4) + 1;
-    let wrong2 = Math.max(1, correctAnswer - (Math.floor(Math.random() * 4) + 1));
-
-    if (wrong1 === wrong2) wrong1 += 1;
-    if (wrong1 === correctAnswer) wrong1 += 2;
-    if (wrong2 === correctAnswer) wrong2 -= 1;
-
-    const options = [
-      { value: correctAnswer, isCorrect: true },
-      { value: wrong1, isCorrect: false },
-      { value: wrong2, isCorrect: false }
-    ];
-
-    options.sort(() => Math.random() - 0.5);
+    const question = generateMathQuestion('Beta');
 
     if (questionEl) {
-      questionEl.textContent = `${var1} ${operator} ${var2} = ?`;
+      questionEl.textContent = question.text;
     }
 
-    renderOptions(options);
+    renderOptions(question.options);
     startTimer();
   }
 
@@ -453,6 +591,11 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA EN B
     clearInterval(timer);
 
     if (!feedbackEl || !optionsContainer) return;
+
+    try {
+      turnManager.comenzarTurno();
+      turnManager.resolverTurno({ fueCorrecto: isCorrect });
+    } catch(e) { console.error(e) }
 
     if (isCorrect) {
       feedbackEl.textContent = "¡Correcto!";
@@ -498,6 +641,10 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA EN B
       }
   
       setTimeout(() => {
+        try {
+          turnManager.siguienteTurno();
+          updateTurnUI();
+        } catch(e) { console.error(e) }
         generateQuestion();
       }, 1500);
     }
@@ -516,6 +663,11 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA EN B
   }
 
   document.addEventListener('siguienteTurno', () => {
+    try {
+      turnManager.siguienteTurno();
+      updateTurnUI();
+    } catch(e) { console.error(e) }
+
     if (feedbackEl) feedbackEl.textContent = "";
     if (optionsContainer) optionsContainer.style.display = 'flex'; 
     generateQuestion(); 
