@@ -54,19 +54,20 @@
     border-radius: 4px;
   }
 
-  /* Estilo base de cada casilla */
+  /* Estilo base de cada casilla (Optimizado para albergar fichas en su base) */
   :global(.casilla-nodo) {
-    width: 45px;
-    height: 45px;
+    width: 55px;
+    height: 55px;
     background: rgba(255, 255, 255, 0.1);
     border: 2px solid #c084fc;
     color: #ffffff;
     border-radius: 50%;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     font-weight: bold;
-    font-size: 1rem;
+    font-size: 0.95rem;
     transition: all 0.3s ease;
     position: relative;
     box-shadow: 0 0 10px rgba(192, 132, 252, 0.2);
@@ -83,19 +84,30 @@
     box-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
   }
 
-  /* Jugadores dentro de la casilla */
-  :global(.ficha-jugador) {
+  /* Contenedor flexible de fichas que evita que se encimen dentro de una casilla */
+  :global(.contenedor-fichas-casilla) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+    justify-content: center;
+    align-items: center;
     position: absolute;
-    bottom: -4px;
-    right: -4px;
-    font-size: 1.6rem;
+    bottom: -6px;
+    width: 100%;
+    pointer-events: none;
+  }
+
+  /* Jugadores dentro de la casilla (Estilizados sin absolute) */
+  :global(.ficha-jugador) {
+    font-size: 1.15rem;
     z-index: 10;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
     animation: brincar 0.5s infinite alternate;
   }
 
   @keyframes brincar {
     from { transform: translateY(0); }
-    to { transform: translateY(-5px); }
+    to { transform: translateY(-4px); }
   }
 </style>
 
@@ -114,7 +126,6 @@
       
       if (parsed.teams && Array.isArray(parsed.teams)) {
         parsed.teams.forEach((team: any) => {
-          // Mantener la posición si ya existía en la partida actual o iniciar en 1
           if (!posicionesEquipos[team.name]) {
             posicionesEquipos[team.name] = 1;
           }
@@ -135,12 +146,22 @@
   }
 
   function actualizarFichasVisuales() {
+    // 1. Limpiamos las fichas existentes y contenedores previos para reconstruir de forma limpia
     document.querySelectorAll('.ficha-jugador').forEach(f => f.remove());
+    document.querySelectorAll('.contenedor-fichas-casilla').forEach(c => c.remove());
 
     Object.entries(posicionesEquipos).forEach(([equipoName, casillaActual]) => {
       const casillaNodo = document.getElementById(`casilla-${casillaActual}`);
       
       if (casillaNodo) {
+        // 2. Creamos o recuperamos el contenedor flexible de fichas interno de la casilla
+        let contenedorFichas = casillaNodo.querySelector('.contenedor-fichas-casilla');
+        if (!contenedorFichas) {
+          contenedorFichas = document.createElement('div');
+          contenedorFichas.className = 'contenedor-fichas-casilla';
+          casillaNodo.appendChild(contenedorFichas);
+        }
+
         const saved = localStorage.getItem('serpientes_escaleras_setup');
         let avatar = '🦁'; 
         if (saved) {
@@ -152,13 +173,10 @@
         const ficha = document.createElement('span');
         ficha.className = 'ficha-jugador';
         ficha.innerText = avatar;
+        ficha.title = equipoName;
 
-        const fichasEnCasilla = casillaNodo.querySelectorAll('.ficha-jugador').length;
-        if (fichasEnCasilla > 0) {
-          ficha.style.transform = `translateX(${fichasEnCasilla * 12}px) translateY(${fichasEnCasilla * -2}px)`;
-        }
-
-        casillaNodo.appendChild(ficha);
+        // 3. Añadimos la ficha dentro del contenedor para que flexbox la acomode automáticamente sin encimarse
+        contenedorFichas.appendChild(ficha);
       }
     });
   }
@@ -171,19 +189,29 @@
       posicionesEquipos[equipoName] = 1;
     }
 
+    // Calcular la nueva posición sumando o restando los pasos
     let nuevaPosicion = posicionesEquipos[equipoName] + pasos;
+    let llegoAMeta = false;
 
+    // 🛡️ CONTROL DE LÍMITES SUPERIOR E INFERIOR
     if (nuevaPosicion >= totalCasillas) {
       nuevaPosicion = totalCasillas;
+      llegoAMeta = true;
       const info = document.getElementById('info-turno');
       if (info) info.innerHTML = `🎉 ¡El <strong>${equipoName}</strong> ha ganado el juego! 🏆`;
+    } else if (nuevaPosicion < 1) {
+      // Evita ir a casillas negativas o cero, devolviendo al jugador a la casilla de salida (1)
+      nuevaPosicion = 1; 
     }
 
-    document.dispatchEvent(new CustomEvent('juegoConcluido', { detail: { ganador: equipoName } }));
-    
-
+    // Actualizamos la posición real del equipo
     posicionesEquipos[equipoName] = nuevaPosicion;
     actualizarFichasVisuales();
+
+    // 🏆 SOLO SE LANZA EL EVENTO CONCLUIDO SI SE ALCANZA LA CASILLA META
+    if (llegoAMeta) {
+      document.dispatchEvent(new CustomEvent('juegoConcluido', { detail: { ganador: equipoName } }));
+    }
 
     const nodoDestino = document.getElementById(`casilla-${nuevaPosicion}`);
     if (nodoDestino) {
