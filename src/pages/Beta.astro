@@ -433,6 +433,7 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA EN B
 
   // Pool de retos sin repetición – se rota todo el catálogo antes de volver a repetir
   const challengePool = new ChallengePool('6to', 3);
+  import { generateMathQuestion } from '../utils/mathgenerator';
 
   // Inicializar TurnManager y UI
   try {
@@ -575,6 +576,14 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA EN B
       renderOptions(options);
     }
     startTimer(15);
+    const question = generateMathQuestion('Beta');
+
+    if (questionEl) {
+      questionEl.textContent = question.text;
+    }
+
+    renderOptions(question.options);
+    startTimer();
   }
 
   function renderOptions(options: { value: number; isCorrect: boolean }[]) {
