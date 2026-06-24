@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA
+import RuletaRetroceso from '../components/RuletaRetroceso.astro'; // 1. IMPORTAMOS LA RULETA DE RETROCESO
 import ModalAlpha from '../components/ModalAlpha.astro';// 2. IMPORTAMOS EL MODAL DE REGLAS
 ---
 
@@ -31,11 +32,11 @@ import ModalAlpha from '../components/ModalAlpha.astro';// 2. IMPORTAMOS EL MODA
     <p id="feedback-message" class="feedback"></p>
 
     <Ruleta />
+    <RuletaRetroceso />
   </div>
 </Layout>
 
 <style is:global>
-  /* ... Tu CSS original se mantiene exactamente igual ... */
   .game-container {
     display: flex;
     flex-direction: column;
@@ -138,7 +139,6 @@ import ModalAlpha from '../components/ModalAlpha.astro';// 2. IMPORTAMOS EL MODA
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
   }
 
-  /* ── Challenge card styles (fracciones / geometría) ── */
   .challenge-card {
     text-align: left;
     animation: fadeSlideIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
@@ -198,7 +198,6 @@ import ModalAlpha from '../components/ModalAlpha.astro';// 2. IMPORTAMOS EL MODA
     font-size: 1.15rem;
   }
 
-  /* ── Fracción matemática apilada ── */
   .frac {
     display: inline-flex;
     flex-direction: column;
@@ -264,12 +263,7 @@ import ModalAlpha from '../components/ModalAlpha.astro';// 2. IMPORTAMOS EL MODA
     left: -100%;
     width: 50%;
     height: 100%;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.3),
-      transparent
-    );
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
     transition: all 0.6s ease;
     transform: skewX(-25deg);
   }
@@ -307,7 +301,6 @@ import ModalAlpha from '../components/ModalAlpha.astro';// 2. IMPORTAMOS EL MODA
     transform: translateY(-2px) scale(0.98);
   }
 
-  /* ── Timer box (sólo retos de 60 s) ── */
   .timer-box {
     display: flex;
     align-items: center;
@@ -364,59 +357,26 @@ import ModalAlpha from '../components/ModalAlpha.astro';// 2. IMPORTAMOS EL MODA
   }
 
   @media (max-width: 600px) {
-    .level-title {
-      font-size: 1.8rem;
-      margin-bottom: 1rem;
-    }
-
-    .screen {
-      padding: 1.5rem 1rem;
-      border-radius: 20px;
-      margin-bottom: 1.5rem;
-      min-width: 0;
-      width: 100%;
-      box-sizing: border-box;
-    }
-
-    #math-question {
-      font-size: 2.5rem;
-      letter-spacing: 2px;
-    }
-
-    .fruits-container {
-      gap: 1rem;
-      width: 100%;
-    }
-
-    :global(.fruit-btn) {
-      min-width: 0;
-      width: 100%;
-      box-sizing: border-box;
-      font-size: 1.4rem;
-      padding: 1.1rem 1.5rem;
-      border-radius: 16px;
-    }
+    .level-title { font-size: 1.8rem; margin-bottom: 1rem; }
+    .screen { padding: 1.5rem 1rem; border-radius: 20px; margin-bottom: 1.5rem; min-width: 0; width: 100%; box-sizing: border-box; }
+    #math-question { font-size: 2.5rem; letter-spacing: 2px; }
+    .fruits-container { gap: 1rem; width: 100%; }
+    :global(.fruit-btn) { min-width: 0; width: 100%; box-sizing: border-box; font-size: 1.4rem; padding: 1.1rem 1.5rem; border-radius: 16px; }
   }
 
   @media (max-width: 360px) {
-    #math-question {
-      font-size: 2rem;
-    }
-    :global(.fruit-btn) {
-      font-size: 1.2rem;
-    }
+    #math-question { font-size: 2rem; }
+    :global(.fruit-btn) { font-size: 1.2rem; }
   }
-</style>
 </style>
 
 <script>
   import confetti from 'canvas-confetti';
   import { turnManager } from '../lib/turnManager';
   import { ChallengePool } from '../utils/fracGeo';
-
-  // Pool de retos sin repetición – se rota todo el catálogo antes de volver a repetir
-  const challengePool = new ChallengePool('5to', 2);
   import { generateMathQuestion } from '../utils/mathgenerator';
+
+  const challengePool = new ChallengePool('5to', 2);
 
   const questionEl = document.getElementById('math-question');
   const optionsContainer = document.getElementById('options-container');
@@ -456,7 +416,6 @@ import ModalAlpha from '../components/ModalAlpha.astro';// 2. IMPORTAMOS EL MODA
       feedbackEl.textContent = '⏰ ¡Tiempo agotado!';
       feedbackEl.style.color = '#f87171';
     }
-    // Disable buttons
     document.querySelectorAll<HTMLButtonElement>('#options-container .fruit-btn')
       .forEach(btn => { btn.disabled = true; btn.style.opacity = '0.5'; });
     setTimeout(() => {
@@ -465,11 +424,12 @@ import ModalAlpha from '../components/ModalAlpha.astro';// 2. IMPORTAMOS EL MODA
         turnManager.resolverTurno({ fueCorrecto: false });
       } catch(e) { console.error(e); }
       if (feedbackEl) { feedbackEl.textContent = ''; feedbackEl.style.color = ''; }
-      generateQuestion();
+      
+      // En vez de pasar pregunta directo, dejamos que la ruleta haga lo suyo si aplica
+      document.dispatchEvent(new CustomEvent('abrirRuletaRetroceso'));
     }, 2000);
   }
 
-  // Inicializar TurnManager y UI
   try {
     turnManager.inicializar();
     updateTurnUI();
@@ -504,7 +464,6 @@ import ModalAlpha from '../components/ModalAlpha.astro';// 2. IMPORTAMOS EL MODA
     isAnswering = false;
     if (feedbackEl) feedbackEl.textContent = "";
 
-    // 50% de probabilidad de usar un reto de fracciones/geometría y 50% de operaciones simples
     const useChallenge = Math.random() > 0.5;
 
     if (useChallenge) {
@@ -565,13 +524,8 @@ import ModalAlpha from '../components/ModalAlpha.astro';// 2. IMPORTAMOS EL MODA
       const audioGanar = new Audio('/sounds/Ganar.mp3');
       audioGanar.play();
 
-      confetti({
-        particleCount: 250,
-        spread: 180,
-        origin: { y: 0.6 }
-      });
+      confetti({ particleCount: 250, spread: 180, origin: { y: 0.6 } });
 
-      // 3. CAMBIO AQUÍ: Ocultamos los botones de respuestas y disparamos la ruleta
       optionsContainer.style.display = 'none'; 
       document.dispatchEvent(new CustomEvent('respuestaCorrecta'));
 
@@ -581,6 +535,11 @@ import ModalAlpha from '../components/ModalAlpha.astro';// 2. IMPORTAMOS EL MODA
 
       const audioPerder = new Audio('/sounds/perder.mp3');
       audioPerder.play();
+
+      if (optionsContainer) optionsContainer.style.display = 'none';
+
+      // Disparamos la ruleta inmediatamente
+      document.dispatchEvent(new CustomEvent('abrirRuletaRetroceso'));
 
       for (let i = 0; i < 25; i++) {
         const x = document.createElement('div');
@@ -601,19 +560,28 @@ import ModalAlpha from '../components/ModalAlpha.astro';// 2. IMPORTAMOS EL MODA
           setTimeout(() => x.remove(), 2500);
         }, Math.random() * 600);
       }
-
-      // Pasar turno automáticamente si se equivoca
-      setTimeout(() => {
-        try {
-          turnManager.siguienteTurno();
-          updateTurnUI();
-        } catch(e) { console.error(e) }
-        generateQuestion();
-      }, 1500);
+      
+      // ¡ELIMINADO EL SETTIMEOUT VIEJO AQUÍ! Ahora el cambio de turno lo maneja la ruleta al terminar.
     }
   }
 
-  // 4. NUEVO: Escuchar cuando la ruleta termine su turno para pasar a la siguiente pregunta
+  // Se activa cuando la ruleta de retroceso termina de girar
+  document.addEventListener('retrocesoCompletado', (e: any) => {
+    const casillasARetar = e.detail.casillas;
+    console.log(`⚠️ Ruleta del destino: El jugador debe retroceder ${casillasARetar} espacios.`);
+    
+    // Cambiamos el turno y generamos la siguiente pregunta justo después de que la ruleta termina
+    try {
+      turnManager.siguienteTurno();
+      updateTurnUI();
+    } catch(e) { console.error(e) }
+
+    if (feedbackEl) feedbackEl.textContent = "";
+    if (optionsContainer) optionsContainer.style.display = 'flex'; 
+    generateQuestion();
+  });
+
+  // Escuchar cuando la ruleta de avance normal termine su turno
   document.addEventListener('siguienteTurno', () => {
     try {
       turnManager.siguienteTurno();
@@ -621,11 +589,10 @@ import ModalAlpha from '../components/ModalAlpha.astro';// 2. IMPORTAMOS EL MODA
     } catch(e) { console.error(e) }
 
     if (feedbackEl) feedbackEl.textContent = "";
-    if (optionsContainer) optionsContainer.style.display = 'flex'; // Regresamos las respuestas visualmente
+    if (optionsContainer) optionsContainer.style.display = 'flex'; 
     generateQuestion();
   });
 
-  // 5. OPCIONAL: Escuchar cuántas casillas debe avanzar (por si tienes código de fichas aquí)
   document.addEventListener('avanzarFicha', (e: any) => {
     console.log(`Mover la ficha del jugador: ${e.detail.pasos} espacios.`);
   });

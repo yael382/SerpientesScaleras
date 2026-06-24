@@ -1,0 +1,176 @@
+---
+// src/components/RuletaRetroceso.astro
+---
+
+<div id="zona-ruleta-retroceso" class="oculto">
+  <div class="puntero-retroceso">▼</div>
+  <div class="ruleta-retroceso" id="ruleta-retroceso">
+    <div class="numero-container-retroceso num-1"><span class="numero-retroceso">-1</span></div>
+    <div class="numero-container-retroceso num-2"><span class="numero-retroceso">-2</span></div>
+    <div class="numero-container-retroceso num-3"><span class="numero-retroceso">-3</span></div>
+  </div>
+  <button id="btn-girar-retroceso">¡Gira Ruleta!</button>
+  <h3 id="resultado-ruleta-retroceso"></h3>
+</div>
+
+<style>
+  .oculto {
+    display: none !important;
+  }
+
+  #zona-ruleta-retroceso {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    margin-top: 2rem;
+    background-color: #f3e8ff; /* Fondo morado pastel muy sutil */
+    padding: 25px;
+    border-radius: 24px;
+    box-shadow: 0 8px 24px rgba(147, 51, 234, 0.2);
+    animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes popIn {
+    0% { transform: scale(0.7); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  .puntero-retroceso {
+    font-size: 2.5rem;
+    color: #9333ea; /* Puntero Morado */
+    z-index: 10;
+    margin-bottom: -18px;
+  }
+
+  .ruleta-retroceso {
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+    border: 5px solid #9333ea;
+    /* Degradado cónico en tonos púrpuras y violetas oscuros */
+    background: conic-gradient(
+      #c084fc 0deg 120deg,
+      #a855f7 120deg 240deg,
+      #9333ea 240deg 360deg
+    );
+    transition: transform 2s cubic-bezier(0.25, 0.1, 0.25, 1);
+  }
+
+  .numero-container-retroceso {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+  }
+
+  .num-1 { transform: rotate(60deg); }
+  .num-2 { transform: rotate(180deg); }
+  .num-3 { transform: rotate(300deg); }
+
+  .numero-retroceso {
+    position: absolute;
+    top: 15px; 
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: white;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+  }
+
+  #btn-girar-retroceso {
+    margin-top: 20px;
+    padding: 12px 30px;
+    font-size: 1.3rem;
+    cursor: pointer;
+    background-color: #9333ea;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(147, 51, 234, 0.4);
+    transition: all 0.2s;
+  }
+
+  #btn-girar-retroceso:hover {
+    background-color: #a855f7;
+    transform: translateY(-2px);
+  }
+
+  #btn-girar-retroceso:disabled {
+    background-color: #e9d5ff;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  #resultado-ruleta-retroceso {
+    margin-top: 15px;
+    font-size: 1.5rem;
+    color: #581c87;
+  }
+</style>
+
+<script>
+  //@ts-ignore
+  import { audioController } from '../utils/audioController.ts';
+
+  function iniciarRuletaRetroceso() {
+    const zonaRuleta = document.getElementById('zona-ruleta-retroceso');
+    const ruleta = document.getElementById('ruleta-retroceso');
+    const btnGirar = document.getElementById('btn-girar-retroceso') as HTMLButtonElement;
+    const resultadoTexto = document.getElementById('resultado-ruleta-retroceso');
+
+    if (!zonaRuleta || !ruleta || !btnGirar || !resultadoTexto) return;
+
+    let rotacionActual = 0;
+
+    // ESCUCHAR CUANDO EL JUEGO DICE QUE LA RESPUESTA FALLÓ O AGOTÓ EL TIEMPO
+    document.addEventListener('abrirRuletaRetroceso', () => {
+      zonaRuleta.classList.remove('oculto');
+      resultadoTexto.innerText = ""; 
+    });
+
+    btnGirar.addEventListener('click', () => {
+      btnGirar.disabled = true;
+      resultadoTexto.innerText = "¡Girando ruleta del destino...!";
+
+      audioController.play('ruleta', true);
+
+      // Genera número del 1 al 3 (que representan los pasos que va a retroceder)
+      const numeroGanador = Math.floor(Math.random() * 3) + 1;
+
+      // Mismo cálculo de ángulos exacto al que ya tienes
+      const angulosAjuste = { 1: 300, 2: 180, 3: 60 };
+      const gradosFinales = angulosAjuste[numeroGanador as keyof typeof angulosAjuste];
+      
+      rotacionActual += (360 * 5); 
+      const resto = rotacionActual % 360;
+      rotacionActual += (gradosFinales - resto);
+
+      ruleta.style.transform = `rotate(${rotacionActual}deg)`;
+
+      setTimeout(() => {
+        audioController.stop('ruleta');
+        resultadoTexto.innerText = `¡Retrocedes ${numeroGanador} casillas!`;
+        
+        // Despachamos el evento de retroceso para que el tablero/consola sepa cuántos espacios quitar
+        document.dispatchEvent(new CustomEvent('avanzarFicha', { detail: { pasos: -numeroGanador } }));
+
+        setTimeout(() => {
+          zonaRuleta.classList.add('oculto');
+          btnGirar.disabled = false;
+          
+          // Le avisamos al nivel que la ruleta terminó y ya puede pasar al siguiente turno
+          document.dispatchEvent(new CustomEvent('retrocesoCompletado', { detail: { casillas: numeroGanador } }));
+        }, 2500);
+
+      }, 2000);
+    });
+  }
+
+  iniciarRuletaRetroceso();
+</script>

@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA EN BETA
+import Ruleta from '../components/Ruleta.astro'; 
+import RuletaRetroceso from '../components/RuletaRetroceso.astro'; // 1. IMPORTAMOS LA RULETA DE RETROCESO
 import ModalBeta from '../components/ModalBeta.astro';
 ---
 
@@ -32,11 +33,11 @@ import ModalBeta from '../components/ModalBeta.astro';
     <p id="feedback-message" class="feedback"></p>
 
     <Ruleta />
+    <RuletaRetroceso /> <!-- 2. AGREGAMOS EL COMPONENTE EN EL HTML -->
   </div>
 </Layout>
 
 <style is:global>
-  /* ... Todo tu CSS original se mantiene exactamente igual ... */
   .game-container {
     display: flex;
     flex-direction: column;
@@ -173,7 +174,6 @@ import ModalBeta from '../components/ModalBeta.astro';
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
   }
 
-  /* ── Challenge card styles (fracciones / geometría) ── */
   .challenge-card {
     text-align: left;
     animation: fadeSlideIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
@@ -233,7 +233,6 @@ import ModalBeta from '../components/ModalBeta.astro';
     font-size: 1.15rem;
   }
 
-  /* ── Fracción matemática apilada ── */
   .frac {
     display: inline-flex;
     flex-direction: column;
@@ -299,12 +298,7 @@ import ModalBeta from '../components/ModalBeta.astro';
     left: -100%;
     width: 50%;
     height: 100%;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.3),
-      transparent
-    );
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
     transition: all 0.6s ease;
     transform: skewX(-25deg);
   }
@@ -372,72 +366,28 @@ import ModalBeta from '../components/ModalBeta.astro';
   }
 
   @media (max-width: 600px) {
-    .header-beta {
-      flex-direction: column;
-      gap: 0.8rem;
-      margin-bottom: 1rem;
-    }
-
-    .level-title {
-      font-size: 1.8rem;
-    }
-
-    .timer-box {
-      font-size: 1.1rem;
-      padding: 0.4rem 1rem;
-      border-radius: 12px;
-    }
-
-    .screen {
-      padding: 1.5rem 1rem;
-      border-radius: 20px;
-      margin-bottom: 1.5rem;
-      min-width: 0;
-      width: 100%;
-      box-sizing: border-box;
-    }
-
-    #math-question {
-      font-size: 2.5rem;
-      letter-spacing: 2px;
-    }
-
-    .fruits-container {
-      gap: 1rem;
-      width: 100%;
-    }
-
-    :global(.fruit-btn) {
-      min-width: 0;
-      width: 100%;
-      box-sizing: border-box;
-      font-size: 1.4rem;
-      padding: 1.1rem 1.5rem;
-      border-radius: 16px;
-    }
+    .header-beta { flex-direction: column; gap: 0.8rem; margin-bottom: 1rem; }
+    .level-title { font-size: 1.8rem; }
+    .timer-box { font-size: 1.1rem; padding: 0.4rem 1rem; border-radius: 12px; }
+    .screen { padding: 1.5rem 1rem; border-radius: 20px; margin-bottom: 1.5rem; min-width: 0; width: 100%; box-sizing: border-box; }
+    #math-question { font-size: 2.5rem; letter-spacing: 2px; }
+    .fruits-container { gap: 1rem; width: 100%; }
+    :global(.fruit-btn) { min-width: 0; width: 100%; box-sizing: border-box; font-size: 1.4rem; padding: 1.1rem 1.5rem; border-radius: 16px; }
   }
 
   @media (max-width: 360px) {
-    #math-question {
-      font-size: 2rem;
-    }
-    :global(.fruit-btn) {
-      font-size: 1.2rem;
-    }
+    #math-question { font-size: 2rem; }
+    :global(.fruit-btn) { font-size: 1.2rem; }
   }
-/* Estilo base idéntico a tus botones de arriba pero más grande */
- /* Estilo vidrioso como la caja de preguntas */
+
   .mute-btn {
-    /* Fondo translúcido blanco que da el efecto de vidrio */
     background: rgba(255, 255, 255, 0.08); 
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    
-    /* Borde limpio idéntico al de arriba */
     border: 1px solid rgba(255, 255, 255, 0.3);
     color: #ffffff;
     padding: 0.7rem 1.6rem;
-    border-radius: 8px; /* Rectangular como Alfa/Beta */
+    border-radius: 8px;
     font-size: 1.15rem;
     font-weight: 600;
     cursor: pointer;
@@ -446,30 +396,25 @@ import ModalBeta from '../components/ModalBeta.astro';
     z-index: 999;
   }
 
-  /* Hover sutil sobre el vidrio */
   .mute-btn:hover {
     background: rgba(255, 255, 255, 0.18);
     border-color: rgba(255, 255, 255, 0.6);
   }
 
-  /* Estado SILENCIADO: Vidrio tintado de rojo/rosa con opacidad */
   .mute-btn.estado-silenciado {
     background: rgba(239, 68, 68, 0.25);
     border-color: rgba(239, 68, 68, 0.6);
     color: #fca5a5;
   }
 
-  /* Hover del estado silenciado */
   .mute-btn.estado-silenciado:hover {
     background: rgba(239, 68, 68, 0.35);
     border-color: rgba(239, 68, 68, 0.8);
   }
 </style>
-</style>
 
 <script>
   //@ts-ignore
-  
   import confetti from 'canvas-confetti';
   import { turnManager } from '../lib/turnManager';
   import { ChallengePool } from '../utils/fracGeo';
@@ -477,7 +422,6 @@ import ModalBeta from '../components/ModalBeta.astro';
   import { generateMathQuestion } from '../utils/mathgenerator.ts';
   import { audioController } from '../utils/audioController.ts';
 
-  // Inicializar TurnManager y UI
   try {
     turnManager.inicializar();
     updateTurnUI();
@@ -542,7 +486,9 @@ import ModalBeta from '../components/ModalBeta.astro';
   }
 
   function handleTimeOut() {
+    if (isAnswering) return;
     isAnswering = true;
+    clearInterval(timer);
 
     audioController.play('incorrecto');
 
@@ -555,12 +501,14 @@ import ModalBeta from '../components/ModalBeta.astro';
       feedbackEl.textContent = "¡Tiempo agotado!";
       feedbackEl.className = "feedback incorrect";
     }
+    
+    document.querySelectorAll<HTMLButtonElement>('#options-container .fruit-btn')
+      .forEach(btn => { btn.disabled = true; btn.style.opacity = '0.5'; });
+
     setTimeout(() => {
-      try {
-        turnManager.siguienteTurno();
-        updateTurnUI();
-      } catch(e) { console.error(e) }
-      generateQuestion();
+      if (feedbackEl) { feedbackEl.textContent = ''; feedbackEl.style.color = ''; }
+      // Lanzamos la ruleta de retroceso en lugar de cambiar la pregunta directamente
+      document.dispatchEvent(new CustomEvent('abrirRuletaRetroceso'));
     }, 2000);
   }
 
@@ -568,7 +516,6 @@ import ModalBeta from '../components/ModalBeta.astro';
     isAnswering = false;
     if (feedbackEl) feedbackEl.textContent = "";
 
-    // 50% de probabilidad de usar un reto de fracciones/geometría y 50% de operaciones simples
     const useChallenge = Math.random() > 0.5;
 
     if (useChallenge) {
@@ -613,10 +560,9 @@ import ModalBeta from '../components/ModalBeta.astro';
   }
 
   function checkAnswer(isCorrect: boolean) {
+    if (!feedbackEl || !optionsContainer || isAnswering) return;
     isAnswering = true;
     clearInterval(timer);
-
-    if (!feedbackEl || !optionsContainer) return;
 
     try {
       turnManager.comenzarTurno();
@@ -629,11 +575,7 @@ import ModalBeta from '../components/ModalBeta.astro';
 
       audioController.play('correcto');
 
-      confetti({
-        particleCount: 150,
-        spread: 80,
-        origin: { y: 0.6 }
-      });
+      confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
 
       optionsContainer.style.display = 'none'; 
       document.dispatchEvent(new CustomEvent('respuestaCorrecta'));
@@ -643,6 +585,11 @@ import ModalBeta from '../components/ModalBeta.astro';
       feedbackEl.className = "feedback incorrect";
 
       audioController.play('incorrecto');
+
+      if (optionsContainer) optionsContainer.style.display = 'none';
+
+      // 💥 ABRIMOS LA RULETA DE RETROCESO INMEDIATAMENTE
+      document.dispatchEvent(new CustomEvent('abrirRuletaRetroceso'));
 
       for (let i = 0; i < 10; i++) {
         const x = document.createElement('div');
@@ -663,18 +610,26 @@ import ModalBeta from '../components/ModalBeta.astro';
           setTimeout(() => x.remove(), 1000);
         }, Math.random() * 200);
       }
-  
-      setTimeout(() => {
-        try {
-          turnManager.siguienteTurno();
-          updateTurnUI();
-        } catch(e) { console.error(e) }
-        generateQuestion();
-      }, 1500);
+      
+      // Eliminado el setTimeout anterior que saltaba de turno a la fuerza.
     }
   }
 
-  // 4. NUEVO: Escuchar cuando la ruleta termine para reiniciar todo en Beta
+  // 🔄 NUEVO: Se activa cuando la ruleta de retroceso termina de girar
+  document.addEventListener('retrocesoCompletado', (e: any) => {
+    const casillasARetar = e.detail.casillas;
+    console.log(`⚠️ Beta Ruleta del destino: Retroceder ${casillasARetar} espacios.`);
+    
+    try {
+      turnManager.siguienteTurno();
+      updateTurnUI();
+    } catch(e) { console.error(e) }
+
+    if (feedbackEl) feedbackEl.textContent = "";
+    if (optionsContainer) optionsContainer.style.display = 'flex'; 
+    generateQuestion();
+  });
+
   document.addEventListener('siguienteTurno', () => {
     try {
       turnManager.siguienteTurno();
@@ -682,11 +637,10 @@ import ModalBeta from '../components/ModalBeta.astro';
     } catch(e) { console.error(e) }
 
     if (feedbackEl) feedbackEl.textContent = "";
-    if (optionsContainer) optionsContainer.style.display = 'flex'; // Regresamos las 3 respuestas visualmente
-    generateQuestion(); // Esto genera nueva pregunta y reinicia el timer solo
+    if (optionsContainer) optionsContainer.style.display = 'flex'; 
+    generateQuestion(); 
   });
 
-  // 5. NUEVO: Escuchar los pasos para avanzar ficha (Consola)
   document.addEventListener('avanzarFicha', (e: any) => {
     console.log(`Beta: El jugador saca dado de ${e.detail.pasos}. Mover ficha.`);
   });
@@ -694,7 +648,6 @@ import ModalBeta from '../components/ModalBeta.astro';
   generateQuestion();
 
   const muteBtn = document.getElementById('mute-button');
-
   muteBtn?.addEventListener('click', () => {
     const mutear = audioController.toggleMute();
     if (muteBtn) {
