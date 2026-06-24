@@ -1,9 +1,11 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA EN BETA
+import ModalBeta from '../components/ModalBeta.astro';
 ---
 
 <Layout showLevelButtons={true}>
+  <ModalBeta />
   <div class="game-container">
     <div class="header-beta">
       <h1 class="level-title">Nivel Beta</h1>

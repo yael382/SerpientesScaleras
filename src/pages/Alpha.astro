@@ -1,9 +1,11 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA
+import ModalAlpha from '../components/ModalAlpha.astro';// 2. IMPORTAMOS EL MODAL DE REGLAS
 ---
 
 <Layout showLevelButtons={true}>
+  <ModalAlpha />
   <div class="game-container">
     <h1 class="level-title">Nivel Alfa</h1>
 
