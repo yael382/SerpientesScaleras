@@ -1,0 +1,70 @@
+---
+// src/components/ModalBeta.astro
+---
+<div id="rules-modal" class="modal-overlay">
+  <div class="modal-card animate-pop">
+    <div class="modal-header">
+      <span class="modal-icon">🚀</span>
+      <h2>¡Bienvenidos al Nivel Beta!</h2>
+    </div>
+    <div class="modal-body">
+      <p class="modal-subtitle">¡La dificultad aumenta en el espacio exterior!</p>
+      <ul class="rules-list">
+        <li><span>⚡</span> Tienes solo 15 segundos para resolver multiplicaciones y divisiones.</li>
+        <li><span>🎯</span> Hay 3 opciones en pantalla. ¡Sé veloz!</li>
+        <li><span>🛸</span> Si el tiempo se agota, perderás tu turno. ¡Concéntrate!</li>
+      </ul>
+    </div>
+    <button type="button" id="btn-close-rules" class="modal-btn">
+      ¡Iniciar Misión! 🎲
+    </button>
+  </div>
+</div>
+
+<style>
+  /* Base idéntica pero con temática y bordes espaciales/azules */
+  .modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(10, 15, 30, 0.9); backdrop-filter: blur(8px);
+    display: flex; justify-content: center; align-items: center; z-index: 10000;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+  }
+  .modal-card {
+    background: #ffffff; width: 90%; max-width: 500px; padding: 2.5rem; border-radius: 32px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6); text-align: center; box-sizing: border-box;
+    border: 3px solid #3B82F6; /* Color azul de Beta */
+  }
+  .modal-header h2 { font-size: 2rem; color: #1e3a5f; margin: 0; font-family: 'Fredoka', sans-serif; }
+  .modal-icon { font-size: 3.5rem; display: block; margin-bottom: 0.5rem; }
+  .modal-subtitle { font-size: 1.1rem; color: #64748b; margin-bottom: 1.5rem; }
+  .rules-list { list-style: none; padding: 0; margin: 0 0 2rem 0; text-align: left; }
+  .rules-list li { font-size: 1.05rem; color: #334155; margin-bottom: 1.2rem; display: flex; gap: 0.75rem; line-height: 1.4; }
+  .modal-btn {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    color: white; border: none; padding: 1rem 2.5rem; font-size: 1.2rem; font-weight: bold; border-radius: 999px; cursor: pointer;
+    box-shadow: 0 8px 20px rgba(29, 78, 216, 0.4); transition: transform 0.2s ease;
+  }
+  .modal-btn:hover { transform: translateY(-3px); }
+  .animate-pop { animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+  :global(.modal-fade-out) { opacity: 0; visibility: hidden; }
+  @keyframes popIn {
+    0% { transform: scale(0.7); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+</style>
+<!-- Al final de src/components/ModalBeta.astro -->
+<script>
+  const rulesModal = document.getElementById('rules-modal');
+  const btnCloseRules = document.getElementById('btn-close-rules');
+
+  if (btnCloseRules && rulesModal) {
+    btnCloseRules.addEventListener('click', () => {
+      rulesModal.classList.add('modal-fade-out');
+      setTimeout(() => {
+        rulesModal.style.display = 'none';
+        // Despacha un evento para avisarle a Beta.astro que arranque el temporizador
+        document.dispatchEvent(new CustomEvent('modalCerrado'));
+      }, 400);
+    });
+  }
+</script>

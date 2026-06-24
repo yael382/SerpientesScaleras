@@ -14,6 +14,7 @@
 </div>
 
 <style>
+
   .oculto {
     display: none !important;
   }
@@ -55,7 +56,7 @@
       #ff8fab 120deg 240deg,
       #fb6f92 240deg 360deg
     );
-    transition: transform 3s cubic-bezier(0.25, 0.1, 0.25, 1);
+    transition: transform 2s cubic-bezier(0.25, 0.1, 0.25, 1);
   }
 
   .numero-container {
@@ -114,6 +115,9 @@
 </style>
 
 <script>
+  //@ts-ignore
+  import { audioController } from '../utils/audioController.ts';
+
   function iniciarRuleta() {
     const zonaRuleta = document.getElementById('zona-ruleta');
     const ruleta = document.getElementById('ruleta');
@@ -134,6 +138,8 @@
       btnGirar.disabled = true;
       resultadoTexto.innerText = "¡Girando ruleta...!";
 
+      audioController.play('ruleta',true);
+
       const numeroGanador = Math.floor(Math.random() * 3) + 1;
 
       const angulosAjuste = { 1: 300, 2: 180, 3: 60 };
@@ -146,6 +152,7 @@
       ruleta.style.transform = `rotate(${rotacionActual}deg)`;
       // 1. ESPERAR 3 SEGUNDOS A QUE LA RULETA DETENGA SU GIRO ANIMADO
       setTimeout(() => {
+        audioController.stop('ruleta');
         resultadoTexto.innerText = `¡Avanzas ${numeroGanador} casillas!`;
         
         // LANZAR EVENTO CON EL NÚMERO (Por si tu tablero necesita mover la ficha)
@@ -161,7 +168,7 @@
           document.dispatchEvent(new CustomEvent('siguienteTurno'));
         }, 3500); // 👈 Aumentado a 3.5 segundos para dar una pausa natural de juego
 
-      }, 3000);
+      }, 2000);
     });
   }
 

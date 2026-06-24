@@ -5,7 +5,7 @@ const { showLevelButtons = false } = Astro.props;
 <nav class="navbar">
   <div class="nav-container">
     <a href="/" class="logo">
-      <span class="logo-text">Serpientes y Escaleras</span>
+      <span class="logo-text">Juego de Oca</span>
     </a>
 
     {showLevelButtons ? (
@@ -17,19 +17,21 @@ const { showLevelButtons = false } = Astro.props;
   </div>
 </nav>
 
-<style>
+<style is:global>
   .navbar {
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(15, 23, 42, 0.35);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
-    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.14), inset 0 1px 2px rgba(255, 255, 255, 0.35);
-    border: 1px solid rgba(255, 255, 255, 0.35);
-    padding: 1.2rem 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    border-left: 1px solid rgba(255, 255, 255, 0.12);
+    border-right: 1px solid rgba(255, 255, 255, 0.12);
+    padding: 1rem 2rem;
     position: sticky;
     top: 0;
     z-index: 100;
     border-bottom-left-radius: 24px;
     border-bottom-right-radius: 24px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 10px 30px rgba(15, 23, 42, 0.25);
   }
 
   .nav-container {
@@ -53,21 +55,66 @@ const { showLevelButtons = false } = Astro.props;
   }
 
   .logo:hover {
-    transform: scale(1.08);
-    filter: drop-shadow(0 4px 12px rgba(124, 58, 237, 0.3));
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 12px rgba(255, 146, 43, 0.5));
   }
 
   .logo-text {
-    color: #1F1035;
     font-weight: 900;
-    text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.6), 0 0 20px rgba(124, 58, 237, 0.2);
-    letter-spacing: 0.5px;
+    letter-spacing: 1.5px;
+    background: linear-gradient(90deg, #FFE066, #FF922B, #FF6B6B, #CC5DE8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 8px rgba(255, 146, 43, 0.3));
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .link {
+    text-decoration: none;
+    color: #e0e7ff;
+    padding: 0.5rem 1.2rem;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(15, 23, 42, 0.25);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  }
+
+  .link:hover {
+    color: #ffffff;
+    transform: translateY(-2px);
+  }
+
+  .link.alfa:hover {
+    border-color: rgba(124, 58, 237, 0.5);
+    box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+    background: rgba(124, 58, 237, 0.2);
+  }
+
+  .link.beta:hover {
+    border-color: rgba(236, 72, 153, 0.5);
+    box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
+    background: rgba(236, 72, 153, 0.2);
   }
 
   @media (max-width: 600px) {
     .nav-container {
       flex-direction: column;
       gap: 1rem;
+      text-align: center;
+    }
+    .navbar {
+      padding: 1rem;
     }
   }
 </style>

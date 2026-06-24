@@ -1,16 +1,19 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import TableroMapa from '../components/TableroMapa.astro';
 import Ruleta from '../components/Ruleta.astro'; 
+import RuletaRetroceso from '../components/RuletaRetroceso.astro'; // 1. IMPORTAMOS LA RULETA DE RETROCESO
+import ModalBeta from '../components/ModalBeta.astro';
 ---
 
 <Layout showLevelButtons={true}>
+  <ModalBeta />
   <div class="game-container">
     <div class="header-beta">
       <h1 class="level-title">Nivel Beta</h1>
       <div class="timer-box">
         <span id="time-left">15</span>s
       </div>
+      <button id="mute-button" class="mute-btn">🔊Sonido</button>
     </div>
 
     <div id="turn-indicator" class="turn-indicator hidden">
@@ -32,11 +35,11 @@ import Ruleta from '../components/Ruleta.astro';
     <TableroMapa />
 
     <Ruleta />
+    <RuletaRetroceso /> <!-- 2. AGREGAMOS EL COMPONENTE EN EL HTML -->
   </div>
 </Layout>
 
-<style>
-  /* ... Todo tu CSS original se mantiene exactamente igual ... */
+<style is:global>
   .game-container {
   display: flex;
   flex-direction: column;
@@ -144,27 +147,24 @@ import Ruleta from '../components/Ruleta.astro';
   }
 
   .screen {
-    background: rgba(255, 255, 255, 0.22);
-    backdrop-filter: blur(22px);
-    color: #1e3a5f;
-    padding: 2rem 4rem;
-    border-radius: 24px;
-    border: 1px solid rgba(255, 255, 255, 0.45);
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.45), rgba(30, 41, 59, 0.25));
+    backdrop-filter: blur(25px) saturate(180%);
+    -webkit-backdrop-filter: blur(25px) saturate(180%);
+    color: #ffffff;
+    padding: 2.5rem 3rem;
+    border-radius: 28px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background-clip: padding-box;
     box-shadow: 
-      0 16px 40px rgba(15, 23, 42, 0.12),
-      inset 0 0 0 1px rgba(255, 255, 255, 0.55);
-    margin-bottom: 2rem;
-    min-width: 300px;
+      0 24px 60px rgba(0, 0, 0, 0.4), 
+      inset 0 1px 1px rgba(255, 255, 255, 0.12),
+      inset 0 -1px 2px rgba(255, 255, 255, 0.05),
+      0 0 0 1px rgba(255, 255, 255, 0.08);
+    margin-bottom: 2.5rem;
+    width: 100%;
+    max-width: 680px;
     position: relative;
-  }
-
-  .screen::before {
-    content: '';
-    position: absolute;
-    inset: -2px;
-    border-radius: 26px;
-    background: rgba(255, 255, 255, 0.18);
-    z-index: -1;
+    z-index: 1;
   }
 
   #math-question {
@@ -172,7 +172,99 @@ import Ruleta from '../components/Ruleta.astro';
     margin: 0;
     font-family: 'Fredoka', monospace;
     letter-spacing: 5px;
-    color: #1e1b4b;
+    color: #ffffff;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  }
+
+  .challenge-card {
+    text-align: left;
+    animation: fadeSlideIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(12px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0)   scale(1);    }
+  }
+
+  .challenge-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .challenge-icon {
+    font-size: 2rem;
+    line-height: 1;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
+  }
+
+  .challenge-badge {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 50px;
+    padding: 0.2rem 0.9rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #e0e7ff;
+    backdrop-filter: blur(8px);
+  }
+
+  .challenge-body {
+    font-size: 1.25rem;
+    line-height: 1.7;
+    color: #f1f5f9;
+    margin: 0;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+  }
+
+  .challenge-body strong {
+    color: #fbbf24;
+    font-weight: 800;
+  }
+
+  .challenge-body em {
+    display: block;
+    margin-top: 0.6rem;
+    color: #a5f3fc;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 1.15rem;
+  }
+
+  .frac {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    margin: 0 0.35em;
+    line-height: 1;
+    font-size: 1em;
+  }
+  .frac-num {
+    font-size: 0.9em;
+    font-weight: 900;
+    color: #fde68a;
+    line-height: 1.2;
+    padding: 0 0.2em 0.05em;
+    border-bottom: 2.5px solid #fbbf24;
+    min-width: 1em;
+    text-align: center;
+    letter-spacing: 0;
+  }
+  .frac-den {
+    font-size: 0.9em;
+    font-weight: 900;
+    color: #fde68a;
+    line-height: 1.2;
+    padding: 0.05em 0.2em 0;
+    min-width: 1em;
+    text-align: center;
+    letter-spacing: 0;
   }
 
   .fruits-container {
@@ -180,61 +272,69 @@ import Ruleta from '../components/Ruleta.astro';
     gap: 1.5rem;
     justify-content: center;
     flex-wrap: wrap;
+    position: relative;
+    z-index: 2;
   }
 
-  :global(.fruit-btn) {
-    background: rgba(255, 255, 255, 0.18);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    color: #ffffff;
-    font-size: 2rem;
-    font-weight: 800;
-    padding: 1.4rem 2rem;
+  .fruit-btn {
     border-radius: 28px;
     cursor: pointer;
     transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
     min-width: 170px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.16);
+    font-size: 2rem;
+    font-weight: 800;
+    padding: 1.4rem 2rem;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3);
     position: relative;
     overflow: hidden;
-    backdrop-filter: blur(16px);
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color: #ffffff !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   }
 
-  :global(.fruit-btn::before) {
+  .fruit-btn::before {
     content: '';
     position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0.08) 40%, transparent 100%);
-    pointer-events: none;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: all 0.6s ease;
+    transform: skewX(-25deg);
   }
 
-  :global(.fruit-btn:hover) {
-    transform: translateY(-10px) scale(1.03);
-    box-shadow: 0 24px 50px rgba(0, 0, 0, 0.2);
+  .fruit-btn:hover::before {
+    left: 150%;
   }
 
-  :global(.fruit-btn.blue-card) {
-    background: rgba(59, 130, 246, 0.24);
-    border-color: rgba(59, 130, 246, 0.55);
+  .fruit-btn:hover {
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.2);
   }
 
-  :global(.fruit-btn.green-card) {
-    background: rgba(16, 185, 129, 0.24);
-    border-color: rgba(16, 185, 129, 0.55);
+  .fruit-btn.blue-card {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.5), rgba(59, 130, 246, 0.2));
+    border: 1px solid rgba(59, 130, 246, 0.5);
   }
 
-  :global(.fruit-btn.red-card) {
-    background: rgba(239, 68, 68, 0.24);
-    border-color: rgba(239, 68, 68, 0.55);
+  .fruit-btn.green-card {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.5), rgba(16, 185, 129, 0.2));
+    border: 1px solid rgba(16, 185, 129, 0.5);
   }
 
-  :global(.fruit-btn.yellow-card) {
-    background: rgba(234, 179, 8, 0.24);
-    border-color: rgba(234, 179, 8, 0.55);
-    color: #1f2937;
+  .fruit-btn.red-card {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.5), rgba(239, 68, 68, 0.2));
+    border: 1px solid rgba(239, 68, 68, 0.5);
   }
 
-  :global(.fruit-btn:active) {
+  .fruit-btn.yellow-card {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.55), rgba(245, 158, 11, 0.25));
+    border: 1px solid rgba(245, 158, 11, 0.5);
+  }
+
+  .fruit-btn:active {
     transform: translateY(-2px) scale(0.98);
   }
 
@@ -243,14 +343,15 @@ import Ruleta from '../components/Ruleta.astro';
     font-weight: bold;
     margin-top: 2rem;
     min-height: 2rem;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
   }
 
-  :global(.correct) {
-    color: #16a34a;
+  .correct {
+    color: #22c55e;
     animation: correctPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
-  :global(.incorrect) {
+  .incorrect {
     color: #ef4444;
     animation: shake 0.5s ease;
   }
@@ -265,14 +366,64 @@ import Ruleta from '../components/Ruleta.astro';
     25% { transform: translateX(-10px); }
     75% { transform: translateX(10px); }
   }
+
+  @media (max-width: 600px) {
+    .header-beta { flex-direction: column; gap: 0.8rem; margin-bottom: 1rem; }
+    .level-title { font-size: 1.8rem; }
+    .timer-box { font-size: 1.1rem; padding: 0.4rem 1rem; border-radius: 12px; }
+    .screen { padding: 1.5rem 1rem; border-radius: 20px; margin-bottom: 1.5rem; min-width: 0; width: 100%; box-sizing: border-box; }
+    #math-question { font-size: 2.5rem; letter-spacing: 2px; }
+    .fruits-container { gap: 1rem; width: 100%; }
+    :global(.fruit-btn) { min-width: 0; width: 100%; box-sizing: border-box; font-size: 1.4rem; padding: 1.1rem 1.5rem; border-radius: 16px; }
+  }
+
+  @media (max-width: 360px) {
+    #math-question { font-size: 2rem; }
+    :global(.fruit-btn) { font-size: 1.2rem; }
+  }
+
+  .mute-btn {
+    background: rgba(255, 255, 255, 0.08); 
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #ffffff;
+    padding: 0.7rem 1.6rem;
+    border-radius: 8px;
+    font-size: 1.15rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    position: relative;
+    z-index: 999;
+  }
+
+  .mute-btn:hover {
+    background: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.6);
+  }
+
+  .mute-btn.estado-silenciado {
+    background: rgba(239, 68, 68, 0.25);
+    border-color: rgba(239, 68, 68, 0.6);
+    color: #fca5a5;
+  }
+
+  .mute-btn.estado-silenciado:hover {
+    background: rgba(239, 68, 68, 0.35);
+    border-color: rgba(239, 68, 68, 0.8);
+  }
 </style>
 
 <script>
   //@ts-ignore
   import confetti from 'canvas-confetti';
   import { turnManager } from '../lib/turnManager';
+  import { ChallengePool } from '../utils/fracGeo';
+  const challengePool = new ChallengePool('6to', 3);
+  import { generateMathQuestion } from '../utils/mathgenerator.ts';
+  import { audioController } from '../utils/audioController.ts';
 
-  // Inicializar TurnManager y UI
   try {
     turnManager.inicializar();
     updateTurnUI();
@@ -313,17 +464,19 @@ import Ruleta from '../components/Ruleta.astro';
   let timeLeft = 15;
   let isAnswering = false;
 
-  function startTimer() {
-    timeLeft = 15;
+  function startTimer(duration: number = 15) {
+    timeLeft = duration;
     if (timeLeftEl) timeLeftEl.textContent = timeLeft.toString();
     if (timerBox) timerBox.classList.remove('timer-warning');
     clearInterval(timer);
+
+    const warnAt = duration > 30 ? 10 : 5;
 
     timer = setInterval(() => {
       timeLeft--;
       if (timeLeftEl) timeLeftEl.textContent = timeLeft.toString();
 
-      if (timeLeft <= 5 && timerBox) {
+      if (timeLeft <= warnAt && timerBox) {
         timerBox.classList.add('timer-warning');
       }
 
@@ -335,7 +488,11 @@ import Ruleta from '../components/Ruleta.astro';
   }
 
   function handleTimeOut() {
+    if (isAnswering) return;
     isAnswering = true;
+    clearInterval(timer);
+
+    audioController.play('incorrecto');
 
     try {
       turnManager.comenzarTurno();
@@ -346,12 +503,14 @@ import Ruleta from '../components/Ruleta.astro';
       feedbackEl.textContent = "¡Tiempo agotado!";
       feedbackEl.className = "feedback incorrect";
     }
+    
+    document.querySelectorAll<HTMLButtonElement>('#options-container .fruit-btn')
+      .forEach(btn => { btn.disabled = true; btn.style.opacity = '0.5'; });
+
     setTimeout(() => {
-      try {
-        turnManager.siguienteTurno();
-        updateTurnUI();
-      } catch(e) { console.error(e) }
-      generateQuestion();
+      if (feedbackEl) { feedbackEl.textContent = ''; feedbackEl.style.color = ''; }
+      // Lanzamos la ruleta de retroceso en lugar de cambiar la pregunta directamente
+      document.dispatchEvent(new CustomEvent('abrirRuletaRetroceso'));
     }, 2000);
   }
 
@@ -359,42 +518,27 @@ import Ruleta from '../components/Ruleta.astro';
     isAnswering = false;
     if (feedbackEl) feedbackEl.textContent = "";
 
-    const isMultiplication = Math.random() > 0.5;
-    let var1, var2, correctAnswer, operator;
+    const useChallenge = Math.random() > 0.5;
 
-    if (isMultiplication) {
-      var1 = Math.floor(Math.random() * 10) + 2;
-      var2 = Math.floor(Math.random() * 10) + 2;
-      correctAnswer = var1 * var2;
-      operator = '×';
+    if (useChallenge) {
+      const challenge = challengePool.next();
+      if (questionEl) {
+        questionEl.innerHTML = challenge.htmlQuestion;
+        questionEl.style.fontSize = '';
+        questionEl.style.letterSpacing = '';
+      }
+      startTimer(challenge.timeLimit);
+      renderOptions(challenge.options);
     } else {
-      var2 = Math.floor(Math.random() * 9) + 2;
-      correctAnswer = Math.floor(Math.random() * 10) + 2;
-      var1 = correctAnswer * var2;
-      operator = '÷';
+      const question = generateMathQuestion('Beta');
+      if (questionEl) {
+        questionEl.textContent = question.text;
+        questionEl.style.fontSize = '4rem';
+        questionEl.style.letterSpacing = '5px';
+      }
+      renderOptions(question.options);
+      startTimer(15);
     }
-
-    let wrong1 = correctAnswer + Math.floor(Math.random() * 4) + 1;
-    let wrong2 = Math.max(1, correctAnswer - (Math.floor(Math.random() * 4) + 1));
-
-    if (wrong1 === wrong2) wrong1 += 1;
-    if (wrong1 === correctAnswer) wrong1 += 2;
-    if (wrong2 === correctAnswer) wrong2 -= 1;
-
-    const options = [
-      { value: correctAnswer, isCorrect: true },
-      { value: wrong1, isCorrect: false },
-      { value: wrong2, isCorrect: false }
-    ];
-
-    options.sort(() => Math.random() - 0.5);
-
-    if (questionEl) {
-      questionEl.textContent = `${var1} ${operator} ${var2} = ?`;
-    }
-
-    renderOptions(options);
-    startTimer();
   }
 
   function renderOptions(options: { value: number; isCorrect: boolean }[]) {
@@ -418,10 +562,9 @@ import Ruleta from '../components/Ruleta.astro';
   }
 
   function checkAnswer(isCorrect: boolean) {
+    if (!feedbackEl || !optionsContainer || isAnswering) return;
     isAnswering = true;
     clearInterval(timer);
-
-    if (!feedbackEl || !optionsContainer) return;
 
     try {
       turnManager.comenzarTurno();
@@ -432,14 +575,9 @@ import Ruleta from '../components/Ruleta.astro';
       feedbackEl.textContent = "¡Correcto!";
       feedbackEl.className = "feedback correct";
 
-      const audioGanar = new Audio('/sounds/Ganar.mp3');
-      audioGanar.play();
+      audioController.play('correcto');
 
-      confetti({
-        particleCount: 150,
-        spread: 80,
-        origin: { y: 0.6 }
-      });
+      confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
 
       optionsContainer.style.display = 'none'; 
       document.dispatchEvent(new CustomEvent('respuestaCorrecta'));
@@ -448,8 +586,12 @@ import Ruleta from '../components/Ruleta.astro';
       feedbackEl.textContent = "Intenta de nuevo";
       feedbackEl.className = "feedback incorrect";
 
-      const audioPerder = new Audio('/sounds/perder.mp3');
-      audioPerder.play();
+      audioController.play('incorrecto');
+
+      if (optionsContainer) optionsContainer.style.display = 'none';
+
+      // 💥 ABRIMOS LA RULETA DE RETROCESO INMEDIATAMENTE
+      document.dispatchEvent(new CustomEvent('abrirRuletaRetroceso'));
 
       for (let i = 0; i < 10; i++) {
         const x = document.createElement('div');
@@ -470,18 +612,26 @@ import Ruleta from '../components/Ruleta.astro';
           setTimeout(() => x.remove(), 1000);
         }, Math.random() * 200);
       }
-  
-      setTimeout(() => {
-        try {
-          turnManager.siguienteTurno();
-          updateTurnUI();
-        } catch(e) { console.error(e) }
-        generateQuestion();
-      }, 1500);
+      
+      // Eliminado el setTimeout anterior que saltaba de turno a la fuerza.
     }
   }
 
-  // 4. NUEVO: Escuchar cuando la ruleta termine para reiniciar todo en Beta
+  // 🔄 NUEVO: Se activa cuando la ruleta de retroceso termina de girar
+  document.addEventListener('retrocesoCompletado', (e: any) => {
+    const casillasARetar = e.detail.casillas;
+    console.log(`⚠️ Beta Ruleta del destino: Retroceder ${casillasARetar} espacios.`);
+    
+    try {
+      turnManager.siguienteTurno();
+      updateTurnUI();
+    } catch(e) { console.error(e) }
+
+    if (feedbackEl) feedbackEl.textContent = "";
+    if (optionsContainer) optionsContainer.style.display = 'flex'; 
+    generateQuestion();
+  });
+
   document.addEventListener('siguienteTurno', () => {
     try {
       turnManager.siguienteTurno();
@@ -489,8 +639,8 @@ import Ruleta from '../components/Ruleta.astro';
     } catch(e) { console.error(e) }
 
     if (feedbackEl) feedbackEl.textContent = "";
-    if (optionsContainer) optionsContainer.style.display = 'flex'; // Regresamos las 3 respuestas visualmente
-    generateQuestion(); // Esto genera nueva pregunta y reinicia el timer solo
+    if (optionsContainer) optionsContainer.style.display = 'flex'; 
+    generateQuestion(); 
   });
 
   // 5. ACTUALIZADO: Enviar el movimiento detallado hacia el TableroMapa
@@ -514,4 +664,12 @@ import Ruleta from '../components/Ruleta.astro';
   });
 
   generateQuestion();
+
+  const muteBtn = document.getElementById('mute-button');
+  muteBtn?.addEventListener('click', () => {
+    const mutear = audioController.toggleMute();
+    if (muteBtn) {
+      muteBtn.textContent = mutear ? '🔇Silenciado' : '🔊Sonido';
+    }
+  });
 </script>

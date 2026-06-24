@@ -1,0 +1,248 @@
+---
+// src/components/Reglas.astro
+---
+
+<div class="instructions">
+  <h2>¿Cómo jugar? 🎮</h2>
+
+  <div class="dynamic-cards">
+    <!-- Nivel Alfa (6-8 años) -->
+    <article class="instruction-card alfa">
+      <div class="icon">🦆</div>
+      <strong>Modo Exploradoras Alfa</strong>
+      <p class="age-badge">Para valientes de 6 a 8 años</p>
+      <p class="desc-text">¡Resuelve sumas y restas mágicas para saltar de oca en oca y volar directo a la meta!</p>
+      
+      <div class="mini-cards">
+        <div class="mini-card">
+          <div class="mini-emoji">✌️</div>
+          <div class="mini-text">2 Opciones</div>
+        </div>
+        <div class="mini-card">
+          <div class="mini-emoji">🎯</div>
+          <div class="mini-text">¡Tú puedes!</div>
+        </div>
+        <div class="mini-card">
+          <div class="mini-emoji">🚀</div>
+          <div class="mini-text">¡Avanza!</div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Nivel Beta (9-12 años) -->
+    <article class="instruction-card beta">
+      <div class="icon">💎</div>
+      <strong>Modo Expertas Beta</strong>
+      <p class="age-badge2">Para maestras de 9 a 12 años</p>
+      <p class="desc-text">¡Domina las multiplicaciones y divisiones a toda velocidad para esquivar el laberinto y el calabozo!</p>
+      
+      <div class="mini-cards">
+        <div class="mini-card">
+          <div class="mini-emoji">3️⃣</div>
+          <div class="mini-text">3 Caminos</div>
+        </div>
+        <div class="mini-card">
+          <div class="mini-emoji">⏱️</div>
+          <div class="mini-text">¡Solo 15s!</div>
+        </div>
+        <div class="mini-card">
+          <div class="mini-emoji">👑</div>
+          <div class="mini-text">¡Gana el trono!</div>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <!-- Pasos rápidos super atractivos -->
+  <div class="quick-steps">
+    <span>👀 Abre bien los ojos y lee la pregunta</span>
+    <span>⚡ ¡Sé rápida y pulsa la respuesta correcta!</span>
+    <span>🦆 ¡De oca a oca y tiro porque me toca!</span>
+  </div>
+</div>
+<style>
+  /* 1. Contenedor general: Flujo normal para el título y pasos inferiores */
+  .instructions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-top: 4rem;
+    position: relative; /* Clave para anclar las tarjetas sin importar el contenedor de arriba */
+  }
+
+  .instructions h2 {
+    font-size: 2.2rem;
+    margin-bottom: 2rem;
+    color: #ffffff; 
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+  }
+
+  /* 2. Caja de tarjetas: Comportamiento para Escritorio / PC */
+  .dynamic-cards {
+    position: absolute;
+    /* Ajusta este número si quieres subirlas o bajarlas un poco más respecto a tus recuadros neón */
+    top: -490px; 
+    left: 50%;
+    transform: translateX(-50%);
+    
+    /* El ancho exacto que expande las tarjetas hasta los extremos laterales del monitor */
+    width: 95vw;
+    max-width: 1550px; 
+    
+    display: flex;
+    justify-content: space-between; 
+    padding: 0; 
+    box-sizing: border-box;
+    pointer-events: none; /* Permite hacer clic en la ruleta del centro sin estorbar */
+    z-index: 99;
+  }
+
+  /* 3. Estilo individual estricto de cada tarjeta */
+  .instruction-card {
+    pointer-events: auto; /* Devuelve el clic y hover a las tarjetas individuales */
+    width: 320px;         /* Ancho ideal para cubrir las zonas de sumas/restas */
+    height: 400px;    
+    padding: 1.8rem;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box;
+  }
+
+  .instruction-card.alfa {
+    border: 3px solid #FF922B;
+  }
+
+  .instruction-card.beta {
+    border: 3px solid #3B82F6;
+  }
+
+  .instruction-card:hover {
+    transform: scale(1.03); /* Efecto sutil de agrandamiento */
+    box-shadow: 0 14px 44px rgba(0, 0, 0, 0.7);
+  }
+
+  .instruction-card .icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .instruction-card strong {
+    display: block;
+    font-size: 1.3rem;
+    color: #1e1b4b;
+    margin-bottom: 0.25rem;
+  }
+
+  .age-badge {
+    background-color: #ffe8cc;
+    color: #d9480f;
+    padding: 0.2rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    display: inline-block;
+    margin: 0.25rem auto 0.75rem;
+  }
+
+  .age-badge2 {
+    background-color: #dbeafe;
+    color: #1e40af;
+    padding: 0.2rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    display: inline-block;
+    margin: 0.25rem auto 0.75rem;
+  }
+
+  .desc-text {
+    font-size: 0.95rem;
+    color: #4b5563;
+    line-height: 1.4;
+    margin-bottom: 1rem !important;
+  }
+
+  .mini-cards {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-top: auto;
+    flex-wrap: wrap;
+  }
+
+  .mini-card {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.7rem;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    min-width: 85px;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  }
+
+  .mini-emoji { font-size: 1rem; }
+  .mini-text { color: #1f2937; }
+
+  .instruction-card.alfa .mini-card { background: #ffe8cc; border: 1px solid #ffa94d; }
+  .instruction-card.beta .mini-card { background: #e0f2fe; border: 1px solid #7dd3fc; }
+
+  /* 4. Pasos rápidos inferiores */
+  .quick-steps {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 2rem 0.5rem;
+    width: 100%;
+  }
+
+  .quick-steps span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.2rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 2px solid #e2e8f0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    font-size: 1rem;
+    font-weight: 600;
+    color: #334155;
+  }
+
+  /* 5. DISEÑO RESPONSIVO: Desactiva por completo la posición absoluta en móviles */
+  @media (max-width: 1150px) {
+    .instructions {
+      margin-top: 2rem; 
+    }
+
+    .dynamic-cards {
+      position: static !important;  /* Rompe el absolute de PC */
+      transform: none !important;
+      flex-direction: column;       /* Pone una tarjeta debajo de la otra */
+      align-items: center;
+      gap: 2rem;                    
+      width: 100%;
+      max-width: 100%;
+      padding: 0 1rem;
+      margin-top: 1rem;
+    }
+
+    .instruction-card {
+      width: 100% !important;
+      max-width: 400px; 
+      height: auto;                 /* Hace que se estire según el contenido */
+      min-height: unset;
+    }
+  }
+</style>
