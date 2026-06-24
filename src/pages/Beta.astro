@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-
+import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA EN BETA
 ---
 
 <Layout showLevelButtons={true}>
@@ -8,8 +8,15 @@ import Layout from '../layouts/Layout.astro';
     <div class="header-beta">
       <h1 class="level-title">Nivel Beta</h1>
       <div class="timer-box">
-
         <span id="time-left">15</span>s
+      </div>
+    </div>
+
+    <div id="turn-indicator" class="turn-indicator hidden">
+      <div class="turn-avatar" id="turn-avatar">🦁</div>
+      <div class="turn-info">
+        <div class="turn-team" id="turn-team">Cargando equipo...</div>
+        <div class="turn-member">Turno de: <strong id="turn-member">...</strong></div>
       </div>
     </div>
 
@@ -17,14 +24,16 @@ import Layout from '../layouts/Layout.astro';
       <h2 id="math-question">Cargando...</h2>
     </div>
 
-    <div class="fruits-container" id="options-container">
-      </div>
+    <div class="fruits-container" id="options-container"></div>
 
     <p id="feedback-message" class="feedback"></p>
+
+    <Ruleta />
   </div>
 </Layout>
 
-<style>
+<style is:global>
+  /* ... Todo tu CSS original se mantiene exactamente igual ... */
   .game-container {
     display: flex;
     flex-direction: column;
@@ -60,6 +69,52 @@ import Layout from '../layouts/Layout.astro';
     filter: drop-shadow(1px 1px 4px rgba(15, 23, 42, 0.12));
   }
 
+  .turn-indicator {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    padding: 10px 20px;
+    border-radius: 20px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    transition: all 0.3s ease;
+  }
+  .turn-indicator.hidden { display: none; }
+  .turn-avatar {
+    font-size: 2.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  }
+  .turn-info {
+    text-align: left;
+  }
+  .turn-team {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
+  }
+  .turn-member {
+    font-size: 1.1rem;
+    color: #e2e8f0;
+    margin-top: 2px;
+  }
+  .turn-member strong {
+    color: #fbbf24;
+    font-size: 1.3rem;
+  }
+
   .timer-box {
     background: linear-gradient(135deg, #EF4444, #F97316);
     color: #fff;
@@ -75,7 +130,6 @@ import Layout from '../layouts/Layout.astro';
     transition: transform 0.2s ease;
   }
 
-
   :global(.timer-warning) {
     animation: timerPulse 0.5s ease-in-out infinite;
     background: linear-gradient(135deg, #DC2626, #EF4444) !important;
@@ -87,27 +141,24 @@ import Layout from '../layouts/Layout.astro';
   }
 
   .screen {
-    background: rgba(255, 255, 255, 0.22);
-    backdrop-filter: blur(22px);
-    color: #1e3a5f;
-    padding: 2rem 4rem;
-    border-radius: 24px;
-    border: 1px solid rgba(255, 255, 255, 0.45);
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.45), rgba(30, 41, 59, 0.25));
+    backdrop-filter: blur(25px) saturate(180%);
+    -webkit-backdrop-filter: blur(25px) saturate(180%);
+    color: #ffffff;
+    padding: 2.5rem 3rem;
+    border-radius: 28px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background-clip: padding-box;
     box-shadow: 
-      0 16px 40px rgba(15, 23, 42, 0.12),
-      inset 0 0 0 1px rgba(255, 255, 255, 0.55);
-    margin-bottom: 2rem;
-    min-width: 300px;
+      0 24px 60px rgba(0, 0, 0, 0.4), 
+      inset 0 1px 1px rgba(255, 255, 255, 0.12),
+      inset 0 -1px 2px rgba(255, 255, 255, 0.05),
+      0 0 0 1px rgba(255, 255, 255, 0.08);
+    margin-bottom: 2.5rem;
+    width: 100%;
+    max-width: 680px;
     position: relative;
-  }
-
-  .screen::before {
-    content: '';
-    position: absolute;
-    inset: -2px;
-    border-radius: 26px;
-    background: rgba(255, 255, 255, 0.18);
-    z-index: -1;
+    z-index: 1;
   }
 
   #math-question {
@@ -115,7 +166,101 @@ import Layout from '../layouts/Layout.astro';
     margin: 0;
     font-family: 'Fredoka', monospace;
     letter-spacing: 5px;
-    color: #1e1b4b;
+    color: #ffffff;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  }
+
+  /* ── Challenge card styles (fracciones / geometría) ── */
+  .challenge-card {
+    text-align: left;
+    animation: fadeSlideIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(12px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0)   scale(1);    }
+  }
+
+  .challenge-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .challenge-icon {
+    font-size: 2rem;
+    line-height: 1;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
+  }
+
+  .challenge-badge {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 50px;
+    padding: 0.2rem 0.9rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #e0e7ff;
+    backdrop-filter: blur(8px);
+  }
+
+  .challenge-body {
+    font-size: 1.25rem;
+    line-height: 1.7;
+    color: #f1f5f9;
+    margin: 0;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+  }
+
+  .challenge-body strong {
+    color: #fbbf24;
+    font-weight: 800;
+  }
+
+  .challenge-body em {
+    display: block;
+    margin-top: 0.6rem;
+    color: #a5f3fc;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 1.15rem;
+  }
+
+  /* ── Fracción matemática apilada ── */
+  .frac {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    margin: 0 0.35em;
+    line-height: 1;
+    font-size: 1em;
+  }
+  .frac-num {
+    font-size: 0.9em;
+    font-weight: 900;
+    color: #fde68a;
+    line-height: 1.2;
+    padding: 0 0.2em 0.05em;
+    border-bottom: 2.5px solid #fbbf24;
+    min-width: 1em;
+    text-align: center;
+    letter-spacing: 0;
+  }
+  .frac-den {
+    font-size: 0.9em;
+    font-weight: 900;
+    color: #fde68a;
+    line-height: 1.2;
+    padding: 0.05em 0.2em 0;
+    min-width: 1em;
+    text-align: center;
+    letter-spacing: 0;
   }
 
   .fruits-container {
@@ -123,61 +268,74 @@ import Layout from '../layouts/Layout.astro';
     gap: 1.5rem;
     justify-content: center;
     flex-wrap: wrap;
+    position: relative;
+    z-index: 2;
   }
 
-  :global(.fruit-btn) {
-    background: rgba(255, 255, 255, 0.18);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    color: #ffffff;
-    font-size: 2rem;
-    font-weight: 800;
-    padding: 1.4rem 2rem;
+  .fruit-btn {
     border-radius: 28px;
     cursor: pointer;
     transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
     min-width: 170px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.16);
+    font-size: 2rem;
+    font-weight: 800;
+    padding: 1.4rem 2rem;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3);
     position: relative;
     overflow: hidden;
-    backdrop-filter: blur(16px);
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color: #ffffff !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   }
 
-  :global(.fruit-btn::before) {
+  .fruit-btn::before {
     content: '';
     position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0.08) 40%, transparent 100%);
-    pointer-events: none;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.3),
+      transparent
+    );
+    transition: all 0.6s ease;
+    transform: skewX(-25deg);
   }
 
-  :global(.fruit-btn:hover) {
-    transform: translateY(-10px) scale(1.03);
-    box-shadow: 0 24px 50px rgba(0, 0, 0, 0.2);
+  .fruit-btn:hover::before {
+    left: 150%;
   }
 
-  :global(.fruit-btn.blue-card) {
-    background: rgba(59, 130, 246, 0.24);
-    border-color: rgba(59, 130, 246, 0.55);
+  .fruit-btn:hover {
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.2);
   }
 
-  :global(.fruit-btn.green-card) {
-    background: rgba(16, 185, 129, 0.24);
-    border-color: rgba(16, 185, 129, 0.55);
+  .fruit-btn.blue-card {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.5), rgba(59, 130, 246, 0.2));
+    border: 1px solid rgba(59, 130, 246, 0.5);
   }
 
-  :global(.fruit-btn.red-card) {
-    background: rgba(239, 68, 68, 0.24);
-    border-color: rgba(239, 68, 68, 0.55);
+  .fruit-btn.green-card {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.5), rgba(16, 185, 129, 0.2));
+    border: 1px solid rgba(16, 185, 129, 0.5);
   }
 
-  :global(.fruit-btn.yellow-card) {
-    background: rgba(234, 179, 8, 0.24);
-    border-color: rgba(234, 179, 8, 0.55);
-    color: #1f2937;
+  .fruit-btn.red-card {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.5), rgba(239, 68, 68, 0.2));
+    border: 1px solid rgba(239, 68, 68, 0.5);
   }
 
-  :global(.fruit-btn:active) {
+  .fruit-btn.yellow-card {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.55), rgba(245, 158, 11, 0.25));
+    border: 1px solid rgba(245, 158, 11, 0.5);
+  }
+
+  .fruit-btn:active {
     transform: translateY(-2px) scale(0.98);
   }
 
@@ -186,14 +344,15 @@ import Layout from '../layouts/Layout.astro';
     font-weight: bold;
     margin-top: 2rem;
     min-height: 2rem;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
   }
 
-  :global(.correct) {
-    color: #16a34a;
+  .correct {
+    color: #22c55e;
     animation: correctPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
-  :global(.incorrect) {
+  .incorrect {
     color: #ef4444;
     animation: shake 0.5s ease;
   }
@@ -208,11 +367,104 @@ import Layout from '../layouts/Layout.astro';
     25% { transform: translateX(-10px); }
     75% { transform: translateX(10px); }
   }
+
+  @media (max-width: 600px) {
+    .header-beta {
+      flex-direction: column;
+      gap: 0.8rem;
+      margin-bottom: 1rem;
+    }
+
+    .level-title {
+      font-size: 1.8rem;
+    }
+
+    .timer-box {
+      font-size: 1.1rem;
+      padding: 0.4rem 1rem;
+      border-radius: 12px;
+    }
+
+    .screen {
+      padding: 1.5rem 1rem;
+      border-radius: 20px;
+      margin-bottom: 1.5rem;
+      min-width: 0;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    #math-question {
+      font-size: 2.5rem;
+      letter-spacing: 2px;
+    }
+
+    .fruits-container {
+      gap: 1rem;
+      width: 100%;
+    }
+
+    :global(.fruit-btn) {
+      min-width: 0;
+      width: 100%;
+      box-sizing: border-box;
+      font-size: 1.4rem;
+      padding: 1.1rem 1.5rem;
+      border-radius: 16px;
+    }
+  }
+
+  @media (max-width: 360px) {
+    #math-question {
+      font-size: 2rem;
+    }
+    :global(.fruit-btn) {
+      font-size: 1.2rem;
+    }
+  }
+</style>
 </style>
 
 <script>
   //@ts-ignore
   import confetti from 'canvas-confetti';
+  import { turnManager } from '../lib/turnManager';
+  import { ChallengePool } from '../utils/fracGeo';
+
+  // Pool de retos sin repetición – se rota todo el catálogo antes de volver a repetir
+  const challengePool = new ChallengePool('6to', 3);
+  import { generateMathQuestion } from '../utils/mathgenerator';
+
+  // Inicializar TurnManager y UI
+  try {
+    turnManager.inicializar();
+    updateTurnUI();
+  } catch (e) {
+    console.warn("Faltan datos de configuración, redirigiendo a Setup...");
+    window.location.href = '/Setup';
+  }
+
+  function updateTurnUI() {
+    try {
+      const turnInfo = turnManager.obtenerTurnoActual();
+      const indicator = document.getElementById('turn-indicator');
+      const avatarEl = document.getElementById('turn-avatar');
+      const teamEl = document.getElementById('turn-team');
+      const memberEl = document.getElementById('turn-member');
+
+      if (indicator && avatarEl && teamEl && memberEl) {
+        indicator.classList.remove('hidden');
+        avatarEl.textContent = turnInfo.equipo.avatar;
+        teamEl.textContent = turnInfo.equipo.name;
+        teamEl.style.color = turnInfo.equipo.hexColor;
+        memberEl.textContent = turnInfo.miembro;
+        indicator.style.borderColor = turnInfo.equipo.hexColor;
+        indicator.style.boxShadow = `0 8px 32px ${turnInfo.equipo.hexColor}40`;
+      }
+    } catch (e) {
+      console.error("Error al actualizar UI de turno:", e);
+    }
+  }
 
   const questionEl = document.getElementById('math-question');
   const optionsContainer = document.getElementById('options-container');
@@ -224,18 +476,19 @@ import Layout from '../layouts/Layout.astro';
   let timeLeft = 15;
   let isAnswering = false;
 
-  function startTimer() {
-    timeLeft = 15;
+  function startTimer(duration: number = 15) {
+    timeLeft = duration;
     if (timeLeftEl) timeLeftEl.textContent = timeLeft.toString();
     if (timerBox) timerBox.classList.remove('timer-warning');
     clearInterval(timer);
+
+    const warnAt = duration > 30 ? 10 : 5;
 
     timer = setInterval(() => {
       timeLeft--;
       if (timeLeftEl) timeLeftEl.textContent = timeLeft.toString();
 
-      // Add warning pulse when time is running out
-      if (timeLeft <= 5 && timerBox) {
+      if (timeLeft <= warnAt && timerBox) {
         timerBox.classList.add('timer-warning');
       }
 
@@ -248,11 +501,21 @@ import Layout from '../layouts/Layout.astro';
 
   function handleTimeOut() {
     isAnswering = true;
+
+    try {
+      turnManager.comenzarTurno();
+      turnManager.resolverTurno({ fueCorrecto: false });
+    } catch(e) { console.error(e) }
+
     if (feedbackEl) {
       feedbackEl.textContent = "¡Tiempo agotado!";
       feedbackEl.className = "feedback incorrect";
     }
     setTimeout(() => {
+      try {
+        turnManager.siguienteTurno();
+        updateTurnUI();
+      } catch(e) { console.error(e) }
       generateQuestion();
     }, 2000);
   }
@@ -261,44 +524,65 @@ import Layout from '../layouts/Layout.astro';
     isAnswering = false;
     if (feedbackEl) feedbackEl.textContent = "";
 
-    // Decidir si es multiplicación o división
-    const isMultiplication = Math.random() > 0.5;
-    let var1, var2, correctAnswer, operator;
+    // 50% de probabilidad de usar un reto de fracciones/geometría y 50% de operaciones simples
+    const useChallenge = Math.random() > 0.5;
 
-    if (isMultiplication) {
-      var1 = Math.floor(Math.random() * 10) + 2;
-      var2 = Math.floor(Math.random() * 10) + 2;
-      correctAnswer = var1 * var2;
-      operator = '×';
+    if (useChallenge) {
+      const challenge = challengePool.next();
+      if (questionEl) {
+        questionEl.innerHTML = challenge.htmlQuestion;
+        questionEl.style.fontSize = '';
+        questionEl.style.letterSpacing = '';
+      }
+      startTimer(challenge.timeLimit);
+      renderOptions(challenge.options);
     } else {
+      const isMultiplication = Math.random() > 0.5;
+      let var1, var2, correctAnswer, operator;
 
-      var2 = Math.floor(Math.random() * 9) + 2;
-      correctAnswer = Math.floor(Math.random() * 10) + 2;
-      var1 = correctAnswer * var2;
-      operator = '÷';
+      if (isMultiplication) {
+        var1 = Math.floor(Math.random() * 10) + 2;
+        var2 = Math.floor(Math.random() * 10) + 2;
+        correctAnswer = var1 * var2;
+        operator = '×';
+      } else {
+        var2 = Math.floor(Math.random() * 9) + 2;
+        correctAnswer = Math.floor(Math.random() * 10) + 2;
+        var1 = correctAnswer * var2;
+        operator = '÷';
+      }
+
+      let wrong1 = correctAnswer + Math.floor(Math.random() * 4) + 1;
+      let wrong2 = Math.max(1, correctAnswer - (Math.floor(Math.random() * 4) + 1));
+
+      if (wrong1 === wrong2) wrong1 += 1;
+      if (wrong1 === correctAnswer) wrong1 += 2;
+      if (wrong2 === correctAnswer) wrong2 -= 1;
+
+      const options = [
+        { value: correctAnswer, isCorrect: true },
+        { value: wrong1, isCorrect: false },
+        { value: wrong2, isCorrect: false }
+      ];
+
+      options.sort(() => Math.random() - 0.5);
+
+      if (questionEl) {
+        questionEl.textContent = `${var1} ${operator} ${var2} = ?`;
+        questionEl.style.fontSize = '4rem';
+        questionEl.style.letterSpacing = '5px';
+      }
+
+      renderOptions(options);
     }
-
-    let wrong1 = correctAnswer + Math.floor(Math.random() * 4) + 1;
-    let wrong2 = Math.max(1, correctAnswer - (Math.floor(Math.random() * 4) + 1));
-
-    if (wrong1 === wrong2) wrong1 += 1;
-    if (wrong1 === correctAnswer) wrong1 += 2;
-    if (wrong2 === correctAnswer) wrong2 -= 1;
-
-    // 3 opciones para Beta
-    const options = [
-      { value: correctAnswer, isCorrect: true },
-      { value: wrong1, isCorrect: false },
-      { value: wrong2, isCorrect: false }
-    ];
-
-    options.sort(() => Math.random() - 0.5);
+    startTimer(15);
+    const question = generateMathQuestion('Beta');
 
     if (questionEl) {
-      questionEl.textContent = `${var1} ${operator} ${var2} = ?`;
+      questionEl.textContent = question.text;
     }
 
-    renderOptions(options);
+    renderOptions(question.options);
     startTimer();
   }
 
@@ -326,7 +610,12 @@ import Layout from '../layouts/Layout.astro';
     isAnswering = true;
     clearInterval(timer);
 
-    if (!feedbackEl) return;
+    if (!feedbackEl || !optionsContainer) return;
+
+    try {
+      turnManager.comenzarTurno();
+      turnManager.resolverTurno({ fueCorrecto: isCorrect });
+    } catch(e) { console.error(e) }
 
     if (isCorrect) {
       feedbackEl.textContent = "¡Correcto!";
@@ -336,14 +625,13 @@ import Layout from '../layouts/Layout.astro';
       audioGanar.play();
 
       confetti({
-        particleCount:150,
-        spread:80,
-        origin:{y:0.6}
+        particleCount: 150,
+        spread: 80,
+        origin: { y: 0.6 }
       });
 
-      setTimeout(() => {
-        generateQuestion();
-      }, 1500);
+      optionsContainer.style.display = 'none'; 
+      document.dispatchEvent(new CustomEvent('respuestaCorrecta'));
 
     } else {
       feedbackEl.textContent = "Intenta de nuevo";
@@ -353,32 +641,51 @@ import Layout from '../layouts/Layout.astro';
       audioPerder.play();
 
       for (let i = 0; i < 10; i++) {
-    const x = document.createElement('div');
-    x.textContent = '❌'; // Puedes cambiarlo por 😢 si prefieres
-    x.style.position = 'fixed';
-    x.style.top = '-50px';
-    // Los distribuye a lo ancho de la pantalla de forma aleatoria
-    x.style.left = Math.random() * 100 + 'vw'; 
-    x.style.fontSize = Math.random() * (30 - 20) + 20 + 'px';
-    x.style.zIndex = '9999';
-    x.style.pointerEvents = 'none';
-    x.style.transition = 'transform 1s linear, opacity 1s ease';
-    
-    document.body.appendChild(x);
+        const x = document.createElement('div');
+        x.textContent = '❌'; 
+        x.style.position = 'fixed';
+        x.style.top = '-50px';
+        x.style.left = Math.random() * 100 + 'vw'; 
+        x.style.fontSize = Math.random() * (30 - 20) + 20 + 'px';
+        x.style.zIndex = '9999';
+        x.style.pointerEvents = 'none';
+        x.style.transition = 'transform 1s linear, opacity 1s ease';
+        
+        document.body.appendChild(x);
 
-    // Animación de caída libre con un ligero delay aleatorio
-    setTimeout(() => {
-      x.style.transform = `translateY(110vh) rotate(${Math.random() * 360}deg)`;
-      x.style.opacity = '0';
-      setTimeout(() => x.remove(), 1000);
-    }, Math.random() * 200);
-  }
+        setTimeout(() => {
+          x.style.transform = `translateY(110vh) rotate(${Math.random() * 360}deg)`;
+          x.style.opacity = '0';
+          setTimeout(() => x.remove(), 1000);
+        }, Math.random() * 200);
+      }
   
       setTimeout(() => {
+        try {
+          turnManager.siguienteTurno();
+          updateTurnUI();
+        } catch(e) { console.error(e) }
         generateQuestion();
       }, 1500);
     }
   }
+
+  // 4. NUEVO: Escuchar cuando la ruleta termine para reiniciar todo en Beta
+  document.addEventListener('siguienteTurno', () => {
+    try {
+      turnManager.siguienteTurno();
+      updateTurnUI();
+    } catch(e) { console.error(e) }
+
+    if (feedbackEl) feedbackEl.textContent = "";
+    if (optionsContainer) optionsContainer.style.display = 'flex'; // Regresamos las 3 respuestas visualmente
+    generateQuestion(); // Esto genera nueva pregunta y reinicia el timer solo
+  });
+
+  // 5. NUEVO: Escuchar los pasos para avanzar ficha (Consola)
+  document.addEventListener('avanzarFicha', (e: any) => {
+    console.log(`Beta: El jugador saca dado de ${e.detail.pasos}. Mover ficha.`);
+  });
 
   generateQuestion();
 </script>

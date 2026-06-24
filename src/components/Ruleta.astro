@@ -1,0 +1,167 @@
+---
+// src/components/Ruleta.astro
+---
+
+<div id="zona-ruleta" class="oculto">
+  <div class="puntero">▼</div>
+  <div class="ruleta" id="ruleta">
+    <div class="numero-container num-1"><span class="numero">1</span></div>
+    <div class="numero-container num-2"><span class="numero">2</span></div>
+    <div class="numero-container num-3"><span class="numero">3</span></div>
+  </div>
+  <button id="btn-girar">¡Girar Ruleta!</button>
+  <h3 id="resultado-ruleta"></h3>
+</div>
+
+<style>
+  .oculto {
+    display: none !important;
+  }
+
+  #zona-ruleta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    margin-top: 2rem;
+    background-color: #ffe5ec; 
+    padding: 25px;
+    border-radius: 24px;
+    box-shadow: 0 8px 24px rgba(251, 111, 146, 0.2);
+    animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes popIn {
+    0% { transform: scale(0.7); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  .puntero {
+    font-size: 2.5rem;
+    color: #fb6f92; 
+    z-index: 10;
+    margin-bottom: -18px;
+  }
+
+  .ruleta {
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+    border: 5px solid #fb6f92;
+    background: conic-gradient(
+      #ffb3c6 0deg 120deg,
+      #ff8fab 120deg 240deg,
+      #fb6f92 240deg 360deg
+    );
+    transition: transform 3s cubic-bezier(0.25, 0.1, 0.25, 1);
+  }
+
+  .numero-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+  }
+
+  .num-1 { transform: rotate(60deg); }
+  .num-2 { transform: rotate(180deg); }
+  .num-3 { transform: rotate(300deg); }
+
+  .numero {
+    position: absolute;
+    top: 15px; 
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: white;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+  }
+
+  #btn-girar {
+    margin-top: 20px;
+    padding: 12px 30px;
+    font-size: 1.3rem;
+    cursor: pointer;
+    background-color: #fb6f92;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(251, 111, 146, 0.4);
+    transition: all 0.2s;
+  }
+
+  #btn-girar:hover {
+    background-color: #ff8fab;
+    transform: translateY(-2px);
+  }
+
+  #btn-girar:disabled {
+    background-color: #ffc2d1;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  #resultado-ruleta {
+    margin-top: 15px;
+    font-size: 1.5rem;
+    color: #7c2d12;
+  }
+</style>
+
+<script>
+  function iniciarRuleta() {
+    const zonaRuleta = document.getElementById('zona-ruleta');
+    const ruleta = document.getElementById('ruleta');
+    const btnGirar = document.getElementById('btn-girar') as HTMLButtonElement;
+    const resultadoTexto = document.getElementById('resultado-ruleta');
+
+    if (!zonaRuleta || !ruleta || !btnGirar || !resultadoTexto) return;
+
+    let rotacionActual = 0;
+
+    // ESCUCHAR CUANDO EL JUEGO DICE QUE LA RESPUESTA ES CORRECTA
+    document.addEventListener('respuestaCorrecta', () => {
+      zonaRuleta.classList.remove('oculto');
+      resultadoTexto.innerText = ""; // Limpiar textos viejos
+    });
+
+    btnGirar.addEventListener('click', () => {
+      btnGirar.disabled = true;
+      resultadoTexto.innerText = "¡Girando ruleta...!";
+
+      const numeroGanador = Math.floor(Math.random() * 3) + 1;
+
+      const angulosAjuste = { 1: 300, 2: 180, 3: 60 };
+      const gradosFinales = angulosAjuste[numeroGanador as keyof typeof angulosAjuste];
+      
+      rotacionActual += (360 * 5); 
+      const resto = rotacionActual % 360;
+      rotacionActual += (gradosFinales - resto);
+
+      ruleta.style.transform = `rotate(${rotacionActual}deg)`;
+
+      setTimeout(() => {
+        resultadoTexto.innerText = `¡Avanzas ${numeroGanador} casillas!`;
+        
+        // LANZAR EVENTO CON EL NÚMERO (Por si tu tablero necesita mover la ficha)
+        document.dispatchEvent(new CustomEvent('avanzarFicha', { detail: { pasos: numeroGanador } }));
+
+        // Esperar 2.5 segundos para que el niño vea el número, esconder la ruleta y pedir nueva pregunta
+        setTimeout(() => {
+          zonaRuleta.classList.add('oculto');
+          btnGirar.disabled = false;
+          // Le avisamos a Alpha que ya puede cambiar de pregunta
+          document.dispatchEvent(new CustomEvent('siguienteTurno'));
+        }, 2500);
+
+      }, 3000);
+    });
+  }
+
+  iniciarRuleta();
+</script>

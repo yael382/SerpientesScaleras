@@ -15,12 +15,13 @@ const { isHome = false, showLevelButtons = false } = Astro.props;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <title>Juego Matemático - UTVAM</title>
+    <title>Juego de Oca - UTVAM</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
   </head>
   <body class={isHome ? 'home' : ''}>
+    <div class="math-rain" aria-hidden="true"></div>
 
     <Navbar showLevelButtons={showLevelButtons} />
 
@@ -43,7 +44,7 @@ const { isHome = false, showLevelButtons = false } = Astro.props;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background: url('/4.jpeg') center/cover no-repeat fixed;
+    background: url('/1.png') center/cover no-repeat fixed;
     background-attachment: fixed;
     overflow-x: hidden;
   }
@@ -67,4 +68,68 @@ const { isHome = false, showLevelButtons = false } = Astro.props;
     50% { transform: translate(-15px, 20px) rotate(180deg) scale(0.9); }
     75% { transform: translate(25px, 10px) rotate(270deg) scale(1.05); }
   }
+
+  .math-rain {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+  }
+
+  .math-rain span {
+    position: absolute;
+    top: -10%;
+    font-size: 1.4rem;
+    font-weight: 700;
+    opacity: 0;
+    white-space: nowrap;
+    animation: rainFall var(--duration) linear infinite, sway var(--sway) ease-in-out infinite alternate;
+    filter: drop-shadow(0 0 6px rgba(0,0,0,0.18));
+  }
+
+  @keyframes rainFall {
+    0% { top: -10%; opacity: 0; }
+    10% { opacity: 1; }
+    100% { top: 120vh; opacity: 0.2; }
+  }
+
+  @keyframes sway {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(var(--drift)); }
+  }
 </style>
+
+<script type="module">
+  const symbols = ['1','2','3','4','5','6','7','8','9','+','-','×','÷','='];
+  const colors = ['#F97316','#22C55E','#3B82F6','#EC4899','#F59E0B','#10B981'];
+
+  function createMathRain() {
+    const container = document.querySelector('.math-rain');
+    if (!container) return;
+
+    for (let i = 0; i < 24; i += 1) {
+      const drop = document.createElement('span');
+      const symbol = symbols[Math.floor(Math.random() * symbols.length)];
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      const duration = 8 + Math.random() * 8;
+      const sway = 4 + Math.random() * 4;
+      const left = Math.random() * 100;
+      const drift = (Math.random() * 40 - 20).toFixed(1);
+      const size = 1 + Math.random() * 0.8;
+
+      drop.textContent = symbol;
+      drop.style.setProperty('--duration', `${duration}s`);
+      drop.style.setProperty('--sway', `${sway}s`);
+      drop.style.setProperty('--drift', `${drift}px`);
+      drop.style.left = `${left}%`;
+      drop.style.color = color;
+      drop.style.fontSize = `${size + 0.7}rem`;
+      drop.style.opacity = '0';
+
+      container.appendChild(drop);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', createMathRain);
+</script>
