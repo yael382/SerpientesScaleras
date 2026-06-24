@@ -12,6 +12,7 @@ import ModalBeta from '../components/ModalBeta.astro';
       <div class="timer-box">
         <span id="time-left">15</span>s
       </div>
+      <button id="mute-button" class="mute-btn">🔊Sonido</button>
     </div>
 
     <div id="turn-indicator" class="turn-indicator hidden">
@@ -424,18 +425,55 @@ import ModalBeta from '../components/ModalBeta.astro';
       font-size: 1.2rem;
     }
   }
+/* Estilo base idéntico a tus botones de arriba pero más grande */
+ /* Estilo vidrioso como la caja de preguntas */
+  .mute-btn {
+    /* Fondo translúcido blanco que da el efecto de vidrio */
+    background: rgba(255, 255, 255, 0.08); 
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    
+    /* Borde limpio idéntico al de arriba */
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #ffffff;
+    padding: 0.7rem 1.6rem;
+    border-radius: 8px; /* Rectangular como Alfa/Beta */
+    font-size: 1.15rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    position: relative;
+    z-index: 999;
+  }
+
+  /* Hover sutil sobre el vidrio */
+  .mute-btn:hover {
+    background: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.6);
+  }
+
+  /* Estado SILENCIADO: Vidrio tintado de rojo/rosa con opacidad */
+  .mute-btn.estado-silenciado {
+    background: rgba(239, 68, 68, 0.25);
+    border-color: rgba(239, 68, 68, 0.6);
+    color: #fca5a5;
+  }
+
+  /* Hover del estado silenciado */
+  .mute-btn.estado-silenciado:hover {
+    background: rgba(239, 68, 68, 0.35);
+    border-color: rgba(239, 68, 68, 0.8);
+  }
 </style>
 </style>
 
 <script>
   //@ts-ignore
+  
   import confetti from 'canvas-confetti';
   import { turnManager } from '../lib/turnManager';
-  import { ChallengePool } from '../utils/fracGeo';
-
-  // Pool de retos sin repetición – se rota todo el catálogo antes de volver a repetir
-  const challengePool = new ChallengePool('6to', 3);
-  import { generateMathQuestion } from '../utils/mathgenerator';
+  import { generateMathQuestion } from '../utils/mathgenerator.ts';
+  import { audioController } from '../utils/audioController.ts';
 
   // Inicializar TurnManager y UI
   try {
@@ -503,6 +541,8 @@ import ModalBeta from '../components/ModalBeta.astro';
 
   function handleTimeOut() {
     isAnswering = true;
+
+    audioController.play('incorrecto');
 
     try {
       turnManager.comenzarTurno();
@@ -623,8 +663,7 @@ import ModalBeta from '../components/ModalBeta.astro';
       feedbackEl.textContent = "¡Correcto!";
       feedbackEl.className = "feedback correct";
 
-      const audioGanar = new Audio('/sounds/Ganar.mp3');
-      audioGanar.play();
+      audioController.play('correcto');
 
       confetti({
         particleCount: 150,
@@ -639,8 +678,7 @@ import ModalBeta from '../components/ModalBeta.astro';
       feedbackEl.textContent = "Intenta de nuevo";
       feedbackEl.className = "feedback incorrect";
 
-      const audioPerder = new Audio('/sounds/perder.mp3');
-      audioPerder.play();
+      audioController.play('incorrecto');
 
       for (let i = 0; i < 10; i++) {
         const x = document.createElement('div');
@@ -690,4 +728,13 @@ import ModalBeta from '../components/ModalBeta.astro';
   });
 
   generateQuestion();
+
+  const muteBtn = document.getElementById('mute-button');
+
+  muteBtn?.addEventListener('click', () => {
+    const mutear = audioController.toggleMute();
+    if (muteBtn) {
+      muteBtn.textContent = mutear ? '🔇Silenciado' : '🔊Sonido';
+    }
+  });
 </script>
