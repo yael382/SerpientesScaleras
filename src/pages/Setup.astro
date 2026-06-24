@@ -83,21 +83,15 @@ import Layout from '../layouts/Layout.astro';
               </div>
             </div>
             <div class="members-section">
-              <span class="picker-label">Integrantes:</span>
-              <div class="member-input-row">
-                <input 
-                  type="text" 
-                  class="member-text-input" 
-                  id="member-input-1" 
-                  placeholder="Ej. Juanito"
-                  maxlength="15"
-                />
-                <button type="button" class="add-member-btn" data-team-id="1">+</button>
+              <span class="picker-label">¿Cuántos integrantes?</span>
+              <div class="members-counter-wrapper">
+                <button type="button" class="counter-btn minus-btn" data-team-id="1">−</button>
+                <span class="counter-value" id="member-count-1">1</span>
+                <button type="button" class="counter-btn plus-btn" data-team-id="1">+</button>
               </div>
-              <div class="members-chips-container" id="members-container-1">
-                <!-- Se llena con chips de JS -->
+              <div class="visual-members-container" id="visual-members-1">
+                <!-- Se llena con emojis desde JS -->
               </div>
-              <p class="empty-warning" id="empty-warning-1">⚠️ Agrega al menos un integrante</p>
             </div>
           </div>
 
@@ -128,21 +122,15 @@ import Layout from '../layouts/Layout.astro';
               </div>
             </div>
             <div class="members-section">
-              <span class="picker-label">Integrantes:</span>
-              <div class="member-input-row">
-                <input 
-                  type="text" 
-                  class="member-text-input" 
-                  id="member-input-2" 
-                  placeholder="Ej. Anita"
-                  maxlength="15"
-                />
-                <button type="button" class="add-member-btn" data-team-id="2">+</button>
+              <span class="picker-label">¿Cuántos integrantes?</span>
+              <div class="members-counter-wrapper">
+                <button type="button" class="counter-btn minus-btn" data-team-id="2">−</button>
+                <span class="counter-value" id="member-count-2">1</span>
+                <button type="button" class="counter-btn plus-btn" data-team-id="2">+</button>
               </div>
-              <div class="members-chips-container" id="members-container-2">
-                <!-- Se llena con chips de JS -->
+              <div class="visual-members-container" id="visual-members-2">
+                <!-- Se llena con emojis desde JS -->
               </div>
-              <p class="empty-warning" id="empty-warning-2">⚠️ Agrega al menos un integrante</p>
             </div>
           </div>
 
@@ -173,21 +161,15 @@ import Layout from '../layouts/Layout.astro';
               </div>
             </div>
             <div class="members-section">
-              <span class="picker-label">Integrantes:</span>
-              <div class="member-input-row">
-                <input 
-                  type="text" 
-                  class="member-text-input" 
-                  id="member-input-3" 
-                  placeholder="Ej. Mateo"
-                  maxlength="15"
-                />
-                <button type="button" class="add-member-btn" data-team-id="3">+</button>
+              <span class="picker-label">¿Cuántos integrantes?</span>
+              <div class="members-counter-wrapper">
+                <button type="button" class="counter-btn minus-btn" data-team-id="3">−</button>
+                <span class="counter-value" id="member-count-3">1</span>
+                <button type="button" class="counter-btn plus-btn" data-team-id="3">+</button>
               </div>
-              <div class="members-chips-container" id="members-container-3">
-                <!-- Se llena con chips de JS -->
+              <div class="visual-members-container" id="visual-members-3">
+                <!-- Se llena con emojis desde JS -->
               </div>
-              <p class="empty-warning" id="empty-warning-3">⚠️ Agrega al menos un integrante</p>
             </div>
           </div>
 
@@ -218,21 +200,15 @@ import Layout from '../layouts/Layout.astro';
               </div>
             </div>
             <div class="members-section">
-              <span class="picker-label">Integrantes:</span>
-              <div class="member-input-row">
-                <input 
-                  type="text" 
-                  class="member-text-input" 
-                  id="member-input-4" 
-                  placeholder="Ej. Sofi"
-                  maxlength="15"
-                />
-                <button type="button" class="add-member-btn" data-team-id="4">+</button>
+              <span class="picker-label">¿Cuántos integrantes?</span>
+              <div class="members-counter-wrapper">
+                <button type="button" class="counter-btn minus-btn" data-team-id="4">−</button>
+                <span class="counter-value" id="member-count-4">1</span>
+                <button type="button" class="counter-btn plus-btn" data-team-id="4">+</button>
               </div>
-              <div class="members-chips-container" id="members-container-4">
-                <!-- Se llena con chips de JS -->
+              <div class="visual-members-container" id="visual-members-4">
+                <!-- Se llena con emojis desde JS -->
               </div>
-              <p class="empty-warning" id="empty-warning-4">⚠️ Agrega al menos un integrante</p>
             </div>
           </div>
 
@@ -647,115 +623,113 @@ import Layout from '../layouts/Layout.astro';
     z-index: 2;
   }
 
-  /* Integrantes */
+  /* Integrantes (Contadores para niños) */
   .members-section {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 12px;
     flex: 1;
+    align-items: center;
+    text-align: center;
   }
 
-  .member-input-row {
+  .members-counter-wrapper {
     display: flex;
-    gap: 8px;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    background: rgba(255, 255, 255, 0.6);
+    border: 2px solid rgba(124, 58, 237, 0.15);
+    border-radius: 20px;
+    padding: 6px 14px;
+    width: fit-content;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.03);
   }
 
-  .member-text-input {
-    flex: 1;
-    background: rgba(15, 23, 42, 0.5);
-    border: 2px solid rgba(255, 255, 255, 0.15);
-    border-radius: 12px;
-    padding: 0.5rem 0.8rem;
-    font-size: 0.95rem;
-    outline: none;
-    transition: all 0.2s ease;
-    color: #ffffff;
-    font-weight: 600;
-  }
-
-  .member-text-input:focus {
-    background: rgba(15, 23, 42, 0.7);
-    border-color: #a78bfa;
-  }
-
-  .add-member-btn {
+  .counter-btn {
     background: linear-gradient(135deg, #7C3AED, #9333EA);
     color: #fff;
     border: none;
     width: 38px;
     height: 38px;
-    border-radius: 12px;
-    font-size: 1.4rem;
-    font-weight: bold;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    font-weight: 800;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
     box-shadow: 0 4px 8px rgba(124, 58, 237, 0.2);
+    user-select: none;
+    line-height: 1;
+    padding-bottom: 2px;
   }
 
-  .add-member-btn:hover {
-    transform: scale(1.1);
-    box-shadow: 0 6px 12px rgba(124, 58, 237, 0.3);
+  .counter-btn:hover:not(:disabled) {
+    transform: scale(1.18);
+    box-shadow: 0 6px 12px rgba(124, 58, 237, 0.35);
   }
 
-  .add-member-btn:active {
-    transform: scale(0.95);
+  .counter-btn:active:not(:disabled) {
+    transform: scale(0.9);
   }
 
-  /* Member chips */
-  .members-chips-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 4px;
-    min-height: 30px;
+  .counter-btn:disabled {
+    background: #d1d5db;
+    color: #9ca3af;
+    cursor: not-allowed;
+    box-shadow: none;
   }
 
-  .member-chip {
-    background: #fff;
-    border: 2px solid rgba(124, 58, 237, 0.15);
+  .counter-value {
+    font-size: 1.8rem;
+    font-weight: 800;
     color: #2D1B4E;
-    font-size: 0.9rem;
-    font-weight: 600;
-    padding: 0.3rem 0.6rem;
-    border-radius: 30px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
-    animation: chipPopIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    min-width: 32px;
+    user-select: none;
   }
 
-  @keyframes chipPopIn {
-    from {
-      transform: scale(0.5);
+  /* Contenedor Visual de Integrantes */
+  .visual-members-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-height: 52px;
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 16px;
+    width: 100%;
+    box-sizing: border-box;
+    border: 2px dashed rgba(124, 58, 237, 0.15);
+    transition: border-color 0.3s ease, background 0.3s ease;
+  }
+
+  .visual-member-avatar {
+    font-size: 2.2rem;
+    display: inline-block;
+    animation: avatarPopIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+    cursor: default;
+    user-select: none;
+    transition: transform 0.2s ease;
+  }
+
+  .visual-member-avatar:hover {
+    transform: scale(1.25) rotate(12deg);
+  }
+
+  @keyframes avatarPopIn {
+    0% {
+      transform: scale(0) rotate(-30deg);
       opacity: 0;
     }
-    to {
-      transform: scale(1);
+    100% {
+      transform: scale(1) rotate(0deg);
       opacity: 1;
     }
-  }
-
-  .remove-member-btn {
-    border: none;
-    background: transparent;
-    color: #ef4444;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 2px;
-    transition: color 0.2s ease, transform 0.2s ease;
-  }
-
-  .remove-member-btn:hover {
-    color: #dc2626;
-    transform: scale(1.2);
   }
 
   .empty-warning {
@@ -1001,14 +975,25 @@ import Layout from '../layouts/Layout.astro';
     teams: Team[];
   }
 
+  const emojiNames: Record<string, string> = {
+    "🦁": "Equipo León",
+    "🦊": "Equipo Zorro",
+    "🐼": "Equipo Panda",
+    "🐨": "Equipo Koala",
+    "🐸": "Equipo Rana",
+    "🐙": "Equipo Pulpo",
+    "🦖": "Equipo Dino",
+    "🦄": "Equipo Unicornio"
+  };
+
   const state: SetupState = {
     level: 'Alpha',
     qty: 3,
     teams: [
-      { id: 1, name: "Equipo León", avatar: "🦁", members: [], colorClass: "team-blue", hexColor: "#3B82F6" },
-      { id: 2, name: "Equipo Zorro", avatar: "🦊", members: [], colorClass: "team-orange", hexColor: "#F97316" },
-      { id: 3, name: "Equipo Panda", avatar: "🐼", members: [], colorClass: "team-green", hexColor: "#10B981" },
-      { id: 4, name: "Equipo Koala", avatar: "🐨", members: [], colorClass: "team-purple", hexColor: "#8B5CF6" }
+      { id: 1, name: "Equipo León", avatar: "🦁", members: ["León 1"], colorClass: "team-blue", hexColor: "#3B82F6" },
+      { id: 2, name: "Equipo Zorro", avatar: "🦊", members: ["Zorro 1"], colorClass: "team-orange", hexColor: "#F97316" },
+      { id: 3, name: "Equipo Panda", avatar: "🐼", members: ["Panda 1"], colorClass: "team-green", hexColor: "#10B981" },
+      { id: 4, name: "Equipo Koala", avatar: "🐨", members: ["Koala 1"], colorClass: "team-purple", hexColor: "#8B5CF6" }
     ]
   };
 
@@ -1042,11 +1027,19 @@ import Layout from '../layouts/Layout.astro';
     // Cargar configuraciones previas si existen
     loadFromLocalStorage();
 
+    // Asegurarse de que cada equipo tenga al menos 1 integrante en su estado inicial
+    state.teams.forEach((team) => {
+      if (!team.members || team.members.length === 0) {
+        const cleanName = team.name.replace("Equipo ", "");
+        team.members = [`${cleanName} 1`];
+      }
+    });
+
     // Enlazar eventos de inputs, avatares y miembros
     bindEvents();
     
-    // Renderizar chips iniciales
-    updateAllChips();
+    // Renderizar contadores e integrantes visuales
+    updateAllVisuals();
   }
 
   // Cargar desde LocalStorage para no reescribir
@@ -1189,88 +1182,86 @@ import Layout from '../layouts/Layout.astro';
             // Cambiar clase activa en los botones de este contenedor
             avatarContainer.querySelectorAll('.avatar-opt-btn').forEach(b => b.classList.remove('active'));
             target.classList.add('active');
+
+            // Actualizar el nombre del equipo según la mascota seleccionada
+            const friendlyName = emojiNames[emoji] || `Equipo ${emoji}`;
+            state.teams[i - 1].name = friendlyName;
+            if (nameInput) {
+              nameInput.value = friendlyName;
+            }
+
+            // Sincronizar los integrantes con la nueva mascota
+            const cleanName = friendlyName.replace("Equipo ", "");
+            state.teams[i - 1].members = state.teams[i - 1].members.map((_, idx) => `${cleanName} ${idx + 1}`);
+
+            // Dibujar de nuevo
+            updateVisualsForTeam(i);
+            validateFormQuietly();
           });
         });
       }
 
-      // 3. Input de integrante y botón Añadir
-      const memberInput = document.getElementById(`member-input-${i}`) as HTMLInputElement;
-      const addBtn = document.querySelector(`.add-member-btn[data-team-id="${i}"]`);
+      // 3. Contadores de integrantes (+ y -)
+      const minusBtn = document.querySelector(`.minus-btn[data-team-id="${i}"]`);
+      const plusBtn = document.querySelector(`.plus-btn[data-team-id="${i}"]`);
 
-      const handleAddMember = () => {
-        if (!memberInput) return;
-        const name = memberInput.value.trim();
-        if (name) {
-          // Validar que no esté repetido en el mismo equipo
-          if (state.teams[i - 1].members.includes(name)) {
-            memberInput.classList.add('shake-anim');
-            setTimeout(() => memberInput.classList.remove('shake-anim'), 400);
-            return;
-          }
-          
-          state.teams[i - 1].members.push(name);
-          memberInput.value = '';
-          updateChipsForTeam(i);
+      minusBtn?.addEventListener('click', () => {
+        const team = state.teams[i - 1];
+        if (team.members.length > 1) {
+          team.members.pop();
+          updateVisualsForTeam(i);
           validateFormQuietly();
         }
-      };
+      });
 
-      if (addBtn) {
-        addBtn.addEventListener('click', handleAddMember);
-      }
-      if (memberInput) {
-        memberInput.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter') {
-            e.preventDefault();
-            handleAddMember();
-          }
-        });
-      }
+      plusBtn?.addEventListener('click', () => {
+        const team = state.teams[i - 1];
+        if (team.members.length < 6) {
+          const cleanName = team.name.replace("Equipo ", "");
+          team.members.push(`${cleanName} ${team.members.length + 1}`);
+          updateVisualsForTeam(i);
+          validateFormQuietly();
+        }
+      });
     }
 
     // Botón Iniciar juego
     btnStart?.addEventListener('click', validateAndStart);
   }
 
-  // Renderizar chips de integrantes para un equipo específico
-  function updateChipsForTeam(teamId: number) {
-    const container = document.getElementById(`members-container-${teamId}`);
-    const emptyWarning = document.getElementById(`empty-warning-${teamId}`);
-    if (!container) return;
+  // Dibujar emojis e indicador de contador para un equipo
+  function updateVisualsForTeam(teamId: number) {
+    const team = state.teams[teamId - 1];
+    const count = team.members.length;
 
-    container.innerHTML = '';
-    const members = state.teams[teamId - 1].members;
+    // Actualizar número en el contador
+    const countEl = document.getElementById(`member-count-${teamId}`);
+    if (countEl) countEl.textContent = count.toString();
 
-    if (members.length === 0) {
-      if (emptyWarning) emptyWarning.classList.add('visible-warning');
-    } else {
-      if (emptyWarning) emptyWarning.classList.remove('visible-warning');
+    // Habilitar/Deshabilitar botones
+    const minusBtn = document.querySelector(`.minus-btn[data-team-id="${teamId}"]`) as HTMLButtonElement;
+    const plusBtn = document.querySelector(`.plus-btn[data-team-id="${teamId}"]`) as HTMLButtonElement;
+    if (minusBtn) minusBtn.disabled = count <= 1;
+    if (plusBtn) plusBtn.disabled = count >= 6;
+
+    // Dibujar emojis
+    const container = document.getElementById(`visual-members-${teamId}`);
+    if (container) {
+      container.innerHTML = '';
+      for (let i = 0; i < count; i++) {
+        const span = document.createElement('span');
+        span.className = 'visual-member-avatar';
+        span.textContent = team.avatar;
+        span.style.animationDelay = `${i * 0.05}s`;
+        container.appendChild(span);
+      }
     }
-
-    members.forEach((member, index) => {
-      const chip = document.createElement('span');
-      chip.className = 'member-chip';
-      chip.textContent = member;
-
-      const removeBtn = document.createElement('button');
-      removeBtn.className = 'remove-member-btn';
-      removeBtn.innerHTML = '&times;';
-      removeBtn.type = 'button';
-      removeBtn.addEventListener('click', () => {
-        state.teams[teamId - 1].members.splice(index, 1);
-        updateChipsForTeam(teamId);
-        validateFormQuietly();
-      });
-
-      chip.appendChild(removeBtn);
-      container.appendChild(chip);
-    });
   }
 
-  // Renderizar chips de todos los equipos
-  function updateAllChips() {
+  // Actualizar todos los equipos
+  function updateAllVisuals() {
     for (let i = 1; i <= 4; i++) {
-      updateChipsForTeam(i);
+      updateVisualsForTeam(i);
     }
   }
 
@@ -1281,15 +1272,10 @@ import Layout from '../layouts/Layout.astro';
 
     for (let i = 0; i < state.qty; i++) {
       const team = state.teams[i];
-      const card = teamCards[i];
-      const emptyWarning = document.getElementById(`empty-warning-${i + 1}`);
 
       // Validar integrantes
       if (team.members.length === 0) {
         isValid = false;
-        emptyWarning?.classList.add('visible-warning');
-      } else {
-        emptyWarning?.classList.remove('visible-warning');
       }
 
       // Validar nombres únicos y no vacíos
@@ -1318,13 +1304,11 @@ import Layout from '../layouts/Layout.astro';
     for (let i = 0; i < state.qty; i++) {
       const team = state.teams[i];
       const card = teamCards[i];
-      const emptyWarning = document.getElementById(`empty-warning-${i + 1}`);
       const nameInput = document.getElementById(`team-name-${i + 1}`);
 
       // Validar integrantes
       if (team.members.length === 0) {
         isValid = false;
-        emptyWarning?.classList.add('visible-warning');
         card?.classList.add('shake-anim');
         setTimeout(() => card?.classList.remove('shake-anim'), 500);
         errorMessage = "Todos los equipos deben tener al menos un integrante.";
