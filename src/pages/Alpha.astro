@@ -284,6 +284,7 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA
 <script>
   import confetti from 'canvas-confetti';
   import { turnManager } from '../lib/turnManager';
+  import { generateMathQuestion } from '../utils/mathGenerator';
 
   const questionEl = document.getElementById('math-question');
   const optionsContainer = document.getElementById('options-container');
@@ -321,35 +322,13 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA
   }
 
   function generateQuestion() {
-    let var1 = Math.floor(Math.random() * 15) + 1;
-    let var2 = Math.floor(Math.random() * 15) + 1;
-
-    const isAddition = Math.random() > 0.5;
-
-    if (!isAddition && var1 < var2) {
-      let temp = var1;
-      var1 = var2;
-      var2 = temp;
-    }
-
-    const correctAnswer = isAddition ? (var1 + var2) : (var1 - var2);
-    const operator = isAddition ? '+' : '-';
-
-    let wrong1 = correctAnswer + Math.floor(Math.random() * 3) + 1;
-    if (wrong1 === correctAnswer) wrong1 += 1;
-
-    const options = [
-      { value: correctAnswer, isCorrect: true },
-      { value: wrong1, isCorrect: false }
-    ];
-
-    options.sort(() => Math.random() - 0.5);
-
+    const question = generateMathQuestion('Alpha');
+    
     if (questionEl) {
-      questionEl.textContent = `${var1} ${operator} ${var2} = ?`;
+      questionEl.textContent = question.text;
     }
 
-    renderOptions(options);
+    renderOptions(question.options);
   }
 
   function renderOptions(options: { value: number; isCorrect: boolean }[]) {
