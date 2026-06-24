@@ -1,9 +1,11 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA EN BETA
+import ModalBeta from '../components/ModalBeta.astro';
 ---
 
 <Layout showLevelButtons={true}>
+  <ModalBeta />
   <div class="game-container">
     <div class="header-beta">
       <h1 class="level-title">Nivel Beta</h1>
@@ -146,7 +148,7 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA EN B
     backdrop-filter: blur(25px) saturate(180%);
     -webkit-backdrop-filter: blur(25px) saturate(180%);
     color: #ffffff;
-    padding: 2.5rem 5rem;
+    padding: 2.5rem 3rem;
     border-radius: 28px;
     border: 1px solid rgba(255, 255, 255, 0.15);
     background-clip: padding-box;
@@ -156,7 +158,8 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA EN B
       inset 0 -1px 2px rgba(255, 255, 255, 0.05),
       0 0 0 1px rgba(255, 255, 255, 0.08);
     margin-bottom: 2.5rem;
-    min-width: 300px;
+    width: 100%;
+    max-width: 680px;
     position: relative;
     z-index: 1;
   }
@@ -168,6 +171,99 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA EN B
     letter-spacing: 5px;
     color: #ffffff;
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  }
+
+  /* ── Challenge card styles (fracciones / geometría) ── */
+  .challenge-card {
+    text-align: left;
+    animation: fadeSlideIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(12px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0)   scale(1);    }
+  }
+
+  .challenge-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .challenge-icon {
+    font-size: 2rem;
+    line-height: 1;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
+  }
+
+  .challenge-badge {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 50px;
+    padding: 0.2rem 0.9rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #e0e7ff;
+    backdrop-filter: blur(8px);
+  }
+
+  .challenge-body {
+    font-size: 1.25rem;
+    line-height: 1.7;
+    color: #f1f5f9;
+    margin: 0;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+  }
+
+  .challenge-body strong {
+    color: #fbbf24;
+    font-weight: 800;
+  }
+
+  .challenge-body em {
+    display: block;
+    margin-top: 0.6rem;
+    color: #a5f3fc;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 1.15rem;
+  }
+
+  /* ── Fracción matemática apilada ── */
+  .frac {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    margin: 0 0.35em;
+    line-height: 1;
+    font-size: 1em;
+  }
+  .frac-num {
+    font-size: 0.9em;
+    font-weight: 900;
+    color: #fde68a;
+    line-height: 1.2;
+    padding: 0 0.2em 0.05em;
+    border-bottom: 2.5px solid #fbbf24;
+    min-width: 1em;
+    text-align: center;
+    letter-spacing: 0;
+  }
+  .frac-den {
+    font-size: 0.9em;
+    font-weight: 900;
+    color: #fde68a;
+    line-height: 1.2;
+    padding: 0.05em 0.2em 0;
+    min-width: 1em;
+    text-align: center;
+    letter-spacing: 0;
   }
 
   .fruits-container {
@@ -420,17 +516,19 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA EN B
   let timeLeft = 15;
   let isAnswering = false;
 
-  function startTimer() {
-    timeLeft = 15;
+  function startTimer(duration: number = 15) {
+    timeLeft = duration;
     if (timeLeftEl) timeLeftEl.textContent = timeLeft.toString();
     if (timerBox) timerBox.classList.remove('timer-warning');
     clearInterval(timer);
+
+    const warnAt = duration > 30 ? 10 : 5;
 
     timer = setInterval(() => {
       timeLeft--;
       if (timeLeftEl) timeLeftEl.textContent = timeLeft.toString();
 
-      if (timeLeft <= 5 && timerBox) {
+      if (timeLeft <= warnAt && timerBox) {
         timerBox.classList.add('timer-warning');
       }
 
@@ -468,6 +566,58 @@ import Ruleta from '../components/Ruleta.astro'; // 1. IMPORTAMOS LA RULETA EN B
     isAnswering = false;
     if (feedbackEl) feedbackEl.textContent = "";
 
+    // 50% de probabilidad de usar un reto de fracciones/geometría y 50% de operaciones simples
+    const useChallenge = Math.random() > 0.5;
+
+    if (useChallenge) {
+      const challenge = challengePool.next();
+      if (questionEl) {
+        questionEl.innerHTML = challenge.htmlQuestion;
+        questionEl.style.fontSize = '';
+        questionEl.style.letterSpacing = '';
+      }
+      startTimer(challenge.timeLimit);
+      renderOptions(challenge.options);
+    } else {
+      const isMultiplication = Math.random() > 0.5;
+      let var1, var2, correctAnswer, operator;
+
+      if (isMultiplication) {
+        var1 = Math.floor(Math.random() * 10) + 2;
+        var2 = Math.floor(Math.random() * 10) + 2;
+        correctAnswer = var1 * var2;
+        operator = '×';
+      } else {
+        var2 = Math.floor(Math.random() * 9) + 2;
+        correctAnswer = Math.floor(Math.random() * 10) + 2;
+        var1 = correctAnswer * var2;
+        operator = '÷';
+      }
+
+      let wrong1 = correctAnswer + Math.floor(Math.random() * 4) + 1;
+      let wrong2 = Math.max(1, correctAnswer - (Math.floor(Math.random() * 4) + 1));
+
+      if (wrong1 === wrong2) wrong1 += 1;
+      if (wrong1 === correctAnswer) wrong1 += 2;
+      if (wrong2 === correctAnswer) wrong2 -= 1;
+
+      const options = [
+        { value: correctAnswer, isCorrect: true },
+        { value: wrong1, isCorrect: false },
+        { value: wrong2, isCorrect: false }
+      ];
+
+      options.sort(() => Math.random() - 0.5);
+
+      if (questionEl) {
+        questionEl.textContent = `${var1} ${operator} ${var2} = ?`;
+        questionEl.style.fontSize = '4rem';
+        questionEl.style.letterSpacing = '5px';
+      }
+
+      renderOptions(options);
+    }
+    startTimer(15);
     const question = generateMathQuestion('Beta');
 
     if (questionEl) {
