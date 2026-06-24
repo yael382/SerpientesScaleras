@@ -1,7 +1,7 @@
 // src/utils/audioController.ts
 
 // Definimos los nombres de los sonidos para evitar errores de escritura
-export type SoundEffect = 'correcto' | 'incorrecto' | 'ruleta' ;
+export type SoundEffect = 'correcto' | 'incorrecto' | 'ruleta' | 'victoria';
 
 class AudioController {
   private static instance: AudioController;
@@ -14,6 +14,7 @@ class AudioController {
       this.sounds.set('correcto', new Audio('sounds/Ganar.mp3')); // Ajusta el nombre si es necesario
       this.sounds.set('incorrecto', new Audio('sounds/perder.mp3'));
       this.sounds.set('ruleta', new Audio('sounds/ruleta.mp3'));
+      this.sounds.set('victoria', new Audio('sounds/victoria.mp3'));
       
       // Agrega aquí los archivos para escalera y serpiente cuando los tengas:
       // this.sounds.set('escalera', new Audio('sounds/Escalera.mp3'));

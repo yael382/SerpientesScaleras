@@ -8,12 +8,18 @@ const { showLevelButtons = false } = Astro.props;
       <span class="logo-text">Juego de Oca</span>
     </a>
 
-    {showLevelButtons ? (
-      <div class="nav-links">
-        <a href="/Alpha" class="link alfa">Nivel Alfa</a>
-        <a href="/Beta" class="link beta">Nivel Beta</a>
-      </div>
-    ) : null}
+    {
+      showLevelButtons ? (
+        <div class="nav-links">
+          <a href="/Alpha" class="link alfa">
+            Nivel Alfa
+          </a>
+          <a href="/Beta" class="link beta">
+            Nivel Beta
+          </a>
+        </div>
+      ) : null
+    }
   </div>
 </nav>
 
@@ -31,7 +37,9 @@ const { showLevelButtons = false } = Astro.props;
     z-index: 100;
     border-bottom-left-radius: 24px;
     border-bottom-right-radius: 24px;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 10px 30px rgba(15, 23, 42, 0.25);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      0 10px 30px rgba(15, 23, 42, 0.25);
   }
 
   .nav-container {
@@ -62,7 +70,7 @@ const { showLevelButtons = false } = Astro.props;
   .logo-text {
     font-weight: 900;
     letter-spacing: 1.5px;
-    background: linear-gradient(90deg, #FFE066, #FF922B, #FF6B6B, #CC5DE8);
+    background: linear-gradient(90deg, #ffe066, #ff922b, #ff6b6b, #cc5de8);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -112,9 +120,6 @@ const { showLevelButtons = false } = Astro.props;
       flex-direction: column;
       gap: 1rem;
       text-align: center;
-    }
-    .navbar {
-      padding: 1rem;
     }
   }
 </style>

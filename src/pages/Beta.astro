@@ -1,9 +1,9 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Ruleta from '../components/Ruleta.astro'; 
-import RuletaRetroceso from '../components/RuletaRetroceso.astro'; // 1. IMPORTAMOS LA RULETA DE RETROCESO
-import ModalBeta from '../components/ModalBeta.astro';
-import TableroMapa from '../components/TableroMapa.astro';
+import Layout from "../layouts/Layout.astro";
+import Ruleta from "../components/Ruleta.astro";
+import RuletaRetroceso from "../components/RuletaRetroceso.astro"; // 1. IMPORTAMOS LA RULETA DE RETROCESO
+import ModalBeta from "../components/ModalBeta.astro";
+import TableroMapa from "../components/TableroMapa.astro";
 ---
 
 <Layout showLevelButtons={true}>
@@ -21,7 +21,9 @@ import TableroMapa from '../components/TableroMapa.astro';
       <div class="turn-avatar" id="turn-avatar">🦁</div>
       <div class="turn-info">
         <div class="turn-team" id="turn-team">Cargando equipo...</div>
-        <div class="turn-member">Turno de: <strong id="turn-member">...</strong></div>
+        <div class="turn-member">
+          Turno de: <strong id="turn-member">...</strong>
+        </div>
       </div>
     </div>
 
@@ -36,24 +38,31 @@ import TableroMapa from '../components/TableroMapa.astro';
     <TableroMapa />
 
     <Ruleta />
-    <RuletaRetroceso /> <!-- 2. AGREGAMOS EL COMPONENTE EN EL HTML -->
+    <RuletaRetroceso />
+    <!-- 2. AGREGAMOS EL COMPONENTE EN EL HTML -->
   </div>
 </Layout>
 
 <style is:global>
   .game-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start; 
-  width: 100%;
-  min-height: 100vh;
-  padding: 20px;
-  box-sizing: border-box;
-}
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    min-height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+  }
   @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   .header-beta {
@@ -89,7 +98,9 @@ import TableroMapa from '../components/TableroMapa.astro';
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     transition: all 0.3s ease;
   }
-  .turn-indicator.hidden { display: none; }
+  .turn-indicator.hidden {
+    display: none;
+  }
   .turn-avatar {
     font-size: 2.5rem;
     background: rgba(255, 255, 255, 0.1);
@@ -99,7 +110,7 @@ import TableroMapa from '../components/TableroMapa.astro';
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   }
   .turn-info {
     text-align: left;
@@ -110,7 +121,7 @@ import TableroMapa from '../components/TableroMapa.astro';
     color: #fff;
     text-transform: uppercase;
     letter-spacing: 1px;
-    text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
   }
   .turn-member {
     font-size: 1.1rem;
@@ -123,13 +134,13 @@ import TableroMapa from '../components/TableroMapa.astro';
   }
 
   .timer-box {
-    background: linear-gradient(135deg, #EF4444, #F97316);
+    background: linear-gradient(135deg, #ef4444, #f97316);
     color: #fff;
     padding: 0.6rem 1.2rem;
     border-radius: 16px;
     font-size: 1.3rem;
     font-weight: 700;
-    font-family: 'Fredoka', monospace;
+    font-family: "Fredoka", monospace;
     box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
     display: flex;
     align-items: center;
@@ -139,16 +150,25 @@ import TableroMapa from '../components/TableroMapa.astro';
 
   :global(.timer-warning) {
     animation: timerPulse 0.5s ease-in-out infinite;
-    background: linear-gradient(135deg, #DC2626, #EF4444) !important;
+    background: linear-gradient(135deg, #dc2626, #ef4444) !important;
   }
 
   @keyframes timerPulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.1); }
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
   }
 
   .screen {
-    background: linear-gradient(135deg, rgba(15, 23, 42, 0.45), rgba(30, 41, 59, 0.25));
+    background: linear-gradient(
+      135deg,
+      rgba(15, 23, 42, 0.45),
+      rgba(30, 41, 59, 0.25)
+    );
     backdrop-filter: blur(25px) saturate(180%);
     -webkit-backdrop-filter: blur(25px) saturate(180%);
     color: #ffffff;
@@ -156,8 +176,8 @@ import TableroMapa from '../components/TableroMapa.astro';
     border-radius: 28px;
     border: 1px solid rgba(255, 255, 255, 0.15);
     background-clip: padding-box;
-    box-shadow: 
-      0 24px 60px rgba(0, 0, 0, 0.4), 
+    box-shadow:
+      0 24px 60px rgba(0, 0, 0, 0.4),
       inset 0 1px 1px rgba(255, 255, 255, 0.12),
       inset 0 -1px 2px rgba(255, 255, 255, 0.05),
       0 0 0 1px rgba(255, 255, 255, 0.08);
@@ -171,7 +191,7 @@ import TableroMapa from '../components/TableroMapa.astro';
   #math-question {
     font-size: 4rem;
     margin: 0;
-    font-family: 'Fredoka', monospace;
+    font-family: "Fredoka", monospace;
     letter-spacing: 5px;
     color: #ffffff;
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
@@ -183,8 +203,14 @@ import TableroMapa from '../components/TableroMapa.astro';
   }
 
   @keyframes fadeSlideIn {
-    from { opacity: 0; transform: translateY(12px) scale(0.97); }
-    to   { opacity: 1; transform: translateY(0)   scale(1);    }
+    from {
+      opacity: 0;
+      transform: translateY(12px) scale(0.97);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
   }
 
   .challenge-header {
@@ -197,7 +223,7 @@ import TableroMapa from '../components/TableroMapa.astro';
   .challenge-icon {
     font-size: 2rem;
     line-height: 1;
-    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
   }
 
   .challenge-badge {
@@ -280,12 +306,17 @@ import TableroMapa from '../components/TableroMapa.astro';
   .fruit-btn {
     border-radius: 28px;
     cursor: pointer;
-    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    transition:
+      transform 0.25s ease,
+      box-shadow 0.25s ease,
+      border-color 0.25s ease;
     min-width: 170px;
     font-size: 2rem;
     font-weight: 800;
     padding: 1.4rem 2rem;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    box-shadow:
+      0 12px 30px rgba(0, 0, 0, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
     position: relative;
     overflow: hidden;
     backdrop-filter: blur(12px);
@@ -295,13 +326,18 @@ import TableroMapa from '../components/TableroMapa.astro';
   }
 
   .fruit-btn::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: -100%;
     width: 50%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.3),
+      transparent
+    );
     transition: all 0.6s ease;
     transform: skewX(-25deg);
   }
@@ -316,22 +352,38 @@ import TableroMapa from '../components/TableroMapa.astro';
   }
 
   .fruit-btn.blue-card {
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.5), rgba(59, 130, 246, 0.2));
+    background: linear-gradient(
+      135deg,
+      rgba(59, 130, 246, 0.5),
+      rgba(59, 130, 246, 0.2)
+    );
     border: 1px solid rgba(59, 130, 246, 0.5);
   }
 
   .fruit-btn.green-card {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.5), rgba(16, 185, 129, 0.2));
+    background: linear-gradient(
+      135deg,
+      rgba(16, 185, 129, 0.5),
+      rgba(16, 185, 129, 0.2)
+    );
     border: 1px solid rgba(16, 185, 129, 0.5);
   }
 
   .fruit-btn.red-card {
-    background: linear-gradient(135deg, rgba(239, 68, 68, 0.5), rgba(239, 68, 68, 0.2));
+    background: linear-gradient(
+      135deg,
+      rgba(239, 68, 68, 0.5),
+      rgba(239, 68, 68, 0.2)
+    );
     border: 1px solid rgba(239, 68, 68, 0.5);
   }
 
   .fruit-btn.yellow-card {
-    background: linear-gradient(135deg, rgba(245, 158, 11, 0.55), rgba(245, 158, 11, 0.25));
+    background: linear-gradient(
+      135deg,
+      rgba(245, 158, 11, 0.55),
+      rgba(245, 158, 11, 0.25)
+    );
     border: 1px solid rgba(245, 158, 11, 0.5);
   }
 
@@ -344,7 +396,7 @@ import TableroMapa from '../components/TableroMapa.astro';
     font-weight: bold;
     margin-top: 2rem;
     min-height: 2rem;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
   }
 
   .correct {
@@ -358,33 +410,80 @@ import TableroMapa from '../components/TableroMapa.astro';
   }
 
   @keyframes correctPop {
-    0% { transform: scale(0.5); opacity: 0; }
-    100% { transform: scale(1); opacity: 1; }
+    0% {
+      transform: scale(0.5);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
   }
 
   @keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-10px); }
-    75% { transform: translateX(10px); }
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    25% {
+      transform: translateX(-10px);
+    }
+    75% {
+      transform: translateX(10px);
+    }
   }
 
   @media (max-width: 600px) {
-    .header-beta { flex-direction: column; gap: 0.8rem; margin-bottom: 1rem; }
-    .level-title { font-size: 1.8rem; }
-    .timer-box { font-size: 1.1rem; padding: 0.4rem 1rem; border-radius: 12px; }
-    .screen { padding: 1.5rem 1rem; border-radius: 20px; margin-bottom: 1.5rem; min-width: 0; width: 100%; box-sizing: border-box; }
-    #math-question { font-size: 2.5rem; letter-spacing: 2px; }
-    .fruits-container { gap: 1rem; width: 100%; }
-    :global(.fruit-btn) { min-width: 0; width: 100%; box-sizing: border-box; font-size: 1.4rem; padding: 1.1rem 1.5rem; border-radius: 16px; }
+    .header-beta {
+      flex-direction: column;
+      gap: 0.8rem;
+      margin-bottom: 1rem;
+    }
+    .level-title {
+      font-size: 1.8rem;
+    }
+    .timer-box {
+      font-size: 1.1rem;
+      padding: 0.4rem 1rem;
+      border-radius: 12px;
+    }
+    .screen {
+      padding: 1.5rem 1rem;
+      border-radius: 20px;
+      margin-bottom: 1.5rem;
+      min-width: 0;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    #math-question {
+      font-size: 2.5rem;
+      letter-spacing: 2px;
+    }
+    .fruits-container {
+      gap: 1rem;
+      width: 100%;
+    }
+    :global(.fruit-btn) {
+      min-width: 0;
+      width: 100%;
+      box-sizing: border-box;
+      font-size: 1.4rem;
+      padding: 1.1rem 1.5rem;
+      border-radius: 16px;
+    }
   }
 
   @media (max-width: 360px) {
-    #math-question { font-size: 2rem; }
-    :global(.fruit-btn) { font-size: 1.2rem; }
+    #math-question {
+      font-size: 2rem;
+    }
+    :global(.fruit-btn) {
+      font-size: 1.2rem;
+    }
   }
 
   .mute-btn {
-    background: rgba(255, 255, 255, 0.08); 
+    background: rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.3);
@@ -418,31 +517,31 @@ import TableroMapa from '../components/TableroMapa.astro';
 
 <script>
   //@ts-ignore
-  import confetti from 'canvas-confetti';
-  import { turnManager } from '../lib/turnManager';
-  import { ChallengePool } from '../utils/fracGeo';
-  const challengePool = new ChallengePool('6to', 3);
-  import { generateMathQuestion } from '../utils/mathgenerator.ts';
-  import { audioController } from '../utils/audioController.ts';
+  import confetti from "canvas-confetti";
+  import { turnManager } from "../lib/turnManager";
+  import { ChallengePool } from "../utils/fracGeo";
+  const challengePool = new ChallengePool("6to", 3);
+  import { generateMathQuestion } from "../utils/mathgenerator";
+  import { audioController } from "../utils/audioController";
 
   try {
     turnManager.inicializar();
     updateTurnUI();
   } catch (e) {
     console.warn("Faltan datos de configuración, redirigiendo a Setup...");
-    window.location.href = '/Setup';
+    window.location.href = "/Setup";
   }
 
   function updateTurnUI() {
     try {
       const turnInfo = turnManager.obtenerTurnoActual();
-      const indicator = document.getElementById('turn-indicator');
-      const avatarEl = document.getElementById('turn-avatar');
-      const teamEl = document.getElementById('turn-team');
-      const memberEl = document.getElementById('turn-member');
+      const indicator = document.getElementById("turn-indicator");
+      const avatarEl = document.getElementById("turn-avatar");
+      const teamEl = document.getElementById("turn-team");
+      const memberEl = document.getElementById("turn-member");
 
       if (indicator && avatarEl && teamEl && memberEl) {
-        indicator.classList.remove('hidden');
+        indicator.classList.remove("hidden");
         avatarEl.textContent = turnInfo.equipo.avatar;
         teamEl.textContent = turnInfo.equipo.name;
         teamEl.style.color = turnInfo.equipo.hexColor;
@@ -455,11 +554,11 @@ import TableroMapa from '../components/TableroMapa.astro';
     }
   }
 
-  const questionEl = document.getElementById('math-question');
-  const optionsContainer = document.getElementById('options-container');
-  const feedbackEl = document.getElementById('feedback-message');
-  const timeLeftEl = document.getElementById('time-left');
-  const timerBox = document.querySelector('.timer-box');
+  const questionEl = document.getElementById("math-question");
+  const optionsContainer = document.getElementById("options-container");
+  const feedbackEl = document.getElementById("feedback-message");
+  const timeLeftEl = document.getElementById("time-left");
+  const timerBox = document.querySelector(".timer-box");
 
   let timer: ReturnType<typeof setInterval> | undefined;
   let timeLeft = 15;
@@ -468,7 +567,7 @@ import TableroMapa from '../components/TableroMapa.astro';
   function startTimer(duration: number = 15) {
     timeLeft = duration;
     if (timeLeftEl) timeLeftEl.textContent = timeLeft.toString();
-    if (timerBox) timerBox.classList.remove('timer-warning');
+    if (timerBox) timerBox.classList.remove("timer-warning");
     clearInterval(timer);
 
     const warnAt = duration > 30 ? 10 : 5;
@@ -478,7 +577,7 @@ import TableroMapa from '../components/TableroMapa.astro';
       if (timeLeftEl) timeLeftEl.textContent = timeLeft.toString();
 
       if (timeLeft <= warnAt && timerBox) {
-        timerBox.classList.add('timer-warning');
+        timerBox.classList.add("timer-warning");
       }
 
       if (timeLeft <= 0) {
@@ -493,25 +592,34 @@ import TableroMapa from '../components/TableroMapa.astro';
     isAnswering = true;
     clearInterval(timer);
 
-    audioController.play('incorrecto');
+    audioController.play("incorrecto");
 
     try {
       turnManager.comenzarTurno();
       turnManager.resolverTurno({ fueCorrecto: false });
-    } catch(e) { console.error(e) }
+    } catch (e) {
+      console.error(e);
+    }
 
     if (feedbackEl) {
       feedbackEl.textContent = "¡Tiempo agotado!";
       feedbackEl.className = "feedback incorrect";
     }
-    
-    document.querySelectorAll<HTMLButtonElement>('#options-container .fruit-btn')
-      .forEach(btn => { btn.disabled = true; btn.style.opacity = '0.5'; });
+
+    document
+      .querySelectorAll<HTMLButtonElement>("#options-container .fruit-btn")
+      .forEach((btn) => {
+        btn.disabled = true;
+        btn.style.opacity = "0.5";
+      });
 
     setTimeout(() => {
-      if (feedbackEl) { feedbackEl.textContent = ''; feedbackEl.style.color = ''; }
+      if (feedbackEl) {
+        feedbackEl.textContent = "";
+        feedbackEl.style.color = "";
+      }
       // Lanzamos la ruleta de retroceso en lugar de cambiar la pregunta directamente
-      document.dispatchEvent(new CustomEvent('abrirRuletaRetroceso'));
+      document.dispatchEvent(new CustomEvent("abrirRuletaRetroceso"));
     }, 2000);
   }
 
@@ -525,17 +633,17 @@ import TableroMapa from '../components/TableroMapa.astro';
       const challenge = challengePool.next();
       if (questionEl) {
         questionEl.innerHTML = challenge.htmlQuestion;
-        questionEl.style.fontSize = '';
-        questionEl.style.letterSpacing = '';
+        questionEl.style.fontSize = "";
+        questionEl.style.letterSpacing = "";
       }
       startTimer(challenge.timeLimit);
       renderOptions(challenge.options);
     } else {
-      const question = generateMathQuestion('Beta');
+      const question = generateMathQuestion("Beta");
       if (questionEl) {
         questionEl.textContent = question.text;
-        questionEl.style.fontSize = '4rem';
-        questionEl.style.letterSpacing = '5px';
+        questionEl.style.fontSize = "4rem";
+        questionEl.style.letterSpacing = "5px";
       }
       renderOptions(question.options);
       startTimer(15);
@@ -544,17 +652,17 @@ import TableroMapa from '../components/TableroMapa.astro';
 
   function renderOptions(options: { value: number; isCorrect: boolean }[]) {
     if (!optionsContainer) return;
-    optionsContainer.innerHTML = '';
+    optionsContainer.innerHTML = "";
 
-    const labels = ['A', 'B', 'C'];
-    const colorClasses = ['blue-card', 'green-card', 'red-card', 'yellow-card'];
+    const labels = ["A", "B", "C"];
+    const colorClasses = ["blue-card", "green-card", "red-card", "yellow-card"];
 
     options.forEach((opt, index) => {
-      const btn = document.createElement('button');
+      const btn = document.createElement("button");
       btn.className = `fruit-btn ${colorClasses[index % colorClasses.length]}`;
       btn.textContent = `Opción ${labels[index]}: ${opt.value}`;
 
-      btn.addEventListener('click', () => {
+      btn.addEventListener("click", () => {
         if (!isAnswering) checkAnswer(opt.isCorrect);
       });
 
@@ -570,95 +678,104 @@ import TableroMapa from '../components/TableroMapa.astro';
     try {
       turnManager.comenzarTurno();
       turnManager.resolverTurno({ fueCorrecto: isCorrect });
-    } catch(e) { console.error(e) }
+    } catch (e) {
+      console.error(e);
+    }
 
     if (isCorrect) {
       feedbackEl.textContent = "¡Correcto!";
       feedbackEl.className = "feedback correct";
 
-      audioController.play('correcto');
+      audioController.play("correcto");
 
       confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
 
-      optionsContainer.style.display = 'none'; 
-      document.dispatchEvent(new CustomEvent('respuestaCorrecta'));
-
+      optionsContainer.style.display = "none";
+      document.dispatchEvent(new CustomEvent("respuestaCorrecta"));
     } else {
       feedbackEl.textContent = "Intenta de nuevo";
       feedbackEl.className = "feedback incorrect";
 
-      audioController.play('incorrecto');
+      audioController.play("incorrecto");
 
-      if (optionsContainer) optionsContainer.style.display = 'none';
+      if (optionsContainer) optionsContainer.style.display = "none";
 
       // 💥 ABRIMOS LA RULETA DE RETROCESO INMEDIATAMENTE
-      document.dispatchEvent(new CustomEvent('abrirRuletaRetroceso'));
+      document.dispatchEvent(new CustomEvent("abrirRuletaRetroceso"));
 
       for (let i = 0; i < 10; i++) {
-        const x = document.createElement('div');
-        x.textContent = '❌'; 
-        x.style.position = 'fixed';
-        x.style.top = '-50px';
-        x.style.left = Math.random() * 100 + 'vw'; 
-        x.style.fontSize = Math.random() * (30 - 20) + 20 + 'px';
-        x.style.zIndex = '9999';
-        x.style.pointerEvents = 'none';
-        x.style.transition = 'transform 1s linear, opacity 1s ease';
-        
+        const x = document.createElement("div");
+        x.textContent = "❌";
+        x.style.position = "fixed";
+        x.style.top = "-50px";
+        x.style.left = Math.random() * 100 + "vw";
+        x.style.fontSize = Math.random() * (30 - 20) + 20 + "px";
+        x.style.zIndex = "9999";
+        x.style.pointerEvents = "none";
+        x.style.transition = "transform 1s linear, opacity 1s ease";
+
         document.body.appendChild(x);
 
         setTimeout(() => {
           x.style.transform = `translateY(110vh) rotate(${Math.random() * 360}deg)`;
-          x.style.opacity = '0';
+          x.style.opacity = "0";
           setTimeout(() => x.remove(), 1000);
         }, Math.random() * 200);
       }
-      
+
       // Eliminado el setTimeout anterior que saltaba de turno a la fuerza.
     }
   }
 
   // 🔄 NUEVO: Se activa cuando la ruleta de retroceso termina de girar
-  document.addEventListener('retrocesoCompletado', (e: any) => {
+  document.addEventListener("retrocesoCompletado", (e: any) => {
     const casillasARetar = e.detail.casillas;
-    console.log(`⚠️ Beta Ruleta del destino: Retroceder ${casillasARetar} espacios.`);
-    
+    console.log(
+      `⚠️ Beta Ruleta del destino: Retroceder ${casillasARetar} espacios.`,
+    );
+
     try {
       turnManager.siguienteTurno();
       updateTurnUI();
-    } catch(e) { console.error(e) }
+    } catch (e) {
+      console.error(e);
+    }
 
     if (feedbackEl) feedbackEl.textContent = "";
-    if (optionsContainer) optionsContainer.style.display = 'flex'; 
+    if (optionsContainer) optionsContainer.style.display = "flex";
     generateQuestion();
   });
 
-  document.addEventListener('siguienteTurno', () => {
+  document.addEventListener("siguienteTurno", () => {
     try {
       turnManager.siguienteTurno();
       updateTurnUI();
-    } catch(e) { console.error(e) }
+    } catch (e) {
+      console.error(e);
+    }
 
     if (feedbackEl) feedbackEl.textContent = "";
-    if (optionsContainer) optionsContainer.style.display = 'flex'; 
-    generateQuestion(); 
+    if (optionsContainer) optionsContainer.style.display = "flex";
+    generateQuestion();
   });
 
   // 5. ACTUALIZADO: Enviar el movimiento detallado hacia el TableroMapa
-  document.addEventListener('avanzarFicha', (e: any) => {
+  document.addEventListener("avanzarFicha", (e: any) => {
     const pasos = e.detail.pasos;
-    
+
     try {
       const datosTurno = turnManager.obtenerTurnoActual();
       const equipoActivo = datosTurno.equipo;
-    
-      document.dispatchEvent(new CustomEvent('renderizarMovimientoTablero', {
-        detail: {
-          equipoName: equipoActivo.name,
-          equipoAvatar: equipoActivo.avatar,
-          pasos: pasos
-        }
-      }));
+
+      document.dispatchEvent(
+        new CustomEvent("renderizarMovimientoTablero", {
+          detail: {
+            equipoName: equipoActivo.name,
+            equipoAvatar: equipoActivo.avatar,
+            pasos: pasos,
+          },
+        }),
+      );
     } catch (err) {
       console.error("Error enviando datos del turno al tablero:", err);
     }
@@ -666,11 +783,11 @@ import TableroMapa from '../components/TableroMapa.astro';
 
   generateQuestion();
 
-  const muteBtn = document.getElementById('mute-button');
-  muteBtn?.addEventListener('click', () => {
+  const muteBtn = document.getElementById("mute-button");
+  muteBtn?.addEventListener("click", () => {
     const mutear = audioController.toggleMute();
     if (muteBtn) {
-      muteBtn.textContent = mutear ? '🔇Silenciado' : '🔊Sonido';
+      muteBtn.textContent = mutear ? "🔇Silenciado" : "🔊Sonido";
     }
   });
 </script>

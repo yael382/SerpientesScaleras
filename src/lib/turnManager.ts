@@ -5,6 +5,8 @@ export interface Team {
   members: string[];
   colorClass: string;
   hexColor: string;
+  correctAnswers?: number;
+  incorrectAnswers?: number;
 }
 
 export type EstadoTurno = 'ESPERANDO' | 'EN_CURSO' | 'RESUELTO';
@@ -51,7 +53,11 @@ export class TurnManager {
         throw new Error("La configuración de equipos no es válida o hay menos de 2 equipos.");
       }
 
-      this.equipos = parsed.teams;
+      this.equipos = parsed.teams.map((t: Team) => ({
+        ...t,
+        correctAnswers: t.correctAnswers || 0,
+        incorrectAnswers: t.incorrectAnswers || 0
+      }));
       this.indiceEquipoActual = 0;
       this.ronda = 1;
       this.estado = 'ESPERANDO';
@@ -105,10 +111,35 @@ export class TurnManager {
       throw new Error(`No se puede resolver el turno. Estado actual: ${this.estado}`);
     }
     this.estado = 'RESUELTO';
+
+    // Registrar estadísticas
+    const equipo = this.equipos[this.indiceEquipoActual];
+    if (resultado && typeof resultado.fueCorrecto === 'boolean') {
+      if (resultado.fueCorrecto) {
+        equipo.correctAnswers = (equipo.correctAnswers || 0) + 1;
+      } else {
+        equipo.incorrectAnswers = (equipo.incorrectAnswers || 0) + 1;
+      }
+      this.persistirEquipos();
+    }
+
     return {
       ...this.obtenerTurnoActual(),
       resultado
     };
+  }
+
+  private persistirEquipos(): void {
+    const savedData = localStorage.getItem('serpientes_escaleras_setup');
+    if (savedData) {
+      try {
+        const parsed = JSON.parse(savedData);
+        parsed.teams = this.equipos;
+        localStorage.setItem('serpientes_escaleras_setup', JSON.stringify(parsed));
+      } catch (e) {
+        console.error("Error al persistir equipos:", e);
+      }
+    }
   }
 
   /**
