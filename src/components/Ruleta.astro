@@ -16,7 +16,6 @@
 </div>
 
 <style>
-
   .oculto {
     display: none !important;
   }
@@ -54,11 +53,6 @@
   @keyframes scalePopIn {
     from { transform: scale(0.85); opacity: 0; }
     to { transform: scale(1); opacity: 1; }
-  }
-
-  @keyframes popIn {
-    0% { transform: scale(0.7); opacity: 0; }
-    100% { transform: scale(1); opacity: 1; }
   }
 
   .puntero {
@@ -141,8 +135,7 @@
 </style>
 
 <script>
-  //@ts-ignore
-  import { audioController } from '../utils/audioController.ts';
+  import { audioController } from '../utils/audioController';
 
   function iniciarRuleta() {
     const zonaRuleta = document.getElementById('zona-ruleta');
@@ -154,20 +147,18 @@
 
     let rotacionActual = 0;
 
-    // ESCUCHAR CUANDO EL JUEGO DICE QUE LA RESPUESTA ES CORRECTA
     document.addEventListener('respuestaCorrecta', () => {
       zonaRuleta.classList.remove('oculto');
-      resultadoTexto.innerText = ""; // Limpiar textos viejos
+      resultadoTexto.innerText = "";
     });
 
     btnGirar.addEventListener('click', () => {
       btnGirar.disabled = true;
       resultadoTexto.innerText = "¡Girando ruleta...!";
 
-      audioController.play('ruleta',true);
+      audioController.play('ruleta', true);
 
       const numeroGanador = Math.floor(Math.random() * 3) + 1;
-
       const angulosAjuste = { 1: 300, 2: 180, 3: 60 };
       const gradosFinales = angulosAjuste[numeroGanador as keyof typeof angulosAjuste];
       
@@ -176,23 +167,19 @@
       rotacionActual += (gradosFinales - resto);
 
       ruleta.style.transform = `rotate(${rotacionActual}deg)`;
-      // 1. ESPERAR 3 SEGUNDOS A QUE LA RULETA DETENGA SU GIRO ANIMADO
+
       setTimeout(() => {
         audioController.stop('ruleta');
+        audioController.play('despues_ruleta');
         resultadoTexto.innerText = `¡Avanzas ${numeroGanador} casillas!`;
         
-        // LANZAR EVENTO CON EL NÚMERO (Por si tu tablero necesita mover la ficha)
         document.dispatchEvent(new CustomEvent('avanzarFicha', { detail: { pasos: numeroGanador } }));
 
-        // 2. LE DAMOS 3.5 SEGUNDOS MÁS para que los niños vean la ruleta detenida,
-        // miren el mapa, vean cómo avanza su avatar 🦁 y celebren la casilla.
         setTimeout(() => {
           zonaRuleta.classList.add('oculto');
           btnGirar.disabled = false;
-          
-          // Ahora sí, limpiamente le avisamos a Beta que pase a la siguiente pregunta
           document.dispatchEvent(new CustomEvent('siguienteTurno'));
-        }, 3500); // 👈 Aumentado a 3.5 segundos para dar una pausa natural de juego
+        }, 3500);
 
       }, 2000);
     });

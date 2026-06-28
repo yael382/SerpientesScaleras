@@ -10,9 +10,10 @@
     <div class="modal-body">
       <p class="modal-subtitle">¡La dificultad aumenta en el espacio exterior!</p>
       <ul class="rules-list">
-        <li><span>⚡</span> Tienes solo 15 segundos para resolver multiplicaciones y divisiones.</li>
-        <li><span>🎯</span> Hay 3 opciones en pantalla. ¡Sé veloz!</li>
-        <li><span>🛸</span> Si el tiempo se agota, perderás tu turno. ¡Concéntrate!</li>
+        <li><span>⚡</span> <strong>Reloj Veloz:</strong> Tienes solo 15 segundos para multiplicaciones y divisiones.</li>
+        <li><span>🎯</span> <strong>Múltiples Opciones:</strong> Selecciona la respuesta correcta antes de que expire el tiempo.</li>
+        <li><span>🐍</span> <strong>Serpientes y Escaleras:</strong> Si aciertas avanzas en el tablero; si el tiempo se agota o fallas, retrocedes.</li>
+        <li><span>➡️</span> <strong>Control de Turno:</strong> Pulsa "Siguiente Pregunta" cuando el equipo esté listo.</li>
       </ul>
     </div>
     <button type="button" id="btn-close-rules" class="modal-btn">
@@ -22,23 +23,23 @@
 </div>
 
 <style>
-  /* Base idéntica pero con temática y bordes espaciales/azules */
   .modal-overlay {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-    background: rgba(10, 15, 30, 0.9); backdrop-filter: blur(8px);
+    background: rgba(10, 15, 30, 0.85); backdrop-filter: blur(12px);
     display: flex; justify-content: center; align-items: center; z-index: 10000;
     transition: opacity 0.4s ease, visibility 0.4s ease;
   }
   .modal-card {
-    background: #ffffff; width: 90%; max-width: 500px; padding: 2.5rem; border-radius: 32px;
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.95));
+    width: 90%; max-width: 520px; padding: 2.5rem; border-radius: 32px;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6); text-align: center; box-sizing: border-box;
-    border: 3px solid #3B82F6; /* Color azul de Beta */
+    border: 3px solid #3B82F6;
   }
-  .modal-header h2 { font-size: 2rem; color: #1e3a5f; margin: 0; font-family: 'Fredoka', sans-serif; }
+  .modal-header h2 { font-size: 2rem; color: #ffffff; margin: 0; font-family: 'Fredoka', sans-serif; }
   .modal-icon { font-size: 3.5rem; display: block; margin-bottom: 0.5rem; }
-  .modal-subtitle { font-size: 1.1rem; color: #64748b; margin-bottom: 1.5rem; }
+  .modal-subtitle { font-size: 1.1rem; color: #cbd5e1; margin-bottom: 1.5rem; }
   .rules-list { list-style: none; padding: 0; margin: 0 0 2rem 0; text-align: left; }
-  .rules-list li { font-size: 1.05rem; color: #334155; margin-bottom: 1.2rem; display: flex; gap: 0.75rem; line-height: 1.4; }
+  .rules-list li { font-size: 1.05rem; color: #ffffff; margin-bottom: 1.2rem; display: flex; gap: 0.75rem; line-height: 1.4; align-items: flex-start; }
   .modal-btn {
     background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
     color: white; border: none; padding: 1rem 2.5rem; font-size: 1.2rem; font-weight: bold; border-radius: 999px; cursor: pointer;
@@ -52,7 +53,7 @@
     100% { transform: scale(1); opacity: 1; }
   }
 </style>
-<!-- Al final de src/components/ModalBeta.astro -->
+
 <script>
   const rulesModal = document.getElementById('rules-modal');
   const btnCloseRules = document.getElementById('btn-close-rules');
@@ -62,7 +63,6 @@
       rulesModal.classList.add('modal-fade-out');
       setTimeout(() => {
         rulesModal.style.display = 'none';
-        // Despacha un evento para avisarle a Beta.astro que arranque el temporizador
         document.dispatchEvent(new CustomEvent('modalCerrado'));
       }, 400);
     });

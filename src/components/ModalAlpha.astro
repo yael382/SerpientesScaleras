@@ -4,19 +4,20 @@
 <div id="rules-modal" class="modal-overlay">
   <div class="modal-card animate-pop">
     <div class="modal-header">
-      <span class="modal-icon">🦆</span>
+      <span class="modal-icon">🍎</span>
       <h2>¡Bienvenidos al Nivel Alfa!</h2>
     </div>
     <div class="modal-body">
-      <p class="modal-subtitle">¡Prepárate para una divertida aventura de sumas y restas!</p>
+      <p class="modal-subtitle">¡Prepárate para una divertida aventura matemática!</p>
       <ul class="rules-list">
-        <li><span>✨</span> No te preocupes por el tiempo, piensa bien tu respuesta.</li>
-        <li><span>🎯</span> Tienes 2 opciones en pantalla. ¡Elige la correcta!</li>
-        <li><span>🚀</span> Si aciertas, activarás la ruleta para avanzar en el tablero.</li>
+        <li><span>🎯</span> <strong>Múltiples Opciones:</strong> Elige la opción correcta entre las alternativas en pantalla.</li>
+        <li><span>⏱️</span> <strong>Tiempo de 60 Segundos:</strong> Tienes 60 segundos para resolver la suma, resta o reto matemático.</li>
+        <li><span>🎲</span> <strong>Ruleta del Destino:</strong> Si aciertas avanzarás casillas. Si fallas, retrocederás con la ruleta.</li>
+        <li><span>➡️</span> <strong>Ritmo del Juego:</strong> Pulsa "Siguiente Pregunta" cuando tu equipo esté listo.</li>
       </ul>
     </div>
     <button type="button" id="btn-close-rules" class="modal-btn">
-      ¡Comenzar Aventura! 🎨
+      ¡Iniciar Misión! 🎲
     </button>
   </div>
 </div>
@@ -28,7 +29,7 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(15, 23, 42, 0.55); 
+    background: rgba(15, 23, 42, 0.75); 
     backdrop-filter: blur(12px);
     display: flex;
     justify-content: center;
@@ -38,20 +39,15 @@
   }
   .modal-card {
     width: 90%;
-    max-width: 500px;
+    max-width: 520px;
     padding: 2.5rem;
     border-radius: 32px;
     text-align: center;
     box-sizing: border-box;
-    background-color: rgba(255, 255, 255, 0.15); 
-    backdrop-filter: blur(20px) saturate(140%); 
-    -webkit-backdrop-filter: blur(20px) saturate(140%);
-    border: 1px solid rgba(255, 146, 43, 0.35); 
-    
-
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.15),
-                inset 0 0 20px rgba(255, 255, 255, 0.25),
-                inset 0 0 4px rgba(255, 146, 43, 0.2); 
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.95));
+    backdrop-filter: blur(20px); 
+    border: 2px solid rgba(255, 146, 43, 0.5); 
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
   }
   .modal-header h2 {
     font-size: 2rem;
@@ -62,7 +58,7 @@
   .modal-icon { font-size: 3.5rem; display: block; margin-bottom: 0.5rem; }
   .modal-subtitle { font-size: 1.1rem; color: #eeeff1; margin-bottom: 1.5rem; }
   .rules-list { list-style: none; padding: 0; margin: 0 0 2rem 0; text-align: left; }
-  .rules-list li { font-size: 1.05rem; color: #ffffff; margin-bottom: 1.2rem; display: flex; gap: 0.75rem; line-height: 1.4; }
+  .rules-list li { font-size: 1.05rem; color: #ffffff; margin-bottom: 1.2rem; display: flex; gap: 0.75rem; line-height: 1.4; align-items: flex-start; }
   .modal-btn {
     background: linear-gradient(135deg, #FF922B 0%, #E8590C 100%);
     color: white; border: none; padding: 1rem 2.5rem; font-size: 1.2rem; font-weight: bold; border-radius: 999px; cursor: pointer;
@@ -76,7 +72,7 @@
     100% { transform: scale(1); opacity: 1; }
   }
 </style>
-<!-- Al final de src/components/ModalAlpha.astro -->
+
 <script>
   const rulesModal = document.getElementById('rules-modal');
   const btnCloseRules = document.getElementById('btn-close-rules');
@@ -86,7 +82,6 @@
       rulesModal.classList.add('modal-fade-out');
       setTimeout(() => {
         rulesModal.style.display = 'none';
-        // Despacha un evento para avisarle a Alpha.astro que ya puede iniciar el juego
         document.dispatchEvent(new CustomEvent('modalCerrado'));
       }, 400);
     });

@@ -1,0 +1,12 @@
+---
+// src/components/TimerBox.astro
+interface Props {
+  initialTime?: number;
+}
+const { initialTime = 60 } = Astro.props;
+---
+
+<div id="timer-box" class="timer-box hidden">
+  <span class="timer-icon">⏱️</span>
+  <span id="time-left">{initialTime}</span>s
+</div>
